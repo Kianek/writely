@@ -9,7 +9,7 @@ namespace Writely.Extensions
     {
         public static EntryDto ToDto(this Entry entry)
         {
-            throw new NotImplementedException();
+            return new EntryDto(entry);
         }
     }
 }
