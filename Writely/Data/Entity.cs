@@ -1,6 +1,6 @@
 using System;
 
-namespace Writely.Models
+namespace Writely.Data
 {
     public class Entity
     {
