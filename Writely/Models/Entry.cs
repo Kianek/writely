@@ -9,7 +9,7 @@ namespace Writely.Models
         public string? Body { get; set; }
         
         public long JournalId { get; set; }
-        public Journal? Journal { get; set; }
+        public Journal Journal { get; set; }
 
         public Entry(string title, string? tags, string body, string userId) : base(userId)
         {
