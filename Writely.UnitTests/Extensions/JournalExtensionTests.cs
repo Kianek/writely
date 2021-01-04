@@ -41,5 +41,25 @@ namespace Writely.UnitTests.Extensions
             result.Should().BeOfType<List<JournalDto>>();
             result.Count().Should().Be(3);
         }
+
+        [Fact]
+        public void CanMapJournalToDto()
+        {
+            // Arrange
+            var journal = new Journal
+            {
+                Id = 1,
+                UserId = "UserId",
+                Title = "Journal 1"
+            };
+
+            // Act
+            var result = journal.ToDto();
+
+            // Assert
+            result.Should().BeOfType<JournalDto>();
+            result.Id.Should().Be(journal.Id);
+            result.UserId.Should().Be(journal.UserId);
+        }
     }
 }
