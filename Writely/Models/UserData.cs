@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Writely.Data;
+using Writely.Extensions;
 using Writely.Models.Dto;
 
 namespace Writely.Models
@@ -22,7 +23,7 @@ namespace Writely.Models
             Username = user.UserName;
             CreatedAt = user.CreatedAt;
             LastModified = user.LastModified;
-            // TODO: Project journals to dto after testing MapToDto extension
+            Journals = journals.MapToDto();
         }
 
         public UserData()
