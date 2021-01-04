@@ -15,7 +15,7 @@ namespace Writely.Extensions
         
         public static List<JournalDto> MapToDto(this List<Journal> journals)
         {
-            return journals.Select(j => new JournalDto(j)).ToList();
+            return journals.Select(j => j.ToDto()).ToList();
         }
     }
 }
