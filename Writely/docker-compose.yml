@@ -1,0 +1,22 @@
+version: "3.9"
+services:
+  web:
+    build: .
+    ports:
+      - "5001:80"
+    depends_on:
+      - db
+    env_file:
+      - .env
+#    volumes:
+#      - .:/app
+  db:
+    image: "mcr.microsoft.com/mssql/server:2019-latest"
+    ports:
+      - "1433:1433"
+    environment:
+      ACCEPT_EULA: "Y"
+      #SA_PASSWORD: "YR%8fNHg7Y_ya%k{8AqS"
+#      MSSQL_SA_PASSWORD: "YR%8fNHg7Y_ya%k{8AqS"
+    env_file:
+      - .env

@@ -1,0 +1,10 @@
+language: csharp
+solution: writely.sln
+mono: none
+dotnet: 5.0
+install:
+    - dotnet add *.UnitTests/*.csproj package xunit
+    - dotnet add *.IntegrationTests/*.csproj package xunit
+script:
+    - dotnet restore
+    - dotnet test
