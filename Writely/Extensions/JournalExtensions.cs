@@ -8,9 +8,9 @@ namespace Writely.Extensions
 {
     public static class JournalExtensions
     {
-        public static IQueryable<JournalDto> MapToDto(this List<Journal> journals)
+        public static List<JournalDto> MapToDto(this List<Journal> journals)
         {
-            throw new NotImplementedException();
+            return journals.Select(j => new JournalDto(j)).ToList();
         }
     }
 }
