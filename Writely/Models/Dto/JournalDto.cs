@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
+using Writely.Extensions;
 
 namespace Writely.Models.Dto
 {
@@ -9,7 +9,7 @@ namespace Writely.Models.Dto
         public long Id { get; set; }
         public string? UserId { get; set; }
         public string? Title { get; set; }
-        public List<EntryDto> Entries { get; set; }
+        public List<EntryDto> Entries { get; set; } = new List<EntryDto>();
         public DateTime? CreatedAt { get; set; }
         public DateTime? LastModifed { get; set; }
 
@@ -20,8 +20,7 @@ namespace Writely.Models.Dto
             Title = journal.Title;
             CreatedAt = journal.CreatedAt;
             LastModifed = journal.LastModified;
-            // TODO: use entry extension to project journal.Entries as dtos
-            Entries = new List<EntryDto>();
+            Entries = journal.Entries.MapToDto();
         }
         
         public JournalDto()
