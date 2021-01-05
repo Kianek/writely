@@ -34,7 +34,8 @@ namespace Writely
             services.Scan(scan => scan
                 .FromAssemblyOf<IModelUpdater<Entry, EntryUpdateModel>>()
                 .AddClasses(classes => classes.AssignableTo(typeof(IModelUpdater<,>)))
-                .AsImplementedInterfaces());
+                    .AsImplementedInterfaces()
+                    .WithTransientLifetime());
             
             services.AddDbContext<AppDbContext>(opts =>
             {
