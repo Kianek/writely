@@ -8,8 +8,8 @@ namespace Writely.Data
 {
     public class AppDbContext : ApiAuthorizationDbContext<AppUser>
     {
-        public DbSet<Journal> Journals { get; set; }
-        public DbSet<Entry> Entries { get; set; }
+        public DbSet<Journal>? Journals { get; set; }
+        public DbSet<Entry>? Entries { get; set; }
         
         public AppDbContext(DbContextOptions<AppDbContext> options, IOptions<OperationalStoreOptions> operationalStoreOptions) : base(options, operationalStoreOptions)
         {
@@ -31,7 +31,7 @@ namespace Writely.Data
                     .IsRequired();
 
                 entity.HasMany(j => j.Entries)
-                    .WithOne(e => e.Journal);
+                    .WithOne(e => e!.Journal!);
             });
 
             builder.Entity<Entry>(entity =>
@@ -50,7 +50,7 @@ namespace Writely.Data
                     .IsRequired();
 
                 entity.HasOne(e => e.Journal)
-                    .WithMany(j => j.Entries);
+                    .WithMany(j => j!.Entries);
             });
         }
     }
