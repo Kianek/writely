@@ -13,7 +13,10 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
+using Scrutor;
 using Writely.Data;
+using Writely.Models;
+using Writely.Services;
 
 namespace Writely
 {
@@ -28,6 +31,11 @@ namespace Writely
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.Scan(scan => scan
+                .FromAssemblyOf<IModelUpdater<Entry, EntryUpdateModel>>()
+                .AddClasses(classes => classes.AssignableTo(typeof(IModelUpdater<,>)))
+                .AsImplementedInterfaces());
+            
             services.AddDbContext<AppDbContext>(opts =>
             {
                 var dbPassword = Environment.GetEnvironmentVariable("MSSQL_SA_PASSWORD");
