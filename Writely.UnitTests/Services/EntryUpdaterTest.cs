@@ -46,7 +46,7 @@ namespace Writely.UnitTests.Services
                 Title = "Spiffy New Title"
             };
             var updater = new EntryUpdater();
-            
+
             // Act
             var (updatedEntry, didUpdate) = updater.Update(entry, updateModel);
 
@@ -65,12 +65,27 @@ namespace Writely.UnitTests.Services
                 Title = entry.Title
             };
             var updater = new EntryUpdater();
-            
+
             // Act
             var (_, didUpdate) = updater.Update(entry, updateModel);
 
             // Assert
             didUpdate.Should().BeFalse();
         }
-    }
+
+        [Fact]
+        public void Update_UpdateModelNull_ReturnsFalse()
+        {
+            // Arrange
+            var entry = Helpers.GetEntry();
+            var updater = new EntryUpdater();
+
+            // Act
+            var (_, didUpdate) = updater.Update(entry, null);
+
+            // Assert
+            didUpdate.Should().BeFalse();
+        }
+    
+}
 }
