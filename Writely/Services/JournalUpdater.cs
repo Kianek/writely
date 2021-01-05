@@ -6,7 +6,14 @@ namespace Writely.Services
     {
         public (Journal?, bool) Update(Journal model, JournalUpdateModel updateModel)
         {
-            throw new System.NotImplementedException();
+            var didUpdate = false;
+            if (updateModel?.Title is not null && model.Title != updateModel.Title)
+            {
+                model.Title = updateModel.Title;
+                didUpdate = true;
+            }
+            
+            return (model, didUpdate);
         }
     }
 }
