@@ -7,6 +7,13 @@ namespace Writely.Services
 {
     public class EntryService : IEntryService
     {
+        private readonly IEntryRepository _repo;
+
+        public EntryService(IEntryRepository repo)
+        {
+            _repo = repo;
+        }
+
         public Task<EntryDto> GetById(long entryId)
         {
             throw new System.NotImplementedException();

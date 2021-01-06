@@ -7,6 +7,13 @@ namespace Writely.Services
 {
     public class JournalService : IJournalService
     {
+        private readonly IJournalRepository _repo;
+
+        public JournalService(IJournalRepository repo)
+        {
+            _repo = repo;
+        }
+
         public Task<JournalDto> GetById(string userId, long journalId)
         {
             throw new System.NotImplementedException();
