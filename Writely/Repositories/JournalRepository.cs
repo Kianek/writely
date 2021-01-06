@@ -2,8 +2,9 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Writely.Data;
 using Writely.Models;
+using Writely.Services;
 
-namespace Writely.Services
+namespace Writely.Repositories
 {
     public class JournalRepository : IJournalRepository
     {
@@ -19,7 +20,7 @@ namespace Writely.Services
             throw new System.NotImplementedException();
         }
 
-        public Task<List<Journal>> GetAll(string userId, string query = "", string order = "", int limit = 0)
+        public Task<List<Journal>> GetAll(string userId, int limit = 0, string orderBy = "date-desc")
         {
             throw new System.NotImplementedException();
         }

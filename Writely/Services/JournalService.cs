@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Writely.Models;
 using Writely.Models.Dto;
+using Writely.Repositories;
 
 namespace Writely.Services
 {
