@@ -1,4 +1,9 @@
 using System.Collections.Generic;
+using IdentityServer4.EntityFramework.Options;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
+using Moq;
+using Writely.Data;
 using Writely.Models;
 
 namespace Writely.UnitTests
@@ -45,6 +50,13 @@ namespace Writely.UnitTests
             }
 
             return journals;
+        }
+
+        public static Mock<AppDbContext> GetMockDbContext()
+        {
+            var dbContextOptions = new Mock<DbContextOptions<AppDbContext>>().Object;
+            var operationalStoreOptions = new Mock<IOptions<OperationalStoreOptions>>().Object;
+            return new Mock<AppDbContext>(dbContextOptions, operationalStoreOptions);
         }
     }
 }
