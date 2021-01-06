@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using Writely.Data;
 using Writely.Models;
 
-namespace Writely.Services
+namespace Writely.Repositories
 {
     public class EntryRepository : IEntryRepository
     {

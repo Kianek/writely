@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Writely.Models;
 
-namespace Writely.Services
+namespace Writely.Repositories
 {
     public interface IEntryRepository
     {
