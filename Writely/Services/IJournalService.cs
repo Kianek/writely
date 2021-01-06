@@ -15,6 +15,6 @@ namespace Writely.Services
             IModelUpdater<Entry, EntryUpdateModel> updater,
             EntryUpdateModel updateModel, long entryId);
 
-        Task Delete(long journalId);
+        Task<bool> Delete(long journalId);
     }
 }
