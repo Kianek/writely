@@ -12,8 +12,8 @@ namespace Writely.Services
         Task<JournalDto> Save(NewJournalModel model);
 
         Task<JournalDto> Update(
-            IModelUpdater<Entry, EntryUpdateModel> updater,
-            EntryUpdateModel updateModel, long entryId);
+            IModelUpdater<Journal, JournalUpdateModel> updater,
+            JournalUpdateModel updateModel, long journalId);
 
         Task<bool> Delete(long journalId);
     }
