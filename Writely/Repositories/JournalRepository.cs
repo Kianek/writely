@@ -30,12 +30,12 @@ namespace Writely.Repositories
             throw new System.NotImplementedException();
         }
 
-        public Task<Journal> Update(IModelUpdater<Journal, JournalUpdateModel> updater, JournalUpdateModel model)
+        public Task<Journal> Update(Journal journal)
         {
             throw new System.NotImplementedException();
         }
 
-        public Task Delete(long id)
+        public Task<bool> Delete(long id)
         {
             throw new System.NotImplementedException();
         }

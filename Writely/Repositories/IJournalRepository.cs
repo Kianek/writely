@@ -10,8 +10,7 @@ namespace Writely.Repositories
         Task<Journal> GetById(string userId, long id);
         Task<List<Journal>> GetAll(string userId, int limit = 0, string orderBy = "date-desc");
         Task<Journal> Save(Journal journal);
-        Task<Journal> Update(IModelUpdater<Journal, JournalUpdateModel> updater, 
-            JournalUpdateModel model);
-        Task Delete(long id);
+        Task<Journal> Update(Journal updatedJournal);
+        Task<bool> Delete(long id);
     }
 }
