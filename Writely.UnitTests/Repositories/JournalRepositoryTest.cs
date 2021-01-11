@@ -8,6 +8,7 @@ namespace Writely.UnitTests.Repositories
 {
     public class JournalRepositoryTest : RepositoryTestBase
     {
+        private string _userId = "UserId";
 
         public JournalRepositoryTest()
         {
@@ -18,14 +19,13 @@ namespace Writely.UnitTests.Repositories
         {
             // Arrange
             await PrepareDatabase();
-            var userId = "UserId";
-            var journal = Helpers.GetJournal(userId);
+            var journal = Helpers.GetJournal(_userId);
             Context.Journals?.Add(journal);
             await Context.SaveChangesAsync();
             var repo = GetJournalRepo(Context);
 
             // Act
-            var result = await repo.GetById(userId, journal.Id);
+            var result = await repo.GetById(_userId, journal.Id);
 
             // Assert
             result.Should().NotBeNull();
@@ -35,7 +35,6 @@ namespace Writely.UnitTests.Repositories
         [Fact]
         public async Task GetById_JournalNotFound_ReturnsNull()
         {
-            
         }
 
         [Fact]
