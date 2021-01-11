@@ -1,13 +1,35 @@
+using System.Threading.Tasks;
+using FluentAssertions;
+using Writely.Data;
+using Writely.Repositories;
 using Xunit;
 
 namespace Writely.UnitTests.Repositories
 {
-    public class JournalRepositoryTest
+    public class JournalRepositoryTest : RepositoryTestBase
     {
-        [Fact]
-        public void GetById_JournalFound_ReturnsJournal()
-        {
 
+        public JournalRepositoryTest()
+        {
+        }
+
+        [Fact]
+        public async Task GetById_JournalFound_ReturnsJournal()
+        {
+            // Arrange
+            await PrepareDatabase();
+            var userId = "UserId";
+            var journal = Helpers.GetJournal(userId);
+            Context.Journals?.Add(journal);
+            await Context.SaveChangesAsync();
+            var repo = GetJournalRepo(Context);
+
+            // Act
+            var result = await repo.GetById(userId, journal.Id);
+
+            // Assert
+            result.Should().NotBeNull();
+            result.Id.Should().Be(journal.Id);
         }
 
         [Fact]
@@ -85,5 +107,7 @@ namespace Writely.UnitTests.Repositories
         {
             
         }
+
+        private JournalRepository GetJournalRepo(AppDbContext context) => new JournalRepository(context);
     }
 }
