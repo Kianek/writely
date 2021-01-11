@@ -35,6 +35,15 @@ namespace Writely.UnitTests.Repositories
         [Fact]
         public async Task GetById_JournalNotFound_ReturnsNull()
         {
+            // Arrange
+            await PrepareDatabase();
+            var repo = GetJournalRepo(Context);
+
+            // Act
+            var result = await repo.GetById(_userId, 4);
+
+            // Assert
+            result.Should().BeNull();
         }
 
         [Fact]
