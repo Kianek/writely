@@ -7,11 +7,12 @@ namespace Writely.UnitTests.Services
 {
     public class JournalUpdaterTest
     {
+        private readonly string _userId = "UserId";
         [Fact]
         public void Update_ChangeTitle_ReturnsTrue()
         {
             // Arrange
-            var journal = Helpers.GetJournal();
+            var journal = Helpers.GetJournal(_userId);
             var updateModel = new JournalUpdateModel
             {
                 Title = "Spiffy New Title"
@@ -30,7 +31,7 @@ namespace Writely.UnitTests.Services
         public void Update_TitlesIdentical_NoUpdate_ReturnsFalse()
         {
             // Arrange
-            var journal = Helpers.GetJournal();
+            var journal = Helpers.GetJournal(_userId);
             var updateModel = new JournalUpdateModel
             {
                 Title = journal.Title
@@ -48,7 +49,7 @@ namespace Writely.UnitTests.Services
         public void Update_UpdateModelNull_ReturnsFalse()
         {
             // Arrange
-            var journal = Helpers.GetJournal();
+            var journal = Helpers.GetJournal(_userId);
             var updater = new JournalUpdater();
 
             // Act
