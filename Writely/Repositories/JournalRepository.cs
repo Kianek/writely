@@ -1,5 +1,7 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using Writely.Data;
 using Writely.Models;
 using Writely.Services;
@@ -15,9 +17,11 @@ namespace Writely.Repositories
             _context = context;
         }
 
-        public Task<Journal> GetById(string userId, long id)
+        public async Task<Journal> GetById(string userId, long id)
         {
-            throw new System.NotImplementedException();
+            return await _context.Journals
+                .Where(j => j.UserId == userId)
+                .FirstOrDefaultAsync(j => j.Id == id);
         }
 
         public Task<List<Journal>> GetAll(string userId, int limit = 0, string orderBy = "date-desc")
