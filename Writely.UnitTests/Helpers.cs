@@ -32,31 +32,27 @@ namespace Writely.UnitTests
             return entries;
         }
 
-        public static Journal GetJournal() => new Journal
+        public static Journal GetJournal(string userId) => new Journal
         {
+            UserId = userId,
             Id = 1,
             Title = "Journal 1"
         };
 
-        public static List<Journal> GetJournals(int num)
+        public static List<Journal> GetJournals(string userId, int num)
         {
             var journals = new List<Journal>();
             for (int i = 1; i <= num; i++)
             {
                 journals.Add(new Journal
                 {
+                    UserId = userId,
+                    Id = i,
                     Title = $"Journal {i}"
                 });
             }
 
             return journals;
-        }
-
-        public static Mock<AppDbContext> GetMockDbContext()
-        {
-            var dbContextOptions = new Mock<DbContextOptions<AppDbContext>>().Object;
-            var operationalStoreOptions = new Mock<IOptions<OperationalStoreOptions>>().Object;
-            return new Mock<AppDbContext>(dbContextOptions, operationalStoreOptions);
         }
     }
 }
