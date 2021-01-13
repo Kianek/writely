@@ -49,35 +49,33 @@ namespace Writely.UnitTests.Repositories
         [Fact]
         public async Task GetAll_JournalsFound_NoLimit_ReturnsAllJournals()
         {
-            
+            // Arrange
+            await PrepareDatabase();
+            Context.Journals.AddRange(Helpers.GetJournals(_userId, 5));
+            await Context.SaveChangesAsync();
+            var repo = new JournalRepository(Context);
+
+            // Act
+            var result = await repo.GetAll(_userId);
+
+            // Assert
+            result.Count.Should().Be(5);
         }
 
         [Fact]
         public async Task GetAll_JournalsFound_Limit_ReturnsLimitedJournals()
         {
+            // Arrange
+            await PrepareDatabase();
+            Context.Journals.AddRange(Helpers.GetJournals(_userId, 5));
+            await Context.SaveChangesAsync();
+            var repo = new JournalRepository(Context);
             
-        }
+            // Act
+            var result = await repo.GetAll(_userId, 2);
 
-        [Fact]
-        public async Task GetAll_JournalsFound_ReturnsSortedByTitleAscending()
-        {
-            
-        }
-        
-        [Fact]
-        public async Task GetAll_JournalsFound_ReturnsSortedByTitleDescending()
-        {
-            
-        }
-        [Fact]
-        public async Task GetAll_JournalsFound_ReturnsSortedByDateAscending()
-        {
-            
-        }
-        [Fact]
-        public async Task GetAll_JournalsFound_ReturnsSortedByDateDescending()
-        {
-            
+            // Assert
+            result.Count.Should().Be(2);
         }
 
         [Fact]
