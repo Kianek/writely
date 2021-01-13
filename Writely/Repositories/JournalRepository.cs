@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Writely.Data;
+using Writely.Extensions;
 using Writely.Models;
 using Writely.Services;
 
@@ -24,9 +25,18 @@ namespace Writely.Repositories
                 .FirstOrDefaultAsync(j => j.Id == id);
         }
 
-        public Task<List<Journal>> GetAll(string userId, int limit = 0, string orderBy = "date-desc")
+        public async Task<List<Journal>> GetAll(string userId, int limit = 0, string order = "date-desc")
         {
-            throw new System.NotImplementedException();
+            var query = _context.Journals
+                .Where(j => j.UserId == userId)
+                .SortBy(order);
+            
+            if (limit <= 0)
+            {
+                return await query.ToListAsync();
+            }
+
+            return await query.Take(limit).ToListAsync();
         }
 
         public Task<Journal> Save(Journal journal)
