@@ -12,6 +12,7 @@ namespace Writely.Data
         public Entity(string? userId = null)
         {
             UserId = userId;
+            CreatedAt = LastModified = DateTime.Now;
         }
     }
 }
