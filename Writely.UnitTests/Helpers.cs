@@ -1,27 +1,23 @@
 using System.Collections.Generic;
-using IdentityServer4.EntityFramework.Options;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
-using Moq;
-using Writely.Data;
 using Writely.Models;
 
 namespace Writely.UnitTests
 {
     public static class Helpers
     {
-        public static Entry GetEntry() => new Entry
+        public static Entry GetEntry(string userId) => new Entry
         {
-            Id = 1, Title = "Entry 1", Tags = "one,two,three", Body = "Blah"
+            UserId = userId, Id = 1, Title = "Entry 1", Tags = "one,two,three", Body = "Blah"
         };
 
-        public static List<Entry> GetEntries(int num)
+        public static List<Entry> GetEntries(string userId, int num)
         {
             var entries = new List<Entry>();
             for (int i = 1; i <= num; i++)
             {
                 entries.Add(new Entry
                 {
+                    UserId = userId,
                     Id = i,
                     Title = $"Entry {i}",
                     Tags = "one,two,three",
