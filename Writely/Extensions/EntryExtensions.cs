@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Writely.Models;
@@ -15,6 +16,21 @@ namespace Writely.Extensions
         public static List<EntryDto> MapToDto(this List<Entry> entries)
         {
             return entries.Select(e => e.ToDto()).ToList();
+        }
+        
+        public static IQueryable<Entry> SortBy(this IQueryable<Entry> entries, string order = "date-desc")
+        {
+            switch (order)
+            {
+                case "date-asc":
+                    return entries.OrderBy(e => e.LastModified);
+                case "asc":
+                    return entries.OrderBy(e => e.Title);
+                case "desc":
+                    return entries.OrderByDescending(e => e.Title);
+                default:
+                    return entries.OrderByDescending(e => e.LastModified);
+            }
         }
     }
 }
