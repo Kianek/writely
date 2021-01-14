@@ -11,16 +11,12 @@ namespace Writely.UnitTests.Repositories
     {
         private string _userId = "UserId";
 
-        public JournalRepositoryTest()
-        {
-        }
-
         [Fact]
         public async Task GetById_JournalFound_ReturnsJournal()
         {
             // Arrange
             await PrepareDatabase();
-            var journal = Helpers.GetJournal(_userId);
+            var journal = Helpers.GetJournal();
             Context.Journals?.Add(journal);
             await Context.SaveChangesAsync();
             var repo = GetJournalRepo(Context);
@@ -52,7 +48,7 @@ namespace Writely.UnitTests.Repositories
         {
             // Arrange
             await PrepareDatabase();
-            Context.Journals.AddRange(Helpers.GetJournals(_userId, 5));
+            Context.Journals.AddRange(Helpers.GetJournals(5));
             await Context.SaveChangesAsync();
             var repo = new JournalRepository(Context);
 
@@ -68,7 +64,7 @@ namespace Writely.UnitTests.Repositories
         {
             // Arrange
             await PrepareDatabase();
-            Context.Journals.AddRange(Helpers.GetJournals(_userId, 5));
+            Context.Journals.AddRange(Helpers.GetJournals(5));
             await Context.SaveChangesAsync();
             var repo = new JournalRepository(Context);
             
@@ -84,7 +80,7 @@ namespace Writely.UnitTests.Repositories
         {
             // Arrange
             await PrepareDatabase();
-            var journal = Helpers.GetJournal(_userId);
+            var journal = Helpers.GetJournal();
             var repo = new JournalRepository(Context);
 
             // Act
@@ -113,7 +109,7 @@ namespace Writely.UnitTests.Repositories
         {
             // Arrange
             await PrepareDatabase();
-            var journal = Helpers.GetJournal(_userId);
+            var journal = Helpers.GetJournal();
             Context.Journals.Add(journal);
             await Context.SaveChangesAsync();
             var repo = new JournalRepository(Context);
@@ -145,7 +141,7 @@ namespace Writely.UnitTests.Repositories
         {
             // Arrange
             await PrepareDatabase();
-            var journal = Helpers.GetJournal(_userId);
+            var journal = Helpers.GetJournal();
             Context.Journals.Add(journal);
             await Context.SaveChangesAsync();
             long id = journal.Id;

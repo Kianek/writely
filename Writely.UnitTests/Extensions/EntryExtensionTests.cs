@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using FluentAssertions;
 using Writely.Extensions;
-using Writely.Models;
 using Writely.Models.Dto;
 using Xunit;
 
@@ -13,15 +12,7 @@ namespace Writely.UnitTests.Extensions
         public void MapEntryToDto_ReturnsDto()
         {
             // Arrange
-            var entry = new Entry
-            {
-                Id = 1,
-                JournalId = 1,
-                UserId = "UserId",
-                Title = "My Entry",
-                Tags = "one,two,three",
-                Body = "Blah blah blah",
-            };
+            var entry = Helpers.GetEntry();
 
             // Act
             var result = entry.ToDto();
@@ -35,36 +26,7 @@ namespace Writely.UnitTests.Extensions
         public void MapToDto_ReturnsListOfDtos()
         {
             // Arrange
-            var entries = new List<Entry>
-            {
-                new Entry
-                {
-                    Id = 1,
-                    JournalId = 1,
-                    UserId = "UserId",
-                    Title = "Entry 1",
-                    Tags = "one,two,three",
-                    Body = "Blah"
-                },
-                new Entry
-                {
-                    Id = 2,
-                    JournalId = 1,
-                    UserId = "UserId",
-                    Title = "Entry 2",
-                    Tags = "one,two,three",
-                    Body = "Blah"
-                },
-                new Entry
-                {
-                    Id = 3,
-                    JournalId = 1,
-                    UserId = "UserId",
-                    Title = "Entry 3",
-                    Tags = "one,two,three",
-                    Body = "Blah"
-                },
-            };
+            var entries = Helpers.GetEntries(3);
 
             // Act
             var result = entries.MapToDto();

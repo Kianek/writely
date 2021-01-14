@@ -16,25 +16,7 @@ namespace Writely.UnitTests.Extensions
         public void MapToDto_ReturnsListOfLength3()
         {
             // Arrange
-            var userId = "UserId";
-            var journals = new List<Journal>
-            {
-                new Journal
-                {
-                    Title = "Journal 1",
-                    UserId = userId
-                },
-                new Journal
-                {
-                    Title = "Journal 2",
-                    UserId = userId
-                },
-                new Journal
-                {
-                    Title = "Journal 3",
-                    UserId = userId
-                },
-            };
+            var journals = Helpers.GetJournals(3);
 
             // Act
             var result = journals.MapToDto();
@@ -48,12 +30,7 @@ namespace Writely.UnitTests.Extensions
         public void CanMapJournalToDto()
         {
             // Arrange
-            var journal = new Journal
-            {
-                Id = 1,
-                UserId = "UserId",
-                Title = "Journal 1"
-            };
+            var journal = Helpers.GetJournal();
 
             // Act
             var result = journal.ToDto();
@@ -68,7 +45,7 @@ namespace Writely.UnitTests.Extensions
         public async Task SortBy_Default_SortByDateDescending()
         {
             // Arrange
-            var journals = Helpers.GetJournals("UserId", 3);
+            var journals = Helpers.GetJournals( 3);
             // First
             journals[2].LastModified = new DateTime(2021, 1, 18);
             // Second
@@ -89,7 +66,7 @@ namespace Writely.UnitTests.Extensions
         public async Task SortBy_SortByDateAscending()
         {
             // Arrange
-            var journals = Helpers.GetJournals("UserId", 3);
+            var journals = Helpers.GetJournals( 3);
             // First
             journals[1].LastModified = new DateTime(2021, 1, 12);
             // Second
@@ -110,7 +87,7 @@ namespace Writely.UnitTests.Extensions
         public async Task SortBy_SortByTitleAscending()
         {
             // Arrange
-            var journals = Helpers.GetJournals("UserId", 3);
+            var journals = Helpers.GetJournals(3);
             var blah = "Blah, Blah, Blah";
             var shifty = "Shifty";
             var spiffy = "Spiffy";
@@ -135,7 +112,7 @@ namespace Writely.UnitTests.Extensions
         public async Task SortBy_SortByTitleDescending()
         {
             // Arrange
-            var journals = Helpers.GetJournals("UserId", 3);
+            var journals = Helpers.GetJournals( 3);
             var blah = "Blah, Blah, Blah";
             var shifty = "Shifty";
             var spiffy = "Spiffy";

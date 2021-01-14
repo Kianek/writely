@@ -5,19 +5,21 @@ namespace Writely.UnitTests
 {
     public static class Helpers
     {
-        public static Entry GetEntry(string userId) => new Entry
+        private static readonly string _userId = "UserId";
+        
+        public static Entry GetEntry() => new Entry
         {
-            UserId = userId, Id = 1, Title = "Entry 1", Tags = "one,two,three", Body = "Blah"
+            UserId = _userId, Id = 1, Title = "Entry 1", Tags = "one,two,three", Body = "Blah"
         };
 
-        public static List<Entry> GetEntries(string userId, int num)
+        public static List<Entry> GetEntries(int num)
         {
             var entries = new List<Entry>();
             for (int i = 1; i <= num; i++)
             {
                 entries.Add(new Entry
                 {
-                    UserId = userId,
+                    UserId = _userId,
                     Id = i,
                     Title = $"Entry {i}",
                     Tags = "one,two,three",
@@ -28,21 +30,21 @@ namespace Writely.UnitTests
             return entries;
         }
 
-        public static Journal GetJournal(string userId) => new Journal
+        public static Journal GetJournal() => new Journal
         {
-            UserId = userId,
+            UserId = _userId,
             Id = 1,
             Title = "Journal 1"
         };
 
-        public static List<Journal> GetJournals(string userId, int num)
+        public static List<Journal> GetJournals(int num)
         {
             var journals = new List<Journal>();
             for (int i = 1; i <= num; i++)
             {
                 journals.Add(new Journal
                 {
-                    UserId = userId,
+                    UserId = _userId,
                     Id = i,
                     Title = $"Journal {i}"
                 });

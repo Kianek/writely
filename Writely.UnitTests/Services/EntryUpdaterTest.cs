@@ -11,13 +11,7 @@ namespace Writely.UnitTests.Services
         public void UpdateEntry_UpdatesAllFields_ReturnsTrue()
         {
             // Arrange
-            var entry = new Entry
-            {
-                Id = 1,
-                Title = "Old Entry",
-                Tags = "",
-                Body = "Blah"
-            };
+            var entry = Helpers.GetEntry();
             var updateModel = new EntryUpdateModel
             {
                 Title = "Updated Entry",
