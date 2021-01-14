@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -22,6 +23,7 @@ namespace Writely.Repositories
         {
             return await _context.Journals
                 .Where(j => j.UserId == userId)
+                .AsNoTracking()
                 .FirstOrDefaultAsync(j => j.Id == id);
         }
 
@@ -29,6 +31,7 @@ namespace Writely.Repositories
         {
             var query = _context.Journals
                 .Where(j => j.UserId == userId)
+                .AsNoTracking()
                 .SortBy(order);
             
             if (limit <= 0)
@@ -39,19 +42,44 @@ namespace Writely.Repositories
             return await query.Take(limit).ToListAsync();
         }
 
-        public Task<Journal> Save(Journal journal)
+        public async Task<Journal> Save(Journal journal)
         {
-            throw new System.NotImplementedException();
+            if (journal == null)
+            {
+                throw new ArgumentNullException();
+            }
+            
+            _context.Journals?.Add(journal);
+            await _context.SaveChangesAsync();
+            return journal;
         }
 
-        public Task<Journal> Update(Journal journal)
+        public async Task<Journal> Update(Journal journal)
         {
-            throw new System.NotImplementedException();
+            if (journal == null)
+            {
+                throw new ArgumentNullException();
+            }
+            
+            _context.Journals?.Update(journal);
+            await _context.SaveChangesAsync();
+            return journal;
         }
 
-        public Task<bool> Delete(long id)
+        public async Task<bool> Delete(long id)
         {
-            throw new System.NotImplementedException();
+            var journal = await _context.Journals
+                .Where(j => j.Id == id)
+                    .Include(j => j.Entries)
+                .FirstOrDefaultAsync();
+            if (journal == null)
+            {
+                return false;
+            }
+            
+            _context.Journals.Remove(journal);
+            await _context.SaveChangesAsync();
+            return true;
         }
     }
 }
