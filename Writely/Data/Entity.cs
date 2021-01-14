@@ -6,7 +6,7 @@ namespace Writely.Data
     {
         public long Id { get; set; }
         public string? UserId { get; set; }
-        public DateTime CreatedAt { get; set; }
+        public DateTime CreatedAt { get; }
         public DateTime LastModified { get; set; }
 
         public Entity(string? userId = null)
