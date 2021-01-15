@@ -7,15 +7,10 @@ namespace Writely.Extensions
 {
     public static class JournalExtensions
     {
-        public static JournalDto ToDto(this Journal journal)
-        {
-            return new JournalDto(journal);
-        }
+        public static JournalDto ToDto(this Journal journal) => new JournalDto(journal);
         
-        public static List<JournalDto> MapToDto(this List<Journal> journals)
-        {
-            return journals.Select(j => j.ToDto()).ToList();
-        }
+        public static List<JournalDto> MapToDto(this List<Journal> journals) 
+            => journals.Select(j => j.ToDto()).ToList();
 
         public static IQueryable<Journal> SortBy(this IQueryable<Journal> journals, string? order = null)
         {
