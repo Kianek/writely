@@ -19,12 +19,17 @@ namespace Writely.Repositories
             throw new System.NotImplementedException();
         }
 
-        public Task<List<Entry>> GetAllByJournal(long journalId)
+        public Task<List<Entry>> GetAllByJournal(string userId, long journalId, string order = "date-desc")
         {
             throw new System.NotImplementedException();
         }
 
-        public Task<Entry> Save(NewEntryModel entry)
+        public Task<List<Entry>> GetAllByTag(string userId, string[] tags, string order = "date-desc")
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public Task<Entry> Save(Entry entry)
         {
             throw new System.NotImplementedException();
         }

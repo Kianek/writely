@@ -7,8 +7,9 @@ namespace Writely.Repositories
     public interface IEntryRepository
     {
         Task<Entry> GetById(long entryId);
-        Task<List<Entry>> GetAllByJournal(long journalId);
-        Task<Entry> Save(NewEntryModel entry);
+        Task<List<Entry>> GetAllByJournal(string userId, long journalId, string orderBy = "date-desc");
+        Task<List<Entry>> GetAllByTag(string userId, string[] tags, string orderBy = "date-desc");
+        Task<Entry> Save(Entry entry);
         Task<Entry> Update(Entry entry);
         Task Delete(long journalId, long entryId);
     }
