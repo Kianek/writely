@@ -1,3 +1,4 @@
+using System;
 using Writely.Data;
 
 namespace Writely.Models
@@ -20,6 +21,11 @@ namespace Writely.Models
 
         public Entry()
         {
+        }
+
+        public string[]? GetTags()
+        {
+            return Tags?.Split(",", StringSplitOptions.TrimEntries);
         }
     }
 }
