@@ -14,7 +14,7 @@ namespace Writely.Repositories
             _context = context;
         }
 
-        public Task<Entry> GetById(long entryId)
+        public Task<Entry> GetById(string userId, long journalId, long entryId)
         {
             throw new System.NotImplementedException();
         }
