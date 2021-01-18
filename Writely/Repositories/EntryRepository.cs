@@ -14,17 +14,17 @@ namespace Writely.Repositories
             _context = context;
         }
 
-        public Task<Entry> GetById(string userId, long journalId, long entryId)
+        public Task<Entry> GetById(long entryId)
         {
             throw new System.NotImplementedException();
         }
 
-        public Task<List<Entry>> GetAllByJournal(string userId, long journalId, string order = "date-desc")
+        public Task<List<Entry>> GetAllByJournal(long journalId, string order = "date-desc")
         {
             throw new System.NotImplementedException();
         }
 
-        public Task<List<Entry>> GetAllByTag(string userId, string[] tags, string order = "date-desc")
+        public Task<List<Entry>> GetAllByTag(long journalId, string[] tags, string order = "date-desc")
         {
             throw new System.NotImplementedException();
         }
