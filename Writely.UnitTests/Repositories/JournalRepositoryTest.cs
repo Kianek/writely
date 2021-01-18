@@ -22,7 +22,7 @@ namespace Writely.UnitTests.Repositories
             var repo = GetJournalRepo(Context);
 
             // Act
-            var result = await repo.GetById(_userId, journal.Id);
+            var result = await repo.GetById(journal.Id);
 
             // Assert
             result.Should().NotBeNull();
@@ -37,7 +37,7 @@ namespace Writely.UnitTests.Repositories
             var repo = GetJournalRepo(Context);
 
             // Act
-            var result = await repo.GetById(_userId, 4);
+            var result = await repo.GetById(4);
 
             // Assert
             result.Should().BeNull();
@@ -53,7 +53,7 @@ namespace Writely.UnitTests.Repositories
             var repo = new JournalRepository(Context);
 
             // Act
-            var result = await repo.GetAll(_userId);
+            var result = await repo.GetAll();
 
             // Assert
             result.Count.Should().Be(5);
@@ -69,7 +69,7 @@ namespace Writely.UnitTests.Repositories
             var repo = new JournalRepository(Context);
             
             // Act
-            var result = await repo.GetAll(_userId, 2);
+            var result = await repo.GetAll(2);
 
             // Assert
             result.Count.Should().Be(2);
