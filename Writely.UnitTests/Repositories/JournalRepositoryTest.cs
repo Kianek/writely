@@ -9,8 +9,6 @@ namespace Writely.UnitTests.Repositories
 {
     public class JournalRepositoryTest : RepositoryTestBase
     {
-        private string _userId = "UserId";
-
         [Fact]
         public async Task GetById_JournalFound_ReturnsJournal()
         {
