@@ -19,18 +19,16 @@ namespace Writely.Repositories
             _context = context;
         }
 
-        public async Task<Journal> GetById(string userId, long id)
+        public async Task<Journal> GetById(long id)
         {
             return await _context.Journals
-                .Where(j => j.UserId == userId)
                 .AsNoTracking()
                 .FirstOrDefaultAsync(j => j.Id == id);
         }
 
-        public async Task<List<Journal>> GetAll(string userId, int limit = 0, string order = "date-desc")
+        public async Task<List<Journal>> GetAll(int limit = 0, string order = "date-desc")
         {
             var query = _context.Journals
-                .Where(j => j.UserId == userId)
                 .AsNoTracking()
                 .SortBy(order);
             
