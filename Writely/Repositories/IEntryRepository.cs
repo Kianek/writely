@@ -11,6 +11,6 @@ namespace Writely.Repositories
         Task<List<Entry>> GetAllByTag(long journalId, string[] tags, string orderBy = "date-desc");
         Task<Entry> Save(Entry entry);
         Task<Entry> Update(Entry entry);
-        Task Delete(long journalId, long entryId);
+        Task<bool> Delete(long journalId, long entryId);
     }
 }

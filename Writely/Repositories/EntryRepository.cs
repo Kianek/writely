@@ -39,7 +39,7 @@ namespace Writely.Repositories
             throw new System.NotImplementedException();
         }
 
-        public Task Delete(long journalId, long entryId)
+        public Task<bool> Delete(long journalId, long entryId)
         {
             throw new System.NotImplementedException();
         }
