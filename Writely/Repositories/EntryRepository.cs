@@ -1,5 +1,7 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using Writely.Data;
 using Writely.Models;
 
@@ -19,15 +21,26 @@ namespace Writely.Repositories
             return await _context.Entries.FindAsync(entryId);
         }
 
-        public async Task<List<Entry>> GetAllByJournal(long journalId, string order = "date-desc")
+        public async Task<List<Entry>?> GetAllByJournal(long journalId, string order = "date-desc")
         {
             var journal = await _context.Journals.FindAsync(journalId);
             return journal?.Entries;
         }
 
-        public async Task<List<Entry>> GetAllByTag(long journalId, string[] tags, string order = "date-desc")
+        public async Task<List<Entry>?> GetAllByTag(long journalId, string[] tags, string order = "date-desc")
         {
-            throw new System.NotImplementedException();
+            var journal = await _context.Journals
+                .AsNoTracking()
+                .Where(j => j.Id == journalId)
+                    .Include(j => j.Entries)
+                .FirstOrDefaultAsync();
+            var entries = journal?.Entries
+                .Where(entry =>
+                {
+                    return tags.All(t => entry.Tags.Contains(t));
+                })
+                .ToList();
+            return entries;
         }
 
         public async Task<Entry> Save(Entry entry)
