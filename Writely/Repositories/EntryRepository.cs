@@ -14,32 +14,32 @@ namespace Writely.Repositories
             _context = context;
         }
 
-        public Task<Entry> GetById(long entryId)
+        public async Task<Entry> GetById(long entryId)
         {
             throw new System.NotImplementedException();
         }
 
-        public Task<List<Entry>> GetAllByJournal(long journalId, string order = "date-desc")
+        public async Task<List<Entry>> GetAllByJournal(long journalId, string order = "date-desc")
         {
             throw new System.NotImplementedException();
         }
 
-        public Task<List<Entry>> GetAllByTag(long journalId, string[] tags, string order = "date-desc")
+        public async Task<List<Entry>> GetAllByTag(long journalId, string[] tags, string order = "date-desc")
         {
             throw new System.NotImplementedException();
         }
 
-        public Task<Entry> Save(Entry entry)
+        public async Task<Entry> Save(Entry entry)
         {
             throw new System.NotImplementedException();
         }
 
-        public Task<Entry> Update(Entry entry)
+        public async Task<Entry> Update(Entry entry)
         {
             throw new System.NotImplementedException();
         }
 
-        public Task<bool> Delete(long journalId, long entryId)
+        public async Task<bool> Delete(long journalId, long entryId)
         {
             throw new System.NotImplementedException();
         }
