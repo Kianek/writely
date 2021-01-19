@@ -49,13 +49,34 @@ namespace Writely.UnitTests.Repositories
         [Fact]
         public async Task GetAllByJournal_JournalFound_ReturnsEntries()
         {
+            // Arrange
+            await PrepareDatabase();
+            var journal = Helpers.GetJournal();
+            var entries = Helpers.GetEntries(3);
+            AddEntriesToJournal(journal, entries);
+            Context.Journals.Add(journal);
+            await Context.SaveChangesAsync();
+            var repo = new EntryRepository(Context);
 
+            // Act
+            var result = await repo.GetAllByJournal(journal.Id);
+
+            // Assert
+            result.Count.Should().Be(entries.Count);
         }
 
         [Fact]
         public async Task GetAllByJournal_JournalNotFound_ReturnsNull()
         {
+            // Arrange
+            await PrepareDatabase();
+            var repo = new EntryRepository(Context);
 
+            // Act
+            var result = await repo.GetAllByJournal(1L);
+
+            // Assert
+            result.Should().BeNull();
         }
 
         [Fact]
