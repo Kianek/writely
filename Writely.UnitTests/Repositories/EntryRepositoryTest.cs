@@ -99,10 +99,9 @@ namespace Writely.UnitTests.Repositories
             var result = await repo.GetAllByTag(journal.Id, new[] {"cats"});
 
             // Assert
-            result.Count.Should().Be(3);
-            result[0].GetTags()?.Contains("cats").Should().BeTrue();
-            result[1].GetTags()?.Contains("cats").Should().BeTrue();
-            result[2].GetTags()?.Contains("cats").Should().BeTrue();
+            result?.Count.Should().Be(3);
+            result?.ForEach(e 
+                => e.GetTags()?.Contains("cats").Should().BeTrue());
         }
 
         [Fact]
