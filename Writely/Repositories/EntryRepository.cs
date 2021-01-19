@@ -16,7 +16,7 @@ namespace Writely.Repositories
 
         public async Task<Entry> GetById(long entryId)
         {
-            throw new System.NotImplementedException();
+            return await _context.Entries.FindAsync(entryId);
         }
 
         public async Task<List<Entry>> GetAllByJournal(long journalId, string order = "date-desc")
