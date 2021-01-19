@@ -12,7 +12,7 @@ namespace Writely.UnitTests
             UserId = _userId, Id = 1, Title = "Entry 1", Tags = "one,two,three", Body = "Blah"
         };
 
-        public static List<Entry> GetEntries(int num)
+        public static List<Entry> GetEntries(int num, long journalId = 1L)
         {
             var entries = new List<Entry>();
             for (int i = 1; i <= num; i++)
