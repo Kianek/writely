@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -140,13 +141,49 @@ namespace Writely.UnitTests.Repositories
         [Fact]
         public async Task Save_EntrySaved_ReturnsEntry()
         {
-            
+            // Arrange
+            await PrepareDatabase();
+            var journal = Helpers.GetJournal();
+            var entry = Helpers.GetEntry();
+            AddEntriesToJournal(journal, new List<Entry>{entry});
+            Context.Journals.Add(journal);
+            await Context.SaveChangesAsync();
+            var repo = new EntryRepository(Context);
+
+            // Act
+            var result = await repo.Save(entry);
+
+            // Arrange
+            result.Should().NotBeNull();
+            result.Title.Should().Be(entry.Title);
         }
 
         [Fact]
         public async Task Save_EntryNull_ThrowsArgumentNullException()
         {
+            // Arrange
+            await PrepareDatabase();
+            var repo = new EntryRepository(Context);
+
+            // Assert
+            repo.Invoking(repo => repo.Save(null))
+                .Should()
+                .Throw<ArgumentNullException>();
+        }
+
+        [Fact]
+        public async Task Save_JournalNotFound_ReturnNull()
+        {
+            // Arrange
+            await PrepareDatabase();
+            var entry = Helpers.GetEntry();
+            var repo = new EntryRepository(Context);
             
+            // Act
+            var result = await repo.Save(entry);
+            
+            // Assert
+            result.Should().BeNull();
         }
 
         [Fact]
