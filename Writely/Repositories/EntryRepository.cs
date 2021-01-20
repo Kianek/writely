@@ -66,7 +66,14 @@ namespace Writely.Repositories
 
         public async Task<Entry> Update(Entry entry)
         {
-            throw new System.NotImplementedException();
+            if (entry == null)
+            {
+                throw new ArgumentNullException();
+            }
+            
+            _context.Entries.Update(entry);
+            await _context.SaveChangesAsync();
+            return entry;
         }
 
         public async Task<bool> Delete(long journalId, long entryId)
