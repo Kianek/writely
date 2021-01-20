@@ -189,13 +189,36 @@ namespace Writely.UnitTests.Repositories
         [Fact]
         public async Task Update_EntryUpdated_ReturnEntry()
         {
+            // Arrange
+            await PrepareDatabase();
+            var entries = Helpers.GetEntries(1);
+            var journal = Helpers.GetJournal();
+            AddEntriesToJournal(journal, entries);
+            Context.Journals.Add(journal);
+            await Context.SaveChangesAsync();
+            entries[0].Title = "Different Title";
+            var repo = new EntryRepository(Context);
             
+
+            // Act
+            var result = await repo.Update(entries[0]);
+
+
+            // Assert
+            result.Title.Should().Be(entries[0].Title);
         }
 
         [Fact]
         public async Task Update_EntryNull_ThrowsArgumentNullException()
         {
+            // Arrange
+            await PrepareDatabase();
+            var repo = new EntryRepository(Context);
             
+            // Assert
+            repo.Invoking(r => r.Update(null))
+                .Should()
+                .Throw<ArgumentNullException>();
         }
 
         [Fact]
