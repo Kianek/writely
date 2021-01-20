@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -45,7 +46,22 @@ namespace Writely.Repositories
 
         public async Task<Entry> Save(Entry entry)
         {
-            throw new System.NotImplementedException();
+            if (entry == null)
+            {
+                throw new ArgumentNullException();
+            }
+            
+            var journal = await _context.Journals
+                .FindAsync(entry.JournalId);
+            if (journal == null)
+            {
+                return null;
+            }
+            
+            journal.Entries.Add(entry);
+            _context.Journals.Update(journal);
+            await _context.SaveChangesAsync();
+            return entry;
         }
 
         public async Task<Entry> Update(Entry entry)
