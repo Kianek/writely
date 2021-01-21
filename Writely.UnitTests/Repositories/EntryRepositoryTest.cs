@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using FluentAssertions;
+using Writely.Exceptions;
 using Writely.Models;
 using Writely.Repositories;
 using Xunit;
@@ -172,18 +173,17 @@ namespace Writely.UnitTests.Repositories
         }
 
         [Fact]
-        public async Task Save_JournalNotFound_ReturnNull()
+        public async Task Save_JournalNotFound_ThrowsException()
         {
             // Arrange
             await PrepareDatabase();
             var entry = Helpers.GetEntry();
             var repo = new EntryRepository(Context);
             
-            // Act
-            var result = await repo.Save(entry);
-            
             // Assert
-            result.Should().BeNull();
+            repo.Invoking(r => r.Save(entry))
+                .Should()
+                .Throw<JournalNotFoundException>();
         }
 
         [Fact]
@@ -224,19 +224,51 @@ namespace Writely.UnitTests.Repositories
         [Fact]
         public async Task Delete_JournalAndEntryFound_EntryDeleted_ReturnsTrue()
         {
-            
+            // Arrange
+            await PrepareDatabase();
+            var entries = Helpers.GetEntries(1);
+            var journal = Helpers.GetJournal();
+            AddEntriesToJournal(journal, entries);
+            Context.Journals.Add(journal);
+            await Context.SaveChangesAsync();
+            var repo = new EntryRepository(Context);
+
+            // Act
+            var result = await repo.Delete(journal.Id, entries[0].Id);
+
+            // Assert
+            result.Should().BeTrue();
         }
 
         [Fact]
-        public async Task Delete_JournalNotFound_ReturnsFalse()
+        public async Task Delete_JournalNotFound_ThrowsJournalNotFoundException()
         {
-            
+            // Arrange
+            await PrepareDatabase();
+            Context.Journals.Add(Helpers.GetJournal());
+            await Context.SaveChangesAsync();
+            var repo = new EntryRepository(Context);
+
+            // Assert
+            repo.Invoking(r => r.Delete(5L, 2L))
+                .Should()
+                .Throw<JournalNotFoundException>();
         }
 
         [Fact]
-        public async Task Delete_EntryNotFound_ReturnsFalse()
+        public async Task Delete_EntryNotFound_ThrowsEntryNotFoundException()
         {
-            
+            // Arrange
+            await PrepareDatabase();
+            var journal = Helpers.GetJournal();
+            Context.Journals.Add(journal);
+            await Context.SaveChangesAsync();
+            var repo = new EntryRepository(Context);
+
+            // Assert
+            repo.Invoking(r => r.Delete(journal.Id, 1L))
+                .Should()
+                .Throw<EntryNotFoundException>();
         }
 
         private void AddEntriesToJournal(Journal journal, List<Entry> entries)
