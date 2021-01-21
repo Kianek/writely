@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Writely.Data;
+using Writely.Exceptions;
 using Writely.Models;
 
 namespace Writely.Repositories
@@ -55,7 +56,7 @@ namespace Writely.Repositories
                 .FindAsync(entry.JournalId);
             if (journal == null)
             {
-                return null;
+                throw new JournalNotFoundException($"Journal not found: {entry.JournalId}");
             }
             
             journal.Entries.Add(entry);
@@ -78,7 +79,22 @@ namespace Writely.Repositories
 
         public async Task<bool> Delete(long journalId, long entryId)
         {
-            throw new System.NotImplementedException();
+            var journal = await _context.Journals.FindAsync(journalId);
+            if (journal == null)
+            {
+                throw new JournalNotFoundException($"Journal not found: {journalId}");
+            }
+            
+            var entry = journal.Entries.Find(e => e.Id == entryId);
+            if (entry == null)
+            {
+                throw new EntryNotFoundException($"Entry not found: {entryId}");
+            }
+            
+            journal.Entries.Remove(entry);
+            _context.Journals.Update(journal);
+            await _context.SaveChangesAsync();
+            return true;
         }
     }
 }
