@@ -31,6 +31,10 @@ namespace Writely.Repositories
 
         public async Task<List<Entry>?> GetAllByTag(long journalId, string[] tags, string order = "date-desc")
         {
+            if (tags.Length == 0)
+            {
+                throw new EmptyTagsException("No tags provided");
+            }
             var journal = await _context.Journals
                 .AsNoTracking()
                 .Where(j => j.Id == journalId)
