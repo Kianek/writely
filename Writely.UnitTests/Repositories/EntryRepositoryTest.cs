@@ -140,6 +140,19 @@ namespace Writely.UnitTests.Repositories
         }
 
         [Fact]
+        public async Task GetAllByTag_TagsEmpty_ThrowsEmptyTagsException()
+        {
+            // Arrange
+            await PrepareDatabase();
+            var repo = new EntryRepository(Context);
+
+            // Assert
+            repo.Invoking(r => r.GetAllByTag(1L, new string[] { }))
+                .Should()
+                .Throw<EmptyTagsException>();
+        }
+
+        [Fact]
         public async Task Save_EntrySaved_ReturnsEntry()
         {
             // Arrange
