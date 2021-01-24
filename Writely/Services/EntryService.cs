@@ -25,6 +25,11 @@ namespace Writely.Services
             throw new System.NotImplementedException();
         }
 
+        public Task<List<EntryDto>> GetAllByTag(long journalId, string tags)
+        {
+            throw new System.NotImplementedException();
+        }
+
         public Task<EntryDto> Save(Entry model)
         {
             throw new System.NotImplementedException();
