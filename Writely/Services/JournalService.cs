@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
 using Writely.Models;
 using Writely.Models.Dto;
 using Writely.Repositories;
@@ -30,7 +31,7 @@ namespace Writely.Services
             throw new System.NotImplementedException();
         }
 
-        public Task<JournalDto> Update(IModelUpdater<Journal, JournalUpdateModel> updater,
+        public Task<JournalDto> Update([FromServices] IModelUpdater<Journal, JournalUpdateModel> updater,
                                                    JournalUpdateModel updateModel, long journalId)
         {
             throw new System.NotImplementedException();
