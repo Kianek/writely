@@ -46,15 +46,18 @@ namespace Writely.UnitTests.Repositories
         {
             // Arrange
             await PrepareDatabase();
-            Context.Journals.AddRange(Helpers.GetJournals(5));
+            var journals = Helpers.GetJournals(5);
+            journals[3].UserId = "Blah McBlahston";
+            journals[4].UserId = "Blah McBlahston";
+            Context.Journals.AddRange(journals);
             await Context.SaveChangesAsync();
             var repo = new JournalRepository(Context);
 
             // Act
-            var result = await repo.GetAll();
+            var result = await repo.GetAllByUserId(journals[0].UserId);
 
             // Assert
-            result.Count.Should().Be(5);
+            result.Count.Should().Be(3);
         }
 
         [Fact]
@@ -62,12 +65,13 @@ namespace Writely.UnitTests.Repositories
         {
             // Arrange
             await PrepareDatabase();
-            Context.Journals.AddRange(Helpers.GetJournals(5));
+            var journals = Helpers.GetJournals(5);
+            Context.Journals.AddRange(journals);
             await Context.SaveChangesAsync();
             var repo = new JournalRepository(Context);
             
             // Act
-            var result = await repo.GetAll(2);
+            var result = await repo.GetAllByUserId(journals[0].UserId, 2);
 
             // Assert
             result.Count.Should().Be(2);
