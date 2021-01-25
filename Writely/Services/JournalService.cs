@@ -21,7 +21,7 @@ namespace Writely.Services
             throw new System.NotImplementedException();
         }
 
-        public Task<List<JournalDto>> GetAll(string userId, int limit = 0, string orderBy = "date-desc")
+        public Task<List<JournalDto>> GetAllByUserId(string userId, int limit = 0, string orderBy = "date-desc")
         {
             throw new System.NotImplementedException();
         }
