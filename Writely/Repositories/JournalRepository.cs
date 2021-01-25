@@ -26,9 +26,10 @@ namespace Writely.Repositories
                 .FirstOrDefaultAsync(j => j.Id == id);
         }
 
-        public async Task<List<Journal>> GetAll(int limit = 0, string order = "date-desc")
+        public async Task<List<Journal>> GetAllByUserId(string userId, int limit = 0, string order = "date-desc")
         {
             var query = _context.Journals
+                .Where(j => j.UserId == userId)
                 .AsNoTracking()
                 .SortBy(order);
             
