@@ -132,5 +132,48 @@ namespace Writely.UnitTests.Extensions
             result[1].Title.Should().Be(shifty);
             result[2].Title.Should().Be(blah);
         }
+
+        [Fact]
+        public void Update_TitleChanged_ReturnsTrue()
+        {
+            // Arrange
+            var journal = Helpers.GetJournal();
+            var updateModel = new JournalUpdateModel
+            {
+                Title = "Shiny New Title"
+            };
+
+            // Act
+            var result = journal.Update(updateModel);
+
+            // Assert
+            result.Should().BeTrue();
+        }
+
+        [Fact]
+        public void Update_NoChange_ReturnsFalse()
+        {
+            // Arrange
+            var journal = Helpers.GetJournal();
+            var updateModel = new JournalUpdateModel();
+
+            // Act
+            var result = journal.Update(updateModel);
+
+            // Assert
+            result.Should().BeFalse();
+        }
+
+        [Fact]
+        public void Update_EntryUpdateModelNull_ThrowsArgumentNullException()
+        {
+            // Arrange
+            var journal = Helpers.GetJournal();
+
+            // Assert
+            journal.Invoking(j => j.Update(null))
+                .Should()
+                .Throw<ArgumentNullException>();
+        }
 }
 }
