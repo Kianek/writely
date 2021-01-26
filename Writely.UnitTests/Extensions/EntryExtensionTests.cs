@@ -126,5 +126,71 @@ namespace Writely.UnitTests.Extensions
             second.Title.Should().Be(skippy);
             third.Title.Should().Be(zippy);
         }
+
+        [Fact]
+        public void Update_AllPropertiesChanged_ReturnsTrue()
+        {
+            // Arrange
+            var entry = Helpers.GetEntry();
+            var updateModel = new EntryUpdateModel
+            {
+                Title = "Super New Title",
+                Tags = "some,new,tags",
+                Body = "Totally different body"
+            };
+
+            // Act
+            var result = entry.Update(updateModel);
+
+            // Assert
+            result.Should().BeTrue();
+            entry.Title.Should().Be(updateModel.Title);
+            entry.Tags.Should().Be(updateModel.Tags);
+            entry.Body.Should().Be(updateModel.Body);
+        }
+
+        [Fact]
+        public void Update_OnePropertyChanged_ReturnsTrue()
+        {
+            // Arrange
+            var entry = Helpers.GetEntry();
+            var updateModel = new EntryUpdateModel
+            {
+                Tags = "blah,dee,bloo"
+            };
+
+            // Act
+            var result = entry.Update(updateModel);
+
+            // Assert
+            result.Should().BeTrue();
+            entry.Tags.Should().Be(updateModel.Tags);
+        }
+
+        [Fact]
+        public void Update_NoChange_ReturnsFalse()
+        {
+            // Arrange
+            var entry = Helpers.GetEntry();
+            var updateModel = new EntryUpdateModel();
+
+            // Act
+            var result = entry.Update(updateModel);
+
+            // Assert
+            result.Should().BeFalse();
+        }
+
+        [Fact]
+        public void Update_EntryUpdateModelNull_ThrowsArgumentNullException()
+        {
+            // Arrange
+            var entry = Helpers.GetEntry();
+
+            // Assert
+            entry.Invoking(e => e.Update(null))
+                .Should()
+                .Throw<ArgumentNullException>();
+        }
     }
 }
