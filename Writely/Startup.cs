@@ -32,10 +32,13 @@ namespace Writely
         public void ConfigureServices(IServiceCollection services)
         {
             services.Scan(scan => scan
-                .FromAssemblyOf<IModelUpdater<Entry, EntryUpdateModel>>()
-                .AddClasses(classes => classes.AssignableTo(typeof(IModelUpdater<,>)))
+                .FromAssemblyOf<IEntryService>()
+                .AddClasses(classes => classes.AssignableTo(typeof(IEntryService)))
                     .AsImplementedInterfaces()
-                    .WithTransientLifetime());
+                    .WithTransientLifetime()
+                .AddClasses(classes => classes.AssignableTo(typeof(IJournalService)))
+                .AsImplementedInterfaces()
+                .WithTransientLifetime());
             
             services.AddDbContext<AppDbContext>(opts =>
             {
