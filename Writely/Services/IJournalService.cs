@@ -11,9 +11,7 @@ namespace Writely.Services
         Task<List<JournalDto>> GetAllByUserId(string userId, int limit = 0, string orderBy = "date-desc");
         Task<JournalDto> Save(NewJournalModel model);
 
-        Task<JournalDto> Update(
-            IModelUpdater<Journal, JournalUpdateModel> updater,
-            JournalUpdateModel updateModel, long journalId);
+        Task<JournalDto> Update(long journalId, JournalUpdateModel updateModel);
 
         Task<bool> Delete(long journalId);
     }

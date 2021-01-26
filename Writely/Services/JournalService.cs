@@ -31,8 +31,7 @@ namespace Writely.Services
             throw new System.NotImplementedException();
         }
 
-        public Task<JournalDto> Update([FromServices] IModelUpdater<Journal, JournalUpdateModel> updater,
-                                                   JournalUpdateModel updateModel, long journalId)
+        public Task<JournalDto> Update(long journalId, JournalUpdateModel updateModel)
         {
             throw new System.NotImplementedException();
         }

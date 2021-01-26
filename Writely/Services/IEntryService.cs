@@ -11,9 +11,7 @@ namespace Writely.Services
         Task<List<EntryDto>> GetAllByJournal(long journalId);
         Task<List<EntryDto>> GetAllByTag(long journalId, string tags);
         Task<EntryDto> Save(Entry model);
-        Task<EntryDto> Update(
-            IModelUpdater<Entry, EntryUpdateModel> updater, 
-            EntryUpdateModel updateModel, long entryId);
+        Task<EntryDto> Update(long entryId, EntryUpdateModel updateModel);
         Task Delete(long journalId, long entryId);
     }
 }
