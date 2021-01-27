@@ -78,7 +78,7 @@ namespace Writely.UnitTests.Repositories
         }
 
         [Fact]
-        public async Task Save_JournalSaved_ReturnsJournal()
+        public async Task Create_JournalSaved_ReturnsJournal()
         {
             // Arrange
             await PrepareDatabase();
@@ -86,7 +86,7 @@ namespace Writely.UnitTests.Repositories
             var repo = new JournalRepository(Context);
 
             // Act
-           await repo.Save(journal);
+           await repo.Create(journal);
            var result = await Context.Journals.FindAsync(journal.Id);
 
            // Assert
@@ -94,14 +94,14 @@ namespace Writely.UnitTests.Repositories
         }
 
         [Fact]
-        public async Task Save_JournalNull_ThrowsArgumentNullException()
+        public async Task Create_JournalNull_ThrowsArgumentNullException()
         {
             // Arrange
             await PrepareDatabase();
             var repo = new JournalRepository(Context);
 
             // Assert
-            repo.Invoking(r => r.Save(null))
+            repo.Invoking(r => r.Create(null))
                 .Should()
                 .Throw<ArgumentNullException>();
         }

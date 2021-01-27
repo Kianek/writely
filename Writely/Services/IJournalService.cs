@@ -9,7 +9,7 @@ namespace Writely.Services
     {
         Task<JournalDto> GetById(string userId, long journalId);
         Task<List<JournalDto>> GetAllByUserId(string userId, int limit = 0, string orderBy = "date-desc");
-        Task<JournalDto> Save(NewJournalModel model);
+        Task<JournalDto> Create(NewJournalModel model);
 
         Task<JournalDto> Update(long journalId, JournalUpdateModel updateModel);
 

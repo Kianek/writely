@@ -153,7 +153,7 @@ namespace Writely.UnitTests.Repositories
         }
 
         [Fact]
-        public async Task Save_EntrySaved_ReturnsEntry()
+        public async Task Create_EntrySaved_ReturnsEntry()
         {
             // Arrange
             await PrepareDatabase();
@@ -165,7 +165,7 @@ namespace Writely.UnitTests.Repositories
             var repo = new EntryRepository(Context);
 
             // Act
-            var result = await repo.Save(entry);
+            var result = await repo.Create(entry);
 
             // Arrange
             result.Should().NotBeNull();
@@ -173,20 +173,20 @@ namespace Writely.UnitTests.Repositories
         }
 
         [Fact]
-        public async Task Save_EntryNull_ThrowsArgumentNullException()
+        public async Task Create_EntryNull_ThrowsArgumentNullException()
         {
             // Arrange
             await PrepareDatabase();
             var repo = new EntryRepository(Context);
 
             // Assert
-            repo.Invoking(repo => repo.Save(null))
+            repo.Invoking(repo => repo.Create(null))
                 .Should()
                 .Throw<ArgumentNullException>();
         }
 
         [Fact]
-        public async Task Save_JournalNotFound_ThrowsException()
+        public async Task Create_JournalNotFound_ThrowsException()
         {
             // Arrange
             await PrepareDatabase();
@@ -194,7 +194,7 @@ namespace Writely.UnitTests.Repositories
             var repo = new EntryRepository(Context);
             
             // Assert
-            repo.Invoking(r => r.Save(entry))
+            repo.Invoking(r => r.Create(entry))
                 .Should()
                 .Throw<JournalNotFoundException>();
         }

@@ -49,7 +49,7 @@ namespace Writely.Repositories
             return entries;
         }
 
-        public async Task<Entry> Save(Entry entry)
+        public async Task<Entry> Create(Entry entry)
         {
             if (entry == null)
             {

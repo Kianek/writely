@@ -41,7 +41,7 @@ namespace Writely.Repositories
             return await query.Take(limit).ToListAsync();
         }
 
-        public async Task<Journal> Save(Journal journal)
+        public async Task<Journal> Create(Journal journal)
         {
             if (journal == null)
             {

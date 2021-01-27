@@ -31,7 +31,7 @@ namespace Writely.Services
             throw new System.NotImplementedException();
         }
 
-        public Task<EntryDto> Save(Entry model)
+        public Task<EntryDto> Create(Entry model)
         {
             throw new System.NotImplementedException();
         }
