@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
 using Writely.Models;
 using Writely.Models.Dto;
 using Writely.Repositories;
@@ -26,7 +25,7 @@ namespace Writely.Services
             throw new System.NotImplementedException();
         }
 
-        public Task<JournalDto> Save(NewJournalModel model)
+        public Task<JournalDto> Create(NewJournalModel model)
         {
             throw new System.NotImplementedException();
         }
