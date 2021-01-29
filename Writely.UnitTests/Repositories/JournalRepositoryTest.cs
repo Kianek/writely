@@ -1,7 +1,8 @@
-using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using FluentAssertions;
-using Writely.Data;
+using Writely.Models;
 using Writely.Repositories;
 using Xunit;
 
@@ -17,7 +18,7 @@ namespace Writely.UnitTests.Repositories
             var journal = Helpers.GetJournal();
             Context.Journals?.Add(journal);
             await Context.SaveChangesAsync();
-            var repo = GetJournalRepo(Context);
+            var repo = GetJournalRepo();
 
             // Act
             var result = await repo.GetById(journal.Id);
@@ -32,10 +33,10 @@ namespace Writely.UnitTests.Repositories
         {
             // Arrange
             await PrepareDatabase();
-            var repo = GetJournalRepo(Context);
+            var repo = GetJournalRepo();
 
             // Act
-            var result = await repo.GetById(4);
+            var result = await repo.GetById(4L);
 
             // Assert
             result.Should().BeNull();
@@ -51,13 +52,14 @@ namespace Writely.UnitTests.Repositories
             journals[4].UserId = "Blah McBlahston";
             Context.Journals.AddRange(journals);
             await Context.SaveChangesAsync();
-            var repo = new JournalRepository(Context);
+            var repo = GetJournalRepo();
+            // var repo = GetJournalRepo(Context);
 
             // Act
-            var result = await repo.GetAllByUserId(journals[0].UserId);
+            var result = await repo.GetAll();
 
             // Assert
-            result.Count.Should().Be(3);
+            result.Count().Should().Be(3);
         }
 
         [Fact]
@@ -68,109 +70,93 @@ namespace Writely.UnitTests.Repositories
             var journals = Helpers.GetJournals(5);
             Context.Journals.AddRange(journals);
             await Context.SaveChangesAsync();
-            var repo = new JournalRepository(Context);
+            var repo = GetJournalRepo();
+            // var repo = GetJournalRepo(Context);
             
             // Act
-            var result = await repo.GetAllByUserId(journals[0].UserId, 2);
+            var result = await repo.GetAll(limit: 2);
 
             // Assert
-            result.Count.Should().Be(2);
+            result.Count().Should().Be(2);
         }
 
         [Fact]
-        public async Task Create_JournalSaved_ReturnsJournal()
+        public async Task GetAll_JournalsFound_FilterByCatsInTitle_ReturnsFilteredJournals()
         {
             // Arrange
             await PrepareDatabase();
-            var journal = Helpers.GetJournal();
-            var repo = new JournalRepository(Context);
-
-            // Act
-           await repo.Create(journal);
-           var result = await Context.Journals.FindAsync(journal.Id);
-
-           // Assert
-           result.Should().NotBeNull();
-        }
-
-        [Fact]
-        public async Task Create_JournalNull_ThrowsArgumentNullException()
-        {
-            // Arrange
-            await PrepareDatabase();
-            var repo = new JournalRepository(Context);
-
-            // Assert
-            repo.Invoking(r => r.Create(null))
-                .Should()
-                .Throw<ArgumentNullException>();
-        }
-
-        [Fact]
-        public async Task Update_JournalUpdated_ReturnsJournal()
-        {
-            // Arrange
-            await PrepareDatabase();
-            var journal = Helpers.GetJournal();
-            Context.Journals.Add(journal);
+            var journals = Helpers.GetJournals(5);
+            journals[1].Title = "A Cat Named the Next Journal";
+            journals[2].Title = "aoijeafj aoiewjf awojfi302901 - cat";
+            Context.Journals.AddRange(journals);
             await Context.SaveChangesAsync();
-            var repo = new JournalRepository(Context);
+            var repo = GetJournalRepo();
 
             // Act
-            journal.Title = "Better Title";
-            var result = await repo.Update(journal);
+            var result = await repo.GetAll(filter: j => j.Title.Contains("Cat"));
+
+            // Assert
+            result.Count().Should().Be(1);
+        }
+
+        [Fact]
+        public async Task GetAll_JournalsFound_OrderByTitleAscending_ReturnsOrderedJournals()
+        {
+            // Arrange
+            await PrepareDatabase();
+            var journals = Helpers.GetJournals(3);
+            var fancyTitle = "My Fancy Title";
+            var xyz = "XYZ";
+            var alphabets = "Alphabets and Stuff";
+            journals[0].Title = fancyTitle;
+            journals[1].Title = xyz;
+            journals[2].Title = alphabets;
+            Context.Journals.AddRange(journals);
+            await Context.SaveChangesAsync();
+            var repo = GetJournalRepo();
+
+            // Act
+            var result = await repo.GetAll(order: "asc") as List<Journal>;
+
+            // Assert
+            result[0].Title.Should().Be(alphabets);
+            result[1].Title.Should().Be(fancyTitle);
+            result[2].Title.Should().Be(xyz);
+        }
+
+        [Fact]
+        public async Task Find_WhereTitleContainsDog_ReturnsJournal()
+        {
+            // Arrange
+            await PrepareDatabase();
+            var journals = Helpers.GetJournals(3);
+            journals[1].Title = "A Dog Wrote This";
+            Context.Journals.AddRange(journals);
+            await Context.SaveChangesAsync();
+            var repo = GetJournalRepo();
+
+            // Act
+            var result = await repo.Find(j => j.Title.Contains("Dog"));
 
             // Assert
             result.Should().NotBeNull();
-            result.Title.Should().Be(journal.Title);
+            result.Title.Should().Be(journals[1].Title);
         }
 
         [Fact]
-        public async Task Update_JournalNull_ThrowsArgumentNullException()
+        public async Task Find_NoJournalFound_ReturnsNull()
         {
             // Arrange
             await PrepareDatabase();
-            var repo = new JournalRepository(Context);
-
-            // Assert
-            repo.Invoking(r => r.Update(null))
-                .Should()
-                .Throw<ArgumentNullException>();
-        }
-
-        [Fact]
-        public async Task Delete_JournalDeleted_ReturnsTrue()
-        {
-            // Arrange
-            await PrepareDatabase();
-            var journal = Helpers.GetJournal();
-            Context.Journals.Add(journal);
-            await Context.SaveChangesAsync();
-            long id = journal.Id;
-            var repo = new JournalRepository(Context);
-            
+            var repo = GetJournalRepo();
 
             // Act
-            var result = await repo.Delete(id);
+            var result = await repo.Find(j => j.Title == "I don't exist!");
 
             // Assert
-            result.Should().BeTrue();
+            result.Should().BeNull();
         }
 
-        [Fact]
-        public async Task Delete_JournalNotFound_ReturnsFalse()
-        {
-            // Arrange
-            await PrepareDatabase();
-            var repo = new JournalRepository(Context);
-
-            // Act
-            var result = await repo.Delete(1L);
-
-            // Assert
-            result.Should().BeFalse();
-        }
-
-        private JournalRepository GetJournalRepo(AppDbContext context) => new JournalRepository(context);
+        private JournalRepository GetJournalRepo() => new (Context, "UserId");
     }
 }
