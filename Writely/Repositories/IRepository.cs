@@ -12,8 +12,8 @@ namespace Writely.Repositories
         Task<TEntity?> GetById(long id);
         Task<IEnumerable<TEntity>?> GetAll(
             Expression<Func<TEntity, bool>>? filter = null,
-            Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>>? orderBy = null,
-            int? limit = null);
+            string? orderBy = null,
+            int limit = 0);
         Task<TEntity?> Find(Expression<Func<TEntity, bool>> predicate);
         void Add(TEntity entity);
         void AddRange(IEnumerable<TEntity> entities);
