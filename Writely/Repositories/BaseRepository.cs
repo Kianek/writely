@@ -16,16 +16,16 @@ namespace Writely.Repositories
             _context = context;
         }
 
-        public abstract Task<TEntity?> GetById(long id);
+        public async Task<TEntity?> GetById(long id)
+        {
+            return await _context.Set<TEntity>().FindAsync(id);
+        }
 
         public abstract Task<IEnumerable<TEntity>?> GetAll(Expression<Func<TEntity, bool>>? filter = null,
-            Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>>? orderBy = null,
-            int? limit = null);
+            string? order = null,
+            int limit = 0);
 
-        public async Task<TEntity?> Find(Expression<Func<TEntity, bool>> predicate)
-        {
-            throw new NotImplementedException();
-        }
+        public abstract Task<TEntity?> Find(Expression<Func<TEntity, bool>> predicate);
 
         public void Add(TEntity entity)
         {
