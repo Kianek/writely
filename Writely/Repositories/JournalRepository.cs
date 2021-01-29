@@ -1,84 +1,49 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Writely.Data;
 using Writely.Extensions;
 using Writely.Models;
-using Writely.Services;
 
 namespace Writely.Repositories
 {
-    public class JournalRepository : IJournalRepository
+    public class JournalRepository : BaseRepository<Journal>
     {
-        private readonly AppDbContext _context;
+        private readonly string _userId;
 
-        public JournalRepository(AppDbContext context)
+        public JournalRepository(AppDbContext context, string userId) : base(context)
         {
-            _context = context;
+            _userId = userId;
+        }
+        
+        public override async Task<IEnumerable<Journal>?> GetAll(Expression<Func<Journal, bool>>? filter = null, string? order = null, int limit = 0)
+        {
+            var query = _context.Journals.AsNoTracking().Where(j => j.UserId == _userId);
+            if (filter != null)
+            {
+                query = query.Where(filter);
+            }
+
+            if (order != null)
+            {
+                query = query.SortBy(order);
+            }
+            
+            return limit > 0 ? 
+                await query.Take(limit).ToListAsync()
+                :
+                await query.ToListAsync();
         }
 
-        public async Task<Journal> GetById(long id)
+        public override async Task<Journal?> Find(Expression<Func<Journal, bool>> predicate)
         {
             return await _context.Journals
                 .AsNoTracking()
-                .FirstOrDefaultAsync(j => j.Id == id);
-        }
-
-        public async Task<List<Journal>> GetAllByUserId(string userId, int limit = 0, string order = "date-desc")
-        {
-            var query = _context.Journals
-                .Where(j => j.UserId == userId)
-                .AsNoTracking()
-                .SortBy(order);
-            
-            if (limit <= 0)
-            {
-                return await query.ToListAsync();
-            }
-
-            return await query.Take(limit).ToListAsync();
-        }
-
-        public async Task<Journal> Create(Journal journal)
-        {
-            if (journal == null)
-            {
-                throw new ArgumentNullException();
-            }
-            
-            _context.Journals?.Add(journal);
-            await _context.SaveChangesAsync();
-            return journal;
-        }
-
-        public async Task<Journal> Update(Journal journal)
-        {
-            if (journal == null)
-            {
-                throw new ArgumentNullException();
-            }
-            
-            _context.Journals?.Update(journal);
-            await _context.SaveChangesAsync();
-            return journal;
-        }
-
-        public async Task<bool> Delete(long id)
-        {
-            var journal = await _context.Journals
-                .Where(j => j.Id == id)
-                    .Include(j => j.Entries)
-                .FirstOrDefaultAsync();
-            if (journal == null)
-            {
-                return false;
-            }
-            
-            _context.Journals.Remove(journal);
-            await _context.SaveChangesAsync();
-            return true;
+                .Where(j => j.UserId == _userId)
+                .FirstOrDefaultAsync(predicate);
         }
     }
 }
