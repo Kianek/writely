@@ -4,13 +4,8 @@ using Writely.Models;
 
 namespace Writely.Repositories
 {
-    public interface IEntryRepository
+    public interface IEntryRepository : IRepository<Entry>
     {
-        Task<Entry> GetById(long entryId);
-        Task<List<Entry>?> GetAllByJournal(long journalId, string orderBy = "date-desc");
-        Task<List<Entry>?> GetAllByTag(long journalId, string[] tags, string orderBy = "date-desc");
-        Task<Entry> Create(Entry entry);
-        Task<Entry> Update(Entry entry);
-        Task<bool> Delete(long journalId, long entryId);
+        Task<IEnumerable<Entry>?> GetAllByTag(string[] tags, string orderBy = "date-desc");
     }
 }
