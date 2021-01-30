@@ -8,9 +8,9 @@ namespace Writely.Services
 {
     public class JournalService : IJournalService
     {
-        private readonly IJournalRepository _repo;
+        private readonly IRepository<Journal> _repo;
 
-        public JournalService(IJournalRepository repo)
+        public JournalService(IRepository<Journal> repo)
         {
             _repo = repo;
         }
