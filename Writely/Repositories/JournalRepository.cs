@@ -29,7 +29,7 @@ namespace Writely.Repositories
 
             if (order != null)
             {
-                query = query.SortBy(order);
+                query = query.SortBy(order) as IQueryable<Journal>;
             }
             
             return limit > 0 ? 
