@@ -1,11 +1,13 @@
 using System;
+using Writely.Models;
 
 namespace Writely.Data
 {
-    public class Entity
+    public class Entity : ISortable
     {
         public long Id { get; set; }
         public string? UserId { get; set; }
+        public string? Title { get; set; }
         public DateTime CreatedAt { get; }
         public DateTime LastModified { get; set; }
 
