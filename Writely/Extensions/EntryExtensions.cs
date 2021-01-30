@@ -42,20 +42,5 @@ namespace Writely.Extensions
             
             return didUpdate;
         }
-        
-        public static IQueryable<Entry> SortBy(this IQueryable<Entry> entries, string order = "date-desc")
-        {
-            switch (order)
-            {
-                case "date-asc":
-                    return entries.OrderBy(e => e.LastModified);
-                case "asc":
-                    return entries.OrderBy(e => e.Title);
-                case "desc":
-                    return entries.OrderByDescending(e => e.Title);
-                default:
-                    return entries.OrderByDescending(e => e.LastModified);
-            }
-        }
     }
 }
