@@ -6,15 +6,14 @@ namespace Writely.Extensions
 {
     public static class QueryExtensions
     {
-        public static IQueryable<ISortable> SortBy(this IQueryable<ISortable> query, string order = "date-desc")
-        {
-            switch (order)
+        public static IOrderedQueryable<T> SortBy<T>(this IQueryable<T> query, string order = "date-desc")
+            where T : ISortable
+            => order switch
             {
-                case "asc": return query.OrderBy(entity => entity.Title);
-                case "desc": return query.OrderByDescending(entity => entity.Title);
-                case "date-asc": return query.OrderBy(entity => entity.LastModified);
-                default: return query.OrderByDescending(entity => entity.LastModified);
-            }
-        }
+                "asc" => query.OrderBy(entity => entity.Title),
+                "desc" => query.OrderByDescending(entity => entity.Title),
+                "date-asc" => query.OrderBy(entity => entity.LastModified),
+                _ => query.OrderByDescending(entity => entity.LastModified)
+            };
     }
 }
