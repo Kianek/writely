@@ -4,12 +4,12 @@ using Writely.Data;
 
 namespace Writely.UnitTests
 {
-    public abstract class RepositoryTestBase : IDisposable
+    public abstract class DatabaseTestBase : IDisposable
     {
         private readonly DatabaseFixture _fixture;
         public AppDbContext Context { get; set; }
 
-        public RepositoryTestBase()
+        public DatabaseTestBase()
         {
             _fixture = new DatabaseFixture();
         }
