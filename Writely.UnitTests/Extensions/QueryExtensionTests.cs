@@ -102,5 +102,26 @@ namespace Writely.UnitTests.Extensions
             result[1].Title.Should().Be(shifty);
             result[2].Title.Should().Be(blah);
         }
+
+        [Fact]
+        public void SortBy_Overload_ReturnsIOrderedEnumerable()
+        {
+            // Arrange
+            var entries = Helpers.GetEntries(3);
+            var x = "x";
+            var y = "y";
+            var z = "z";
+            entries[0].Title = x;
+            entries[1].Title = y;
+            entries[2].Title = z;
+
+            // Act
+            var result = entries.SortBy("desc").ToList();
+
+            // Assert
+            result[0].Title.Should().Be(z);
+            result[1].Title.Should().Be(y);
+            result[2].Title.Should().Be(x);
+        }
     }
 }
