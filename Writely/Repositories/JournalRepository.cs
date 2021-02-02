@@ -29,13 +29,15 @@ namespace Writely.Repositories
 
             if (order != null)
             {
-                query = query.SortBy(order) as IQueryable<Journal>;
+                query = query.SortBy(order);
             }
-            
-            return limit > 0 ? 
-                await query.Take(limit).ToListAsync()
-                :
-                await query.ToListAsync();
+
+            if (limit > 0)
+            {
+                query = query.Take(limit);
+            }
+
+            return await query.ToListAsync();
         }
 
         public override async Task<Journal?> Find(Expression<Func<Journal, bool>> predicate)
