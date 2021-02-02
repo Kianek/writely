@@ -8,7 +8,7 @@ using Xunit;
 
 namespace Writely.UnitTests.Repositories
 {
-    public class JournalRepositoryTest : RepositoryTestBase
+    public class JournalRepositoryTest : DatabaseTestBase
     {
         [Fact]
         public async Task GetById_JournalFound_ReturnsJournal()
@@ -53,7 +53,6 @@ namespace Writely.UnitTests.Repositories
             Context.Journals.AddRange(journals);
             await Context.SaveChangesAsync();
             var repo = GetJournalRepo();
-            // var repo = GetJournalRepo(Context);
 
             // Act
             var result = await repo.GetAll();
@@ -71,7 +70,6 @@ namespace Writely.UnitTests.Repositories
             Context.Journals.AddRange(journals);
             await Context.SaveChangesAsync();
             var repo = GetJournalRepo();
-            // var repo = GetJournalRepo(Context);
             
             // Act
             var result = await repo.GetAll(limit: 2);
@@ -122,6 +120,20 @@ namespace Writely.UnitTests.Repositories
             result[0].Title.Should().Be(alphabets);
             result[1].Title.Should().Be(fancyTitle);
             result[2].Title.Should().Be(xyz);
+        }
+
+        [Fact]
+        public async Task GetAll_JournalsNotFound_ReturnsEmpty()
+        {
+            // Arrange
+            await PrepareDatabase();
+            var repo = GetJournalRepo();
+
+            // Act
+            var result = await repo.GetAll();
+
+            // Assert
+            result.Should().BeEmpty();
         }
 
         [Fact]
