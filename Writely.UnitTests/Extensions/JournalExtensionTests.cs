@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using FluentAssertions;
 using Writely.Extensions;
 using Writely.Models;
@@ -23,7 +22,7 @@ namespace Writely.UnitTests.Extensions
 
             // Assert
             result.Should().BeOfType<List<JournalDto>>();
-            result.Count().Should().Be(3);
+            result.Count.Should().Be(3);
         }
 
         [Fact]
@@ -42,7 +41,7 @@ namespace Writely.UnitTests.Extensions
         }
 
         [Fact]
-        public async Task SortBy_Default_SortByDateDescending()
+        public void SortBy_Default_SortByDateDescending()
         {
             // Arrange
             var journals = Helpers.GetJournals( 3);
@@ -63,7 +62,7 @@ namespace Writely.UnitTests.Extensions
         }
 
         [Fact]
-        public async Task SortBy_SortByDateAscending()
+        public void SortBy_SortByDateAscending()
         {
             // Arrange
             var journals = Helpers.GetJournals( 3);
@@ -84,7 +83,7 @@ namespace Writely.UnitTests.Extensions
         }
 
         [Fact]
-        public async Task SortBy_SortByTitleAscending()
+        public void SortBy_SortByTitleAscending()
         {
             // Arrange
             var journals = Helpers.GetJournals(3);
@@ -109,7 +108,7 @@ namespace Writely.UnitTests.Extensions
         }
 
         [Fact]
-        public async Task SortBy_SortByTitleDescending()
+        public void SortBy_SortByTitleDescending()
         {
             // Arrange
             var journals = Helpers.GetJournals( 3);
