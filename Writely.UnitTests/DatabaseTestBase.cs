@@ -1,6 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using Writely.Data;
+using Writely.Models;
 
 namespace Writely.UnitTests
 {
@@ -19,6 +20,12 @@ namespace Writely.UnitTests
             var (options, operationalStoreOptions) = _fixture.CreateDbContextOptions();
             Context = new AppDbContext(options, operationalStoreOptions);
             await Context.Database.EnsureCreatedAsync();
+        }
+
+        public async Task SaveJournal(Journal journal)
+        {
+            Context.Journals.Add(journal);
+            await Context.SaveChangesAsync();
         }
 
         public void Dispose()
