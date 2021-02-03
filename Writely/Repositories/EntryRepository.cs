@@ -42,7 +42,7 @@ namespace Writely.Repositories
             return await query!.ToListAsync();
         }
 
-        public async Task<IEnumerable<Entry>?> GetAllByTag(string[] tags, string? order = "date-desc")
+        public async Task<IEnumerable<Entry>?> GetAllByTag(string[] tags, string order = "date-desc")
         {
             if (tags.Length <= 0)
             {
@@ -59,12 +59,10 @@ namespace Writely.Repositories
                 throw new JournalNotFoundException($"Journal not found: {_journalId}");
             }
 
-            var query = journal.Entries.GetByTag(tags);
-            if (order != null)
-            {
-                query = query.SortBy(order);
-            }
-            return query.ToList();
+            return journal.Entries
+                .GetByTag(tags)
+                .SortBy(order)
+                .ToList();
         }
 
         public override async Task<Entry?> Find(Expression<Func<Entry, bool>> predicate)
