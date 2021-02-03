@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -10,7 +9,7 @@ using Xunit;
 
 namespace Writely.UnitTests.Repositories
 {
-    public class EntryRepositoryTest : RepositoryTestBase
+    public class EntryRepositoryTest : DatabaseTestBase
     {
         [Fact]
         public async Task GetById_EntryFound_ReturnsEntry()
@@ -20,16 +19,15 @@ namespace Writely.UnitTests.Repositories
             var journal = Helpers.GetJournal();
             var entries = Helpers.GetEntries(1);
             AddEntriesToJournal(journal, entries);
-            Context.Journals.Add(journal);
-            await Context.SaveChangesAsync();
-            var repo = new EntryRepository(Context);
+            await SaveJournal(journal);
+            var repo = GetEntryRepo(journal.Id);
 
             // Act
             var result = await repo.GetById(entries[0].Id);
 
             // Assert
             result.Should().NotBeNull();
-            result.Id.Should().Be(entries[0].Id);
+            result?.Id.Should().Be(entries[0].Id);
         }
 
         [Fact]
@@ -38,9 +36,8 @@ namespace Writely.UnitTests.Repositories
             // Arrange
             await PrepareDatabase();
             var journal = Helpers.GetJournal();
-            Context.Journals.Add(journal);
-            await Context.SaveChangesAsync();
-            var repo = new EntryRepository(Context);
+            await SaveJournal(journal);
+            var repo = GetEntryRepo(journal.Id);
 
             // Act
             var result = await repo.GetById(1L);
@@ -50,36 +47,116 @@ namespace Writely.UnitTests.Repositories
         }
 
         [Fact]
-        public async Task GetAllByJournal_JournalFound_ReturnsEntries()
+        public async Task GetAll_ReturnsEntries()
         {
             // Arrange
             await PrepareDatabase();
             var journal = Helpers.GetJournal();
             var entries = Helpers.GetEntries(3);
             AddEntriesToJournal(journal, entries);
-            Context.Journals.Add(journal);
-            await Context.SaveChangesAsync();
-            var repo = new EntryRepository(Context);
+            await SaveJournal(journal);
+            var repo = GetEntryRepo(journal.Id);
 
             // Act
-            var result = await repo.GetAllByJournal(journal.Id);
+            var result = await repo.GetAll() as List<Entry>;
 
             // Assert
-            result.Count.Should().Be(entries.Count);
+            result?.Count.Should().Be(entries.Count);
         }
 
         [Fact]
-        public async Task GetAllByJournal_JournalNotFound_ReturnsNull()
+        public async Task GetAll_JournalNotFound_ReturnsEmptySequence()
         {
             // Arrange
             await PrepareDatabase();
-            var repo = new EntryRepository(Context);
+            var repo = GetEntryRepo(5L);
 
             // Act
-            var result = await repo.GetAllByJournal(1L);
+            var result = await repo.GetAll();
 
             // Assert
-            result.Should().BeNull();
+            result.Should().BeEmpty();
+        }
+
+        [Fact]
+        public async Task GetAll_CanFilter_ReturnsFilteredEntries()
+        {
+            // Arrange
+            await PrepareDatabase();
+            var journal = Helpers.GetJournal();
+            var entries = Helpers.GetEntries(5);
+            entries[2].Title = "I Look Like a Turtle";
+            entries[3].Title = "I Was a Teenage Mutant Ninja Turtle";
+            AddEntriesToJournal(journal, entries);
+            await SaveJournal(journal);
+            var repo = GetEntryRepo(journal.Id);
+
+            // Act
+            var result = await repo.GetAll(filter: e => e.Title.Contains("Turtle"));
+
+            // Assert
+            result?.Count().Should().Be(2);
+        }
+
+        [Fact]
+        public async Task GetAll_CanSetOrderOfSequence_ReturnsOrderedEntries()
+        {
+            // Arrange
+            await PrepareDatabase();
+            var journal = Helpers.GetJournal();
+            var entries = Helpers.GetEntries(3);
+            var alphabets = "alphabets";
+            var alphabits = "alphabits";
+            var aardvarks = "aardvarks";
+            entries[0].Title = alphabits;
+            entries[1].Title = aardvarks;
+            entries[2].Title = alphabets;
+            AddEntriesToJournal(journal, entries);
+            await SaveJournal(journal);
+            var repo = GetEntryRepo(journal.Id);
+
+            // Act
+            var result = await repo.GetAll(order: SortOrder.Descending) as List<Entry>;
+
+            // Assert
+            result![0].Title.Should().Be(alphabits);
+            result![1].Title.Should().Be(alphabets);
+            result![2].Title.Should().Be(aardvarks);
+        }
+
+        [Fact]
+        public async Task GetAll_CanLimitNumberOfEntries_ReturnsLimitedEntries()
+        {
+            // Arrange
+            await PrepareDatabase();
+            var journal = Helpers.GetJournal();
+            var entries = Helpers.GetEntries(10);
+            AddEntriesToJournal(journal, entries);
+            await SaveJournal(journal);
+            var repo = GetEntryRepo(journal.Id);
+
+            // Act
+            var result = await repo.GetAll(limit: 4);
+
+            // Assert
+            result?.Count().Should().Be(4);
+        }
+
+        [Fact]
+        public async Task GetAll_NegativeLimit_ReturnsAllEntries()
+        {
+            // Arrange
+            await PrepareDatabase();
+            var journal = Helpers.GetJournal();
+            journal.Entries = Helpers.GetEntries(5);
+            await SaveJournal(journal);
+            var repo = GetEntryRepo(journal.Id);
+
+            // Act
+            var result = await repo.GetAll(limit: -4);
+
+            // Assert
+            result?.Count().Should().Be(5);
         }
 
         [Fact]
@@ -93,17 +170,44 @@ namespace Writely.UnitTests.Repositories
             entries[2].Tags = "cats";
             entries[4].Tags = "frogs,dogs,cats,chickens";
             AddEntriesToJournal(journal, entries);
-            Context.Journals.Add(journal);
-            await Context.SaveChangesAsync();
-            var repo = new EntryRepository(Context);
+            await SaveJournal(journal);
+            var repo = GetEntryRepo(journal.Id);
 
             // Act
-            var result = await repo.GetAllByTag(journal.Id, new[] {"cats"});
+            var result = await repo.GetAllByTag(new[] {"cats"}) as List<Entry>;
 
             // Assert
             result?.Count.Should().Be(3);
             result?.ForEach(e 
                 => e.GetTags()?.Contains("cats").Should().BeTrue());
+        }
+
+        [Fact]
+        public async Task GetAllByTag_JournalFound_SortsByTitleDescending_ReturnsSortedEntriesByTag()
+        {
+            // Arrange
+            await PrepareDatabase();
+            var journal = Helpers.GetJournal();
+            var entries = Helpers.GetEntries(5);
+            var x = "x";
+            var y = "y";
+            var z = "z";
+            var tag = "funnytag";
+            SetTitleAndTags(entries[0], x, tag);
+            SetTitleAndTags(entries[1], y, tag);
+            SetTitleAndTags(entries[2], z, tag);
+            AddEntriesToJournal(journal, entries);
+            await SaveJournal(journal);
+            var repo = GetEntryRepo(journal.Id);
+
+            // Act
+            var result = await repo.GetAllByTag(new [] {tag}, "desc") as List<Entry>;
+
+            // Assert
+            result!.Count.Should().Be(3);
+            result[0].Title.Should().Be(z);
+            result[1].Title.Should().Be(y);
+            result[2].Title.Should().Be(x);
         }
 
         [Fact]
@@ -114,174 +218,75 @@ namespace Writely.UnitTests.Repositories
             var journal = Helpers.GetJournal();
             var entries = Helpers.GetEntries(3);
             AddEntriesToJournal(journal, entries);
-            Context.Journals.Add(journal);
-            await Context.SaveChangesAsync();
-            var repo = new EntryRepository(Context);
+            await SaveJournal(journal);
+            var repo = GetEntryRepo(journal.Id);
 
             // Act
-            var result = await repo.GetAllByTag(journal.Id, new[]{ "blah" });
+            var result = await repo.GetAllByTag(new[]{ "blah" }) as List<Entry>;
 
             // Assert
-            result.Count.Should().Be(0);
+            result?.Count.Should().Be(0);
         }
 
         [Fact]
-        public async Task GetAllByTag_JournalNotFound_ReturnsNull()
+        public async Task GetAllByTag_JournalNotFound_ThrowsJournalNotFoundException()
         {
             // Arrange
             await PrepareDatabase();
-            var repo = new EntryRepository(Context);
-
-            // Act
-            var result = await repo.GetAllByTag(1L, new[] {"Dogs"});
+            
+            var repo = GetEntryRepo(1L);
 
             // Assert
-            result.Should().BeNull();
+            repo.Invoking(r => r.GetAllByTag(new[] {"Dogs"}))
+                .Should()
+                .Throw<JournalNotFoundException>();
         }
 
         [Fact]
-        public async Task GetAllByTag_TagsEmpty_ThrowsEmptyTagsException()
+        public async Task GetAllByTag_JournalFound_TagsEmpty_ThrowsEmptyTagsException()
         {
             // Arrange
             await PrepareDatabase();
-            var repo = new EntryRepository(Context);
-
+            var repo = GetEntryRepo(1L);
+            
             // Assert
-            repo.Invoking(r => r.GetAllByTag(1L, new string[] { }))
+            repo.Invoking(r => r.GetAllByTag(new string[]{}))
                 .Should()
                 .Throw<EmptyTagsException>();
         }
 
         [Fact]
-        public async Task Create_EntrySaved_ReturnsEntry()
+        public async Task Find_EntryFound_ReturnsEntry()
         {
             // Arrange
             await PrepareDatabase();
             var journal = Helpers.GetJournal();
-            var entry = Helpers.GetEntry();
-            AddEntriesToJournal(journal, new List<Entry>{entry});
-            Context.Journals.Add(journal);
-            await Context.SaveChangesAsync();
-            var repo = new EntryRepository(Context);
+            var entries = Helpers.GetEntries(3);
+            entries[0].Title = "Spiffy Title";
+            AddEntriesToJournal(journal, entries);
+            await SaveJournal(journal);
+            var repo = GetEntryRepo(journal.Id);
 
             // Act
-            var result = await repo.Create(entry);
+            var result = await repo.Find(e => e.Title.Contains("Spiffy"));
 
-            // Arrange
+            // Assert
             result.Should().NotBeNull();
-            result.Title.Should().Be(entry.Title);
+            result!.Title.Should().Be(entries[0].Title);
         }
 
         [Fact]
-        public async Task Create_EntryNull_ThrowsArgumentNullException()
+        public async Task Find_EntryNotFound_ReturnsNull()
         {
             // Arrange
             await PrepareDatabase();
-            var repo = new EntryRepository(Context);
-
-            // Assert
-            repo.Invoking(repo => repo.Create(null))
-                .Should()
-                .Throw<ArgumentNullException>();
-        }
-
-        [Fact]
-        public async Task Create_JournalNotFound_ThrowsException()
-        {
-            // Arrange
-            await PrepareDatabase();
-            var entry = Helpers.GetEntry();
-            var repo = new EntryRepository(Context);
-            
-            // Assert
-            repo.Invoking(r => r.Create(entry))
-                .Should()
-                .Throw<JournalNotFoundException>();
-        }
-
-        [Fact]
-        public async Task Update_EntryUpdated_ReturnEntry()
-        {
-            // Arrange
-            await PrepareDatabase();
-            var entries = Helpers.GetEntries(1);
-            var journal = Helpers.GetJournal();
-            AddEntriesToJournal(journal, entries);
-            Context.Journals.Add(journal);
-            await Context.SaveChangesAsync();
-            entries[0].Title = "Different Title";
-            var repo = new EntryRepository(Context);
-            
+            var repo = GetEntryRepo(3L);
 
             // Act
-            var result = await repo.Update(entries[0]);
-
-
-            // Assert
-            result.Title.Should().Be(entries[0].Title);
-        }
-
-        [Fact]
-        public async Task Update_EntryNull_ThrowsArgumentNullException()
-        {
-            // Arrange
-            await PrepareDatabase();
-            var repo = new EntryRepository(Context);
-            
-            // Assert
-            repo.Invoking(r => r.Update(null))
-                .Should()
-                .Throw<ArgumentNullException>();
-        }
-
-        [Fact]
-        public async Task Delete_JournalAndEntryFound_EntryDeleted_ReturnsTrue()
-        {
-            // Arrange
-            await PrepareDatabase();
-            var entries = Helpers.GetEntries(1);
-            var journal = Helpers.GetJournal();
-            AddEntriesToJournal(journal, entries);
-            Context.Journals.Add(journal);
-            await Context.SaveChangesAsync();
-            var repo = new EntryRepository(Context);
-
-            // Act
-            var result = await repo.Delete(journal.Id, entries[0].Id);
+            var result = await repo.Find(e => e.Id == 1L);
 
             // Assert
-            result.Should().BeTrue();
-        }
-
-        [Fact]
-        public async Task Delete_JournalNotFound_ThrowsJournalNotFoundException()
-        {
-            // Arrange
-            await PrepareDatabase();
-            Context.Journals.Add(Helpers.GetJournal());
-            await Context.SaveChangesAsync();
-            var repo = new EntryRepository(Context);
-
-            // Assert
-            repo.Invoking(r => r.Delete(5L, 2L))
-                .Should()
-                .Throw<JournalNotFoundException>();
-        }
-
-        [Fact]
-        public async Task Delete_EntryNotFound_ThrowsEntryNotFoundException()
-        {
-            // Arrange
-            await PrepareDatabase();
-            var journal = Helpers.GetJournal();
-            Context.Journals.Add(journal);
-            await Context.SaveChangesAsync();
-            var repo = new EntryRepository(Context);
-
-            // Assert
-            repo.Invoking(r => r.Delete(journal.Id, 1L))
-                .Should()
-                .Throw<EntryNotFoundException>();
+            result.Should().BeNull();
         }
 
         private void AddEntriesToJournal(Journal journal, List<Entry> entries)
@@ -292,6 +297,14 @@ namespace Writely.UnitTests.Repositories
                 entry.Journal = journal;
                 journal.Entries.Add(entry);
             });
+        }
+
+        private EntryRepository GetEntryRepo(long journalId) => new EntryRepository(Context, journalId);
+
+        private void SetTitleAndTags(Entry entry, string title, string tags)
+        {
+            entry.Title = title;
+            entry.Tags = tags;
         }
     }
 }
