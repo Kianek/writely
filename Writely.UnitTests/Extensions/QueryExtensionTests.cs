@@ -123,5 +123,20 @@ namespace Writely.UnitTests.Extensions
             result[1].Title.Should().Be(y);
             result[2].Title.Should().Be(x);
         }
+
+        [Fact]
+        public void GetByTag_ReturnsFilteredEntries()
+        {
+            // Arrange
+            var entries = Helpers.GetEntries(5);
+            entries[0].Tags = "cats,dogs,bigfoot";
+            entries[2].Tags = "reptiles,bigfoot";
+
+            // Act
+            var result = entries.GetByTag(new[] {"bigfoot"}).ToList();
+
+            // Assert
+            result.Count.Should().Be(2);
+        }
     }
 }
