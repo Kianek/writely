@@ -1,104 +1,79 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Writely.Data;
 using Writely.Exceptions;
+using Writely.Extensions;
 using Writely.Models;
 
 namespace Writely.Repositories
 {
-    public class EntryRepository : IEntryRepository
+    public class EntryRepository : BaseRepository<Entry>, IEntryRepository
     {
-        private readonly AppDbContext _context;
+        private readonly long _journalId;
 
-        public EntryRepository(AppDbContext context)
+        public EntryRepository(AppDbContext context, long journalId) : base(context)
         {
-            _context = context;
+            _journalId = journalId;
         }
 
-        public async Task<Entry> GetById(long entryId)
+        public override async Task<IEnumerable<Entry>?> GetAll(
+            Expression<Func<Entry, bool>>? filter = null, string? order = null, int limit = 0)
         {
-            return await _context.Entries.FindAsync(entryId);
-        }
-
-        public async Task<List<Entry>?> GetAllByJournal(long journalId, string order = "date-desc")
-        {
-            var journal = await _context.Journals.FindAsync(journalId);
-            return journal?.Entries;
-        }
-
-        public async Task<List<Entry>?> GetAllByTag(long journalId, string[] tags, string order = "date-desc")
-        {
-            if (tags.Length == 0)
+            var query = _context.Entries?.Where(e => e.JournalId == _journalId);
+            if (filter != null)
             {
-                throw new EmptyTagsException("No tags provided");
+                query = query!.Where(filter);
             }
-            var journal = await _context.Journals
+
+            if (order != null)
+            {
+                query = query!.SortBy(order);
+            }
+
+            if (limit > 0)
+            {
+                query = query!.Take(limit);
+            }
+            
+            return await query!.ToListAsync();
+        }
+
+        public async Task<IEnumerable<Entry>?> GetAllByTag(string[] tags, string? order = "date-desc")
+        {
+            if (tags.Length <= 0)
+            {
+                throw new EmptyTagsException("No tags to search by");
+            }
+            
+            var journal = await _context.Journals!
                 .AsNoTracking()
-                .Where(j => j.Id == journalId)
+                .Where(j => j.Id == _journalId)
                     .Include(j => j.Entries)
                 .FirstOrDefaultAsync();
-            var entries = journal?.Entries
-                .Where(entry =>
-                {
-                    return tags.All(t => entry.Tags.Contains(t));
-                })
-                .ToList();
-            return entries;
-        }
-
-        public async Task<Entry> Create(Entry entry)
-        {
-            if (entry == null)
-            {
-                throw new ArgumentNullException();
-            }
-            
-            var journal = await _context.Journals
-                .FindAsync(entry.JournalId);
             if (journal == null)
             {
-                throw new JournalNotFoundException($"Journal not found: {entry.JournalId}");
+                throw new JournalNotFoundException($"Journal not found: {_journalId}");
             }
-            
-            journal.Entries.Add(entry);
-            _context.Journals.Update(journal);
-            await _context.SaveChangesAsync();
-            return entry;
+
+            var query = journal.Entries.GetByTag(tags);
+            if (order != null)
+            {
+                query = query.SortBy(order);
+            }
+            return query.ToList();
         }
 
-        public async Task<Entry> Update(Entry entry)
+        public override async Task<Entry?> Find(Expression<Func<Entry, bool>> predicate)
         {
-            if (entry == null)
-            {
-                throw new ArgumentNullException();
-            }
-            
-            _context.Entries.Update(entry);
-            await _context.SaveChangesAsync();
-            return entry;
-        }
-
-        public async Task<bool> Delete(long journalId, long entryId)
-        {
-            var journal = await _context.Journals.FindAsync(journalId);
-            if (journal == null)
-            {
-                throw new JournalNotFoundException($"Journal not found: {journalId}");
-            }
-            
-            var entry = journal.Entries.Find(e => e.Id == entryId);
-            if (entry == null)
-            {
-                throw new EntryNotFoundException($"Entry not found: {entryId}");
-            }
-            
-            journal.Entries.Remove(entry);
-            _context.Journals.Update(journal);
-            await _context.SaveChangesAsync();
-            return true;
+            return await _context.Entries!
+                .AsNoTracking()
+                .Where(e => e.JournalId == _journalId)
+                .Where(predicate)
+                .FirstOrDefaultAsync();
         }
     }
 }
