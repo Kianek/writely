@@ -19,7 +19,7 @@ namespace Writely.UnitTests.Extensions
 
             // Act
             var result = entry.ToDto();
-            
+
             // Assert
             result.Should().BeOfType<EntryDto>();
             result.Id.Should().Be(entry.Id);
@@ -58,7 +58,7 @@ namespace Writely.UnitTests.Extensions
             first.LastModified.Should().BeAfter(second.LastModified);
             second.LastModified.Should().BeAfter(third.LastModified);
         }
-        
+
         [Fact]
         public void SortBy_Default_SortByDateAscending()
         {
@@ -78,7 +78,7 @@ namespace Writely.UnitTests.Extensions
             first.LastModified.Should().BeBefore(second.LastModified);
             second.LastModified.Should().BeBefore(third.LastModified);
         }
-        
+
         [Fact]
         public void SortBy_Default_SortByTitleDescending()
         {
@@ -102,7 +102,7 @@ namespace Writely.UnitTests.Extensions
             second.Title.Should().Be(skippy);
             third.Title.Should().Be(flippy);
         }
-        
+
         [Fact]
         public void SortBy_Default_SortByTitleAscending()
         {
