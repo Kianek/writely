@@ -22,6 +22,12 @@ namespace Writely.Models
         {
         }
 
+        public void AddTags(string newTags)
+        {
+            // TODO: combine tag strings, then split, filter duplicates, and re-combine
+            throw new NotImplementedException();
+        }
+
         public string[]? GetTags()
         {
             return Tags?.Split(",", StringSplitOptions.TrimEntries);
