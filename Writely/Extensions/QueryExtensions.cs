@@ -26,5 +26,10 @@ namespace Writely.Extensions
                 "date-asc" => sequence.OrderBy(entity => entity.LastModified),
                 _ => sequence.OrderByDescending(entity => entity.LastModified),
             };
+        
+        public static IQueryable<Entry> GetByTag(this IEnumerable<Entry> entries, string[] tags)
+            => entries
+                .Where(e => tags.All(tag => e.GetTags()!.Contains(tag)))
+                .AsQueryable();
     }
 }
