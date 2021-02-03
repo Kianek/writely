@@ -5,16 +5,23 @@ namespace Writely.Data
 {
     public class UnitOfWork : IUnitOfWork
     {
-        private AppDbContext _context;
+        private readonly string _userId;
+        private readonly long _journalId;
+        private readonly AppDbContext _context;
+        private IRepository<Journal>? _journals;
+        private IEntryRepository? _entries;
 
-        public IRepository<Journal> Journals { get; private set; }
-        public IEntryRepository Entries { get; private set;  }
+        public IRepository<Journal> Journals => 
+            _journals ?? new JournalRepository(_context, _userId);
 
-        public UnitOfWork(AppDbContext context, string userId, long journalId)
+        public IEntryRepository Entries =>
+            _entries ?? new EntryRepository(_context, _journalId);
+
+        public UnitOfWork(AppDbContext context, string userId, long journalId = 0L)
         {
             _context = context;
-            Journals = new JournalRepository(_context, userId);
-            Entries = new EntryRepository(_context, journalId);
+            _userId = userId;
+            _journalId = journalId;
         }
         
         public int Complete()
