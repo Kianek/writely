@@ -1,41 +1,41 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Writely.Data;
 using Writely.Models;
 using Writely.Models.Dto;
-using Writely.Repositories;
 
 namespace Writely.Services
 {
     public class JournalService : IJournalService
     {
-        private readonly IRepository<Journal> _repo;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public JournalService(IRepository<Journal> repo)
+        public JournalService(IUnitOfWork unitOfWork)
         {
-            _repo = repo;
+            _unitOfWork = unitOfWork;
         }
 
-        public Task<JournalDto> GetById(string userId, long journalId)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public Task<List<JournalDto>> GetAllByUserId(string userId, int limit = 0, string orderBy = "date-desc")
+        public Task<Journal> GetById(string userId, long journalId)
         {
             throw new System.NotImplementedException();
         }
 
-        public Task<JournalDto> Create(NewJournalModel model)
+        public Task<List<Journal>> GetAll(int limit = 0, string orderBy = "date-desc")
         {
             throw new System.NotImplementedException();
         }
 
-        public Task<JournalDto> Update(long journalId, JournalUpdateModel updateModel)
+        public Task<Journal> Add(NewJournalModel model)
         {
             throw new System.NotImplementedException();
         }
 
-        public Task<bool> Delete(long journalId)
+        public Task<Journal> Update(long journalId, JournalUpdateModel updateModel)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public Task<bool> Remove(long journalId)
         {
             throw new System.NotImplementedException();
         }
