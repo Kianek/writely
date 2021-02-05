@@ -1,4 +1,5 @@
 using System;
+using System.Threading.Tasks;
 using Writely.Models;
 using Writely.Repositories;
 
@@ -8,6 +9,6 @@ namespace Writely.Data
     {
         IRepository<Journal> Journals { get; }
         IEntryRepository Entries { get; }
-        int Complete();
+        Task<int> Complete();
     }
 }
