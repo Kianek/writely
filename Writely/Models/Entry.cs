@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using Writely.Data;
 
 namespace Writely.Models
@@ -24,13 +25,25 @@ namespace Writely.Models
 
         public void AddTags(string newTags)
         {
-            // TODO: combine tag strings, then split, filter duplicates, and re-combine
-            throw new NotImplementedException();
+            if (string.IsNullOrEmpty(newTags))
+            {
+                return;
+            }
+
+            Tags = Tags?.Length > 0
+                ? Tags = SanitizeTags(Tags + "," + newTags)
+                : Tags = SanitizeTags(newTags);
         }
 
         public string[]? GetTags()
         {
             return Tags?.Split(",", StringSplitOptions.TrimEntries);
         }
+
+        private static string SanitizeTags(string tags) =>
+                string.Join(",",
+                tags.Split(",", StringSplitOptions.RemoveEmptyEntries)
+                    .Distinct()
+                    .ToArray());
     }
 }
