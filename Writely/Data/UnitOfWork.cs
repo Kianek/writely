@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using Writely.Models;
 using Writely.Repositories;
 
@@ -24,9 +25,9 @@ namespace Writely.Data
             _journalId = journalId;
         }
         
-        public int Complete()
+        public async Task<int> Complete()
         {
-            throw new System.NotImplementedException();
+            return await _context.SaveChangesAsync();
         }
         
         public void Dispose()
