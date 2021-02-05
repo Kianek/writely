@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Writely.Data;
@@ -34,7 +33,7 @@ namespace Writely.Repositories
 
         public void AddRange(IEnumerable<TEntity> entities)
         {
-            _context.Set<TEntity>().RemoveRange(entities);
+            _context.Set<TEntity>().AddRange(entities);
         }
 
         public void Remove(TEntity entity)
