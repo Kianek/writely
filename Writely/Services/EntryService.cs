@@ -1,47 +1,47 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+using Writely.Data;
 using Writely.Models;
-using Writely.Models.Dto;
-using Writely.Repositories;
 
 namespace Writely.Services
 {
     public class EntryService : IEntryService
     {
-        private readonly IEntryRepository _repo;
+        private AppDbContext _context;
+        
+        public long JournalId { get; set; }
 
-        public EntryService(IEntryRepository repo)
+        public EntryService(AppDbContext context)
         {
-            _repo = repo;
+            _context = context;
         }
 
-        public Task<EntryDto> GetById(long entryId)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public Task<List<EntryDto>> GetAllByJournal(long journalId)
+        public Task<Entry> GetById(long entryId)
         {
             throw new System.NotImplementedException();
         }
 
-        public Task<List<EntryDto>> GetAllByTag(long journalId, string tags)
+        public Task<List<Entry>> GetAllByJournal(long journalId)
         {
             throw new System.NotImplementedException();
         }
 
-        public Task<EntryDto> Create(Entry model)
+        public Task<List<Entry>> GetAllByTag(long journalId, string tags)
         {
             throw new System.NotImplementedException();
         }
 
-        public Task<EntryDto> Update(long entryId, EntryUpdateModel updateModel)
+        public Task<Entry> Add(NewEntryModel model)
         {
             throw new System.NotImplementedException();
         }
 
-        public Task Delete(long journalId, long entryId)
+        public Task<Entry> Update(long entryId, EntryUpdateModel updateModel)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public Task Remove(long entryId)
         {
             throw new System.NotImplementedException();
         }
