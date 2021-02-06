@@ -6,8 +6,8 @@ namespace Writely.Data
 {
     public class UnitOfWork : IUnitOfWork
     {
-        private readonly string _userId;
-        private readonly long _journalId;
+        private readonly string? _userId;
+        private readonly long? _journalId;
         private readonly AppDbContext _context;
         private IRepository<Journal>? _journals;
         private IEntryRepository? _entries;
@@ -18,7 +18,7 @@ namespace Writely.Data
         public IEntryRepository Entries =>
             _entries ?? new EntryRepository(_context, _journalId);
 
-        public UnitOfWork(AppDbContext context, string userId, long journalId = 0L)
+        public UnitOfWork(AppDbContext context, string? userId = null, long? journalId = null)
         {
             _context = context;
             _userId = userId;
