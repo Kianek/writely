@@ -8,14 +8,16 @@ namespace Writely.Services
 {
     public class JournalService : IJournalService
     {
-        private readonly IUnitOfWork _unitOfWork;
+        private readonly AppDbContext _context;
+        
+        public string? UserId { get; set; }
 
-        public JournalService(IUnitOfWork unitOfWork)
+        public JournalService(AppDbContext context)
         {
-            _unitOfWork = unitOfWork;
+            _context = context;
         }
 
-        public Task<Journal> GetById(string userId, long journalId)
+        public Task<Journal> GetById(long journalId)
         {
             throw new System.NotImplementedException();
         }
