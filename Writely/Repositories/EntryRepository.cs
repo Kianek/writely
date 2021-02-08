@@ -15,9 +15,9 @@ namespace Writely.Repositories
     {
         private readonly long _journalId;
 
-        public EntryRepository(AppDbContext context, long journalId) : base(context)
+        public EntryRepository(AppDbContext context, long? journalId) : base(context)
         {
-            _journalId = journalId;
+            _journalId = journalId ?? throw new ArgumentNullException();
         }
 
         public override async Task<IEnumerable<Entry>?> GetAll(
