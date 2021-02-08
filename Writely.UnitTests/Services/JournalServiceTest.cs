@@ -63,7 +63,7 @@ namespace Writely.UnitTests.Services
         }
 
         [Fact]
-        public async Task Save_SaveSuccessful_ReturnsDto()
+        public async Task Add_SaveSuccessful_ReturnsJournal()
         {
             // Arrange
             
@@ -73,7 +73,7 @@ namespace Writely.UnitTests.Services
         }
 
         [Fact]
-        public async Task Save_NewJournalModelNull_ThrowsArgumentNullException()
+        public async Task Add_NewJournalModelNull_ThrowsArgumentNullException()
         {
             // Arrange
             
@@ -104,6 +104,26 @@ namespace Writely.UnitTests.Services
 
         [Fact]
         public async Task Update_JournalNotFound_ThrowsJournalNotFoundException()
+        {
+            // Arrange
+            
+            // Act
+            
+            // Assert
+        }
+
+        [Fact]
+        public async Task Remove_JournalFoundAndRemoved_ReturnsTrue()
+        {
+            // Arrange
+            
+            // Act
+            
+            // Assert
+        }
+
+        [Fact]
+        public async Task Remove_JournalNotFound_ReturnsFalse()
         {
             // Arrange
             
