@@ -26,6 +26,11 @@ namespace Writely.Extensions
                 journal.Title = model.Title;
                 didUpdate = true;
             }
+
+            if (didUpdate)
+            {
+                journal.LastModified = DateTime.Now;
+            }
             
             return didUpdate;
         }
