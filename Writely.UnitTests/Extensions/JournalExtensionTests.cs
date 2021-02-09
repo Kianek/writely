@@ -147,6 +147,7 @@ namespace Writely.UnitTests.Extensions
 
             // Assert
             result.Should().BeTrue();
+            journal.LastModified.Should().BeAfter(journal.CreatedAt);
         }
 
         [Fact]
