@@ -8,10 +8,10 @@ namespace Writely.Services
     {
         long JournalId { get; set; }
         Task<Entry> GetById(long entryId);
-        Task<List<Entry>> GetAllByJournal(long journalId);
-        Task<List<Entry>> GetAllByTag(long journalId, string tags);
+        Task<IEnumerable<Entry>> GetAllByJournal(long journalId);
+        Task<IEnumerable<Entry>> GetAllByTag(long journalId, string tags, string orderBy = "date-desc");
         Task<Entry> Add(NewEntryModel model);
         Task<Entry> Update(long entryId, EntryUpdateModel updateModel);
-        Task Remove(long entryId);
+        Task<Entry> Remove(long entryId);
     }
 }

@@ -9,11 +9,11 @@ namespace Writely.Services
     {
         string? UserId { get; set; }
         Task<Journal> GetById(long journalId);
-        Task<List<Journal>> GetAll(int limit = 0, string orderBy = "date-desc");
+        Task<IEnumerable<Journal>?> GetAll(int limit = 0, string orderBy = "date-desc");
         Task<Journal> Add(NewJournalModel model);
 
         Task<Journal> Update(long journalId, JournalUpdateModel updateModel);
 
-        Task<bool> Remove(long journalId);
+        Task<Journal> Remove(long journalId);
     }
 }
