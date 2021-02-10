@@ -18,7 +18,7 @@ namespace Writely.UnitTests.Repositories
             await PrepareDatabase();
             var journal = Helpers.GetJournal();
             var entries = Helpers.GetEntries(1);
-            AddEntriesToJournal(journal, entries);
+            Helpers.AddEntriesToJournal(journal, entries);
             await SaveJournal(journal);
             var repo = GetEntryRepo(journal.Id);
 
@@ -53,7 +53,7 @@ namespace Writely.UnitTests.Repositories
             await PrepareDatabase();
             var journal = Helpers.GetJournal();
             var entries = Helpers.GetEntries(3);
-            AddEntriesToJournal(journal, entries);
+            Helpers.AddEntriesToJournal(journal, entries);
             await SaveJournal(journal);
             var repo = GetEntryRepo(journal.Id);
 
@@ -87,7 +87,7 @@ namespace Writely.UnitTests.Repositories
             var entries = Helpers.GetEntries(5);
             entries[2].Title = "I Look Like a Turtle";
             entries[3].Title = "I Was a Teenage Mutant Ninja Turtle";
-            AddEntriesToJournal(journal, entries);
+            Helpers.AddEntriesToJournal(journal, entries);
             await SaveJournal(journal);
             var repo = GetEntryRepo(journal.Id);
 
@@ -111,7 +111,7 @@ namespace Writely.UnitTests.Repositories
             entries[0].Title = alphabits;
             entries[1].Title = aardvarks;
             entries[2].Title = alphabets;
-            AddEntriesToJournal(journal, entries);
+            Helpers.AddEntriesToJournal(journal, entries);
             await SaveJournal(journal);
             var repo = GetEntryRepo(journal.Id);
 
@@ -131,7 +131,7 @@ namespace Writely.UnitTests.Repositories
             await PrepareDatabase();
             var journal = Helpers.GetJournal();
             var entries = Helpers.GetEntries(10);
-            AddEntriesToJournal(journal, entries);
+            Helpers.AddEntriesToJournal(journal, entries);
             await SaveJournal(journal);
             var repo = GetEntryRepo(journal.Id);
 
@@ -169,7 +169,7 @@ namespace Writely.UnitTests.Repositories
             entries[1].Tags = "dogs,cats";
             entries[2].Tags = "cats";
             entries[4].Tags = "frogs,dogs,cats,chickens";
-            AddEntriesToJournal(journal, entries);
+            Helpers.AddEntriesToJournal(journal, entries);
             await SaveJournal(journal);
             var repo = GetEntryRepo(journal.Id);
 
@@ -196,7 +196,7 @@ namespace Writely.UnitTests.Repositories
             SetTitleAndTags(entries[0], x, tag);
             SetTitleAndTags(entries[1], y, tag);
             SetTitleAndTags(entries[2], z, tag);
-            AddEntriesToJournal(journal, entries);
+            Helpers.AddEntriesToJournal(journal, entries);
             await SaveJournal(journal);
             var repo = GetEntryRepo(journal.Id);
 
@@ -217,7 +217,7 @@ namespace Writely.UnitTests.Repositories
             await PrepareDatabase();
             var journal = Helpers.GetJournal();
             var entries = Helpers.GetEntries(3);
-            AddEntriesToJournal(journal, entries);
+            Helpers.AddEntriesToJournal(journal, entries);
             await SaveJournal(journal);
             var repo = GetEntryRepo(journal.Id);
 
@@ -263,7 +263,7 @@ namespace Writely.UnitTests.Repositories
             var journal = Helpers.GetJournal();
             var entries = Helpers.GetEntries(3);
             entries[0].Title = "Spiffy Title";
-            AddEntriesToJournal(journal, entries);
+            Helpers.AddEntriesToJournal(journal, entries);
             await SaveJournal(journal);
             var repo = GetEntryRepo(journal.Id);
 
@@ -287,16 +287,6 @@ namespace Writely.UnitTests.Repositories
 
             // Assert
             result.Should().BeNull();
-        }
-
-        private void AddEntriesToJournal(Journal journal, List<Entry> entries)
-        {
-            entries.ForEach(entry =>
-            {
-                entry.JournalId = journal.Id;
-                entry.Journal = journal;
-                journal.Entries.Add(entry);
-            });
         }
 
         private EntryRepository GetEntryRepo(long journalId) => new EntryRepository(Context, journalId);
