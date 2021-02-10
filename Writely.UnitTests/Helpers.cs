@@ -52,5 +52,16 @@ namespace Writely.UnitTests
 
             return journals;
         }
+        
+        
+        public static void AddEntriesToJournal(Journal journal, List<Entry> entries)
+        {
+            entries.ForEach(entry =>
+            {
+                entry.JournalId = journal.Id;
+                entry.Journal = journal;
+                journal.Entries.Add(entry);
+            });
+        }
     }
 }
