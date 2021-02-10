@@ -11,9 +11,10 @@ namespace Writely.Services
         
         public long JournalId { get; set; }
 
-        public EntryService(AppDbContext context)
+        public EntryService(AppDbContext context, long? journalId)
         {
             _context = context;
+            JournalId = journalId ?? 0L;
         }
 
         public Task<Entry> GetById(long entryId)
@@ -21,12 +22,12 @@ namespace Writely.Services
             throw new System.NotImplementedException();
         }
 
-        public Task<IEnumerable<Entry>> GetAllByJournal(long journalId)
+        public Task<IEnumerable<Entry>> GetAll()
         {
             throw new System.NotImplementedException();
         }
 
-        public Task<IEnumerable<Entry>> GetAllByTag(long journalId, string tags, string order = "date-desc")
+        public Task<IEnumerable<Entry>> GetAllByTag(string tags, string order = "date-desc")
         {
             throw new System.NotImplementedException();
         }
