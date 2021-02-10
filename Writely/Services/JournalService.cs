@@ -1,6 +1,9 @@
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Writely.Data;
+using Writely.Exceptions;
+using Writely.Extensions;
 using Writely.Models;
 using Writely.Models.Dto;
 
@@ -12,34 +15,82 @@ namespace Writely.Services
         
         public string? UserId { get; set; }
 
-        public JournalService(AppDbContext context)
+        public JournalService(AppDbContext context, string? userId = null)
         {
             _context = context;
+            UserId = userId;
         }
 
-        public Task<Journal> GetById(long journalId)
+        public async Task<Journal> GetById(long journalId)
         {
-            throw new System.NotImplementedException();
+            if (UserId == null)
+            {
+                throw new UserNotFoundException();
+            }
+            
+            using var unitOfWork = GetUnitOfWork();
+            var journal = await unitOfWork.Journals.GetById(journalId);
+            return journal ?? throw new JournalNotFoundException($"Journal not found: {journalId}");
         }
 
-        public Task<List<Journal>> GetAll(int limit = 0, string orderBy = "date-desc")
+        public async Task<IEnumerable<Journal>?> GetAll(int limit = 0, string orderBy = "date-desc")
+        
         {
-            throw new System.NotImplementedException();
+            if (UserId == null)
+            {
+                throw new UserNotFoundException();
+            }
+            
+            using var unitOfWork = GetUnitOfWork();
+            return await unitOfWork.Journals.GetAll(null, orderBy, limit);
         }
 
-        public Task<Journal> Add(NewJournalModel model)
+        public async Task<Journal> Add(NewJournalModel model)
         {
-            throw new System.NotImplementedException();
+            if (UserId == null)
+            {
+                throw new UserNotFoundException();
+            }
+
+            if (model == null)
+            {
+                throw new ArgumentNullException();
+            }
+            
+            var unitOfWork = GetUnitOfWork();
+            var newJournal = new Journal {Title = model.Title, UserId = UserId};
+            unitOfWork.Journals.Add(newJournal);
+            await unitOfWork.Complete();
+            return newJournal;
         }
 
-        public Task<Journal> Update(long journalId, JournalUpdateModel updateModel)
+        public async Task<Journal> Update(long journalId, JournalUpdateModel updateModel)
         {
-            throw new System.NotImplementedException();
+            using var unitOfWork = GetUnitOfWork();
+            var journal = await unitOfWork.Journals.GetById(journalId);
+            if (journal == null)
+            {
+                throw new JournalNotFoundException($"Journal not found: {journalId}");
+            }
+            journal.Update(updateModel);
+            await unitOfWork.Complete();
+            return journal;
         }
 
-        public Task<bool> Remove(long journalId)
+        public async Task<Journal> Remove(long journalId)
         {
-            throw new System.NotImplementedException();
+            using var unitOfWork = GetUnitOfWork();
+            var journal = await unitOfWork.Journals.GetById(journalId);
+            if (journal == null)
+            {
+                throw new JournalNotFoundException($"Journal not found: {journalId}");
+            }
+            
+            unitOfWork.Journals.Remove(journal);
+            await unitOfWork.Complete();
+            return journal;
         }
+
+        private IUnitOfWork GetUnitOfWork(long? journalId = null) => new UnitOfWork(_context, UserId, journalId);
     }
 }
