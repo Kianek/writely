@@ -21,7 +21,10 @@ namespace Writely.Repositories
         
         public override async Task<IEnumerable<Journal>?> GetAll(Expression<Func<Journal, bool>>? filter = null, string? order = null, int limit = 0)
         {
-            var query = _context.Journals!.AsNoTracking().Where(j => j.UserId == _userId);
+            var query = _context.Journals!
+                .AsNoTracking()
+                .Where(j => j.UserId == _userId);
+            
             if (filter != null)
             {
                 query = query.Where(filter);
@@ -37,7 +40,7 @@ namespace Writely.Repositories
                 query = query.Take(limit);
             }
 
-            return await query.ToListAsync();
+            return await query.Include(j => j.Entries).ToListAsync();
         }
 
         public override async Task<Journal?> Find(Expression<Func<Journal, bool>> predicate)
@@ -45,6 +48,7 @@ namespace Writely.Repositories
             return await _context.Journals!
                 .AsNoTracking()
                 .Where(j => j.UserId == _userId)
+                .Include(j => j.Entries)
                 .FirstOrDefaultAsync(predicate);
         }
     }
