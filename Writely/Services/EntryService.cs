@@ -21,12 +21,12 @@ namespace Writely.Services
             throw new System.NotImplementedException();
         }
 
-        public Task<List<Entry>> GetAllByJournal(long journalId)
+        public Task<IEnumerable<Entry>> GetAllByJournal(long journalId)
         {
             throw new System.NotImplementedException();
         }
 
-        public Task<List<Entry>> GetAllByTag(long journalId, string tags)
+        public Task<IEnumerable<Entry>> GetAllByTag(long journalId, string tags, string order = "date-desc")
         {
             throw new System.NotImplementedException();
         }
@@ -41,7 +41,7 @@ namespace Writely.Services
             throw new System.NotImplementedException();
         }
 
-        public Task Remove(long entryId)
+        public Task<Entry> Remove(long entryId)
         {
             throw new System.NotImplementedException();
         }
