@@ -6,7 +6,7 @@ namespace Writely.Services
 {
     public interface IEntryService
     {
-        long JournalId { get; set; }
+        long? JournalId { get; set; }
         Task<Entry> GetById(long entryId);
         Task<IEnumerable<Entry>> GetAll();
         Task<IEnumerable<Entry>> GetAllByTag(string tags, string orderBy = "date-desc");

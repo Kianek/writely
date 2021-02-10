@@ -9,12 +9,12 @@ namespace Writely.Services
     {
         private AppDbContext _context;
         
-        public long JournalId { get; set; }
+        public long? JournalId { get; set; }
 
         public EntryService(AppDbContext context, long? journalId)
         {
             _context = context;
-            JournalId = journalId ?? 0L;
+            JournalId = journalId;
         }
 
         public Task<Entry> GetById(long entryId)
