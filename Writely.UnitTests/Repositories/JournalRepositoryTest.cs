@@ -25,7 +25,7 @@ namespace Writely.UnitTests.Repositories
 
             // Assert
             result.Should().NotBeNull();
-            result.Id.Should().Be(journal.Id);
+            result!.Id.Should().Be(journal.Id);
         }
 
         [Fact]
@@ -50,7 +50,7 @@ namespace Writely.UnitTests.Repositories
             var journals = Helpers.GetJournals(5);
             journals[3].UserId = "Blah McBlahston";
             journals[4].UserId = "Blah McBlahston";
-            Context.Journals.AddRange(journals);
+            Context.Journals?.AddRange(journals);
             await Context.SaveChangesAsync();
             var repo = GetJournalRepo();
 
@@ -58,7 +58,7 @@ namespace Writely.UnitTests.Repositories
             var result = await repo.GetAll();
 
             // Assert
-            result.Count().Should().Be(3);
+            result!.Count().Should().Be(3);
         }
 
         [Fact]
@@ -67,7 +67,7 @@ namespace Writely.UnitTests.Repositories
             // Arrange
             await PrepareDatabase();
             var journals = Helpers.GetJournals(5);
-            Context.Journals.AddRange(journals);
+            Context.Journals?.AddRange(journals);
             await Context.SaveChangesAsync();
             var repo = GetJournalRepo();
             
@@ -75,7 +75,7 @@ namespace Writely.UnitTests.Repositories
             var result = await repo.GetAll(limit: 2);
 
             // Assert
-            result.Count().Should().Be(2);
+            result!.Count().Should().Be(2);
         }
 
         [Fact]
@@ -86,15 +86,15 @@ namespace Writely.UnitTests.Repositories
             var journals = Helpers.GetJournals(5);
             journals[1].Title = "A Cat Named the Next Journal";
             journals[2].Title = "aoijeafj aoiewjf awojfi302901 - cat";
-            Context.Journals.AddRange(journals);
+            Context.Journals?.AddRange(journals);
             await Context.SaveChangesAsync();
             var repo = GetJournalRepo();
 
             // Act
-            var result = await repo.GetAll(filter: j => j.Title.Contains("Cat"));
+            var result = await repo.GetAll(filter: j => j.Title!.Contains("Cat"));
 
             // Assert
-            result.Count().Should().Be(1);
+            result!.Count().Should().Be(1);
         }
 
         [Fact]
@@ -109,7 +109,7 @@ namespace Writely.UnitTests.Repositories
             journals[0].Title = fancyTitle;
             journals[1].Title = xyz;
             journals[2].Title = alphabets;
-            Context.Journals.AddRange(journals);
+            Context.Journals?.AddRange(journals);
             await Context.SaveChangesAsync();
             var repo = GetJournalRepo();
 
@@ -117,9 +117,7 @@ namespace Writely.UnitTests.Repositories
             var result = await repo.GetAll(order: "asc") as List<Journal>;
 
             // Assert
-            result[0].Title.Should().Be(alphabets);
-            result[1].Title.Should().Be(fancyTitle);
-            result[2].Title.Should().Be(xyz);
+            result.Should().BeInAscendingOrder(j => j.Title);
         }
 
         [Fact]
@@ -143,16 +141,16 @@ namespace Writely.UnitTests.Repositories
             await PrepareDatabase();
             var journals = Helpers.GetJournals(3);
             journals[1].Title = "A Dog Wrote This";
-            Context.Journals.AddRange(journals);
+            Context.Journals?.AddRange(journals);
             await Context.SaveChangesAsync();
             var repo = GetJournalRepo();
 
             // Act
-            var result = await repo.Find(j => j.Title.Contains("Dog"));
+            var result = await repo.Find(j => j.Title!.Contains("Dog"));
 
             // Assert
             result.Should().NotBeNull();
-            result.Title.Should().Be(journals[1].Title);
+            result?.Title.Should().Be(journals[1].Title);
         }
 
         [Fact]
