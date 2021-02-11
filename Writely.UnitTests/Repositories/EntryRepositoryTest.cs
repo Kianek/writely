@@ -92,7 +92,7 @@ namespace Writely.UnitTests.Repositories
             var repo = GetEntryRepo(journal.Id);
 
             // Act
-            var result = await repo.GetAll(filter: e => e.Title.Contains("Turtle"));
+            var result = await repo.GetAll(filter: e => e.Title!.Contains("Turtle"));
 
             // Assert
             result?.Count().Should().Be(2);
@@ -119,9 +119,7 @@ namespace Writely.UnitTests.Repositories
             var result = await repo.GetAll(order: SortOrder.Descending) as List<Entry>;
 
             // Assert
-            result![0].Title.Should().Be(alphabits);
-            result![1].Title.Should().Be(alphabets);
-            result![2].Title.Should().Be(aardvarks);
+            result!.Should().BeInDescendingOrder(e => e.Title);
         }
 
         [Fact]
@@ -189,25 +187,20 @@ namespace Writely.UnitTests.Repositories
             await PrepareDatabase();
             var journal = Helpers.GetJournal();
             var entries = Helpers.GetEntries(5);
-            var x = "x";
-            var y = "y";
-            var z = "z";
             var tag = "funnytag";
-            SetTitleAndTags(entries[0], x, tag);
-            SetTitleAndTags(entries[1], y, tag);
-            SetTitleAndTags(entries[2], z, tag);
+            SetTitleAndTags(entries[0], "x", tag);
+            SetTitleAndTags(entries[1], "y", tag);
+            SetTitleAndTags(entries[2], "z", tag);
             Helpers.AddEntriesToJournal(journal, entries);
             await SaveJournal(journal);
             var repo = GetEntryRepo(journal.Id);
 
             // Act
-            var result = await repo.GetAllByTag(new [] {tag}, "desc") as List<Entry>;
+            var result = await repo.GetAllByTag(new [] {tag}, SortOrder.Descending) as List<Entry>;
 
             // Assert
             result!.Count.Should().Be(3);
-            result[0].Title.Should().Be(z);
-            result[1].Title.Should().Be(y);
-            result[2].Title.Should().Be(x);
+            result!.Should().BeInDescendingOrder(e => e.Title);
         }
 
         [Fact]
@@ -268,7 +261,7 @@ namespace Writely.UnitTests.Repositories
             var repo = GetEntryRepo(journal.Id);
 
             // Act
-            var result = await repo.Find(e => e.Title.Contains("Spiffy"));
+            var result = await repo.Find(e => e.Title!.Contains("Spiffy"));
 
             // Assert
             result.Should().NotBeNull();
