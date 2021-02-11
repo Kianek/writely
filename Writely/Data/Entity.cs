@@ -16,5 +16,7 @@ namespace Writely.Data
             UserId = userId;
             CreatedAt = LastModified = DateTime.Now;
         }
+
+        protected void UpdateLastModified() => LastModified = DateTime.Now;
     }
 }
