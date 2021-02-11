@@ -7,11 +7,11 @@ namespace Writely.UnitTests.Models
 {
     public class JournalTests
     {
-        private Journal journal;
+        private readonly Journal _journal;
 
         public JournalTests()
         {
-            journal = Helpers.GetJournal();
+            _journal = Helpers.GetJournal();
         }
         
         [Fact]
@@ -21,20 +21,20 @@ namespace Writely.UnitTests.Models
             var entry = Helpers.GetEntry();
 
             // Act
-            journal.Add(entry);
+            _journal.Add(entry);
 
             // Assert
-            journal.Entries.Contains(entry).Should().BeTrue();
-            journal.LastModified.Should().BeAfter(journal.CreatedAt);
-            entry.Journal.Should().Be(journal);
-            entry.JournalId.Should().Be(journal.Id);
+            _journal.Entries.Contains(entry).Should().BeTrue();
+            _journal.LastModified.Should().BeAfter(_journal.CreatedAt);
+            entry.Journal.Should().Be(_journal);
+            entry.JournalId.Should().Be(_journal.Id);
         }
 
         [Fact]
         public void Add_EntryNull_ThrowsArgumentNullException()
         {
             // Assert
-            journal.Invoking(j => j.Add(null))
+            _journal.Invoking(j => j.Add(null))
                 .Should()
                 .Throw<ArgumentNullException>();
         }
@@ -44,14 +44,14 @@ namespace Writely.UnitTests.Models
         {
             // Arrange
             var entry = Helpers.GetEntry();
-            journal.Add(entry);
+            _journal.Add(entry);
 
             // Act
-            var result = journal.Remove(entry);
+            var result = _journal.Remove(entry);
 
             // Assert
             result.Should().BeTrue();
-            journal.Entries.Should().NotContain(entry);
+            _journal.Entries.Should().NotContain(entry);
         }
 
         [Fact]
@@ -61,14 +61,14 @@ namespace Writely.UnitTests.Models
             var entry = Helpers.GetEntry();
 
             // Assert
-            journal.Remove(entry).Should().BeFalse();
+            _journal.Remove(entry).Should().BeFalse();
         }
 
         [Fact]
         public void Remove_EntryNull_ThrowsArgumentNullException()
         {
             // Assert
-            journal.Invoking(j => j.Remove(null))
+            _journal.Invoking(j => j.Remove(null))
                 .Should()
                 .Throw<ArgumentNullException>();
         }
