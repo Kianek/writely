@@ -72,5 +72,47 @@ namespace Writely.UnitTests.Models
                 .Should()
                 .Throw<ArgumentNullException>();
         }
+
+        [Fact]
+        public void Update_TitleChanged_ReturnsTrue()
+        {
+            // Arrange
+            var updateModel = new JournalUpdateModel
+            {
+                Title = "Spiffy New Title"
+            };
+
+            // Act
+            var result = _journal.Update(updateModel);
+
+            // Assert
+            result.Should().BeTrue();
+            _journal.Title.Should().Be(updateModel.Title);
+        }
+
+        [Fact]
+        public void Update_NoChange_ReturnsFalse()
+        {
+            // Arrange
+            var updateModel = new JournalUpdateModel
+            {
+                Title = _journal.Title
+            };
+
+            // Act
+            var result = _journal.Update(updateModel);
+
+            // Assert
+            result.Should().BeFalse();
+        }
+
+        [Fact]
+        public void Update_UpdateModelNull_ThrowsArgumentNullException()
+        {
+            // Assert
+            _journal.Invoking(j => j.Update(null))
+                .Should()
+                .Throw<ArgumentNullException>();
+        }
 }
 }
