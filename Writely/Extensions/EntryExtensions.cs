@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using Writely.Models;
@@ -12,35 +11,5 @@ namespace Writely.Extensions
 
         public static List<EntryDto> MapToDto(this List<Entry> entries)
             => entries.Select(e => e.ToDto()).ToList();
-       
-
-        public static bool Update(this Entry entry, EntryUpdateModel model)
-        {
-            if (model is null)
-            {
-                throw new ArgumentNullException();
-            }
-            
-            var didUpdate = false;
-            if (model.Title is not null && entry.Title != model.Title)
-            {
-                entry.Title = model.Title;
-                didUpdate = true;
-            }
-
-            if (model.Tags is not null && entry.Tags != model.Tags)
-            {
-                entry.Tags = model.Tags;
-                didUpdate = true;
-            }
-
-            if (model.Body is not null && entry.Body != model.Body)
-            {
-                entry.Body = model.Body;
-                didUpdate = true;
-            }
-            
-            return didUpdate;
-        }
     }
 }
