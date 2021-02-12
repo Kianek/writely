@@ -44,7 +44,7 @@ namespace Writely.UnitTests.Extensions
         public void SortBy_Default_SortByDateDescending()
         {
             // Arrange
-            var journals = Helpers.GetJournals( 3);
+            var journals = Helpers.GetJournals(3);
             // First
             journals[2].LastModified = new DateTime(2021, 1, 18);
             // Second
@@ -65,7 +65,7 @@ namespace Writely.UnitTests.Extensions
         public void SortBy_SortByDateAscending()
         {
             // Arrange
-            var journals = Helpers.GetJournals( 3);
+            var journals = Helpers.GetJournals(3);
             // First
             journals[1].LastModified = new DateTime(2021, 1, 12);
             // Second
@@ -111,7 +111,7 @@ namespace Writely.UnitTests.Extensions
         public void SortBy_SortByTitleDescending()
         {
             // Arrange
-            var journals = Helpers.GetJournals( 3);
+            var journals = Helpers.GetJournals(3);
             var blah = "Blah, Blah, Blah";
             var shifty = "Shifty";
             var spiffy = "Spiffy";
@@ -131,49 +131,5 @@ namespace Writely.UnitTests.Extensions
             result[1].Title.Should().Be(shifty);
             result[2].Title.Should().Be(blah);
         }
-
-        [Fact]
-        public void Update_TitleChanged_ReturnsTrue()
-        {
-            // Arrange
-            var journal = Helpers.GetJournal();
-            var updateModel = new JournalUpdateModel
-            {
-                Title = "Shiny New Title"
-            };
-
-            // Act
-            var result = journal.Update(updateModel);
-
-            // Assert
-            result.Should().BeTrue();
-            journal.LastModified.Should().BeAfter(journal.CreatedAt);
-        }
-
-        [Fact]
-        public void Update_NoChange_ReturnsFalse()
-        {
-            // Arrange
-            var journal = Helpers.GetJournal();
-            var updateModel = new JournalUpdateModel();
-
-            // Act
-            var result = journal.Update(updateModel);
-
-            // Assert
-            result.Should().BeFalse();
-        }
-
-        [Fact]
-        public void Update_EntryUpdateModelNull_ThrowsArgumentNullException()
-        {
-            // Arrange
-            var journal = Helpers.GetJournal();
-
-            // Assert
-            journal.Invoking(j => j.Update(null))
-                .Should()
-                .Throw<ArgumentNullException>();
-        }
-}
+    }
 }
