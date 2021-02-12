@@ -49,7 +49,7 @@ namespace Writely.UnitTests.Extensions
             entries[2].LastModified = new DateTime(2021, 1, 25);
 
             // Act
-            var result = entries.AsQueryable().SortBy().ToList();
+            var result = entries.SortBy();
 
             // Assert
             result.Should().BeInDescendingOrder(e => e.LastModified);
@@ -65,7 +65,7 @@ namespace Writely.UnitTests.Extensions
             entries[2].LastModified = new DateTime(2021, 1, 25);
 
             // Act
-            var result = entries.AsQueryable().SortBy(SortOrder.DateAscending).ToList();
+            var result = entries.SortBy(SortOrder.DateAscending);
 
             // Assert
             result.Should().BeInAscendingOrder(e => e.LastModified);
@@ -76,15 +76,12 @@ namespace Writely.UnitTests.Extensions
         {
             // Arrange
             var entries = Helpers.GetEntries(3);
-            var skippy = "Skippy";
-            var flippy = "Flippy";
-            var zippy = "Zippy";
-            entries[0].Title = skippy;
-            entries[1].Title = flippy;
-            entries[2].Title = zippy;
+            entries[0].Title = "Skippy";
+            entries[1].Title = "Flippy";
+            entries[2].Title = "Zippy";
 
             // Act
-            var result = entries.AsQueryable().SortBy(SortOrder.Descending).ToList();
+            var result = entries.SortBy(SortOrder.Descending);
 
             // Assert
             result.Should().BeInDescendingOrder(e => e.Title);
@@ -95,15 +92,12 @@ namespace Writely.UnitTests.Extensions
         {
             // Arrange
             var entries = Helpers.GetEntries(3);
-            var skippy = "Skippy";
-            var flippy = "Flippy";
-            var zippy = "Zippy";
-            entries[0].Title = skippy;
-            entries[1].Title = flippy;
-            entries[2].Title = zippy;
+            entries[0].Title = "Skippy";
+            entries[1].Title = "Flippy";
+            entries[2].Title = "Zippy";
 
             // Act
-            var result = entries.AsQueryable().SortBy(SortOrder.Ascending).ToList();
+            var result = entries.SortBy(SortOrder.Ascending);
 
             // Assert
             result.Should().BeInAscendingOrder(e => e.Title);

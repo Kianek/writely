@@ -45,20 +45,15 @@ namespace Writely.UnitTests.Extensions
         {
             // Arrange
             var journals = Helpers.GetJournals(3);
-            // First
             journals[2].LastModified = new DateTime(2021, 1, 18);
-            // Second
             journals[0].LastModified = new DateTime(2021, 1, 16);
-            // Third
             journals[1].LastModified = new DateTime(2021, 1, 12);
-            IQueryable<Journal> query = journals.AsQueryable();
 
             // Act
-            var result = query.SortBy(SortOrder.DateDescending).ToList();
+            var result = journals.SortBy(SortOrder.DateDescending);
 
             // Assert
-            result[2].LastModified.Should().BeBefore(result[0].LastModified);
-            result[0].LastModified.Should().BeAfter(result[1].LastModified);
+            result.Should().BeInDescendingOrder(j => j.LastModified);
         }
 
         [Fact]
@@ -66,20 +61,15 @@ namespace Writely.UnitTests.Extensions
         {
             // Arrange
             var journals = Helpers.GetJournals(3);
-            // First
             journals[1].LastModified = new DateTime(2021, 1, 12);
-            // Second
             journals[0].LastModified = new DateTime(2021, 1, 16);
-            // Third
             journals[2].LastModified = new DateTime(2021, 1, 18);
-            IQueryable<Journal> query = journals.AsQueryable();
 
             // Act
-            var result = query.SortBy(SortOrder.DateDescending).ToList();
+            var result = journals.SortBy(SortOrder.DateDescending);
 
             // Assert
-            result[1].LastModified.Should().BeBefore(result[0].LastModified);
-            result[0].LastModified.Should().BeAfter(result[2].LastModified);
+            result.Should().BeInDescendingOrder(j => j.LastModified);
         }
 
         [Fact]
@@ -87,24 +77,15 @@ namespace Writely.UnitTests.Extensions
         {
             // Arrange
             var journals = Helpers.GetJournals(3);
-            var blah = "Blah, Blah, Blah";
-            var shifty = "Shifty";
-            var spiffy = "Spiffy";
-            // First
-            journals[2].Title = blah;
-            // Second
-            journals[0].Title = shifty;
-            // Third
-            journals[1].Title = spiffy;
-            IQueryable<Journal> query = journals.AsQueryable();
+            journals[2].Title = "Blah, Blah, Blah";
+            journals[0].Title = "Shifty";
+            journals[1].Title = "Spiffy";
 
             // Act
-            var result = query.SortBy(SortOrder.Ascending).ToList();
+            var result = journals.SortBy(SortOrder.Ascending);
 
             // Assert
-            result[0].Title.Should().Be(blah);
-            result[1].Title.Should().Be(shifty);
-            result[2].Title.Should().Be(spiffy);
+            result.Should().BeInAscendingOrder(j => j.Title);
         }
 
         [Fact]
@@ -112,24 +93,15 @@ namespace Writely.UnitTests.Extensions
         {
             // Arrange
             var journals = Helpers.GetJournals(3);
-            var blah = "Blah, Blah, Blah";
-            var shifty = "Shifty";
-            var spiffy = "Spiffy";
-            // First
-            journals[0].Title = blah;
-            // Second
-            journals[2].Title = shifty;
-            // Third
-            journals[1].Title = spiffy;
-            IQueryable<Journal> query = journals.AsQueryable();
+            journals[0].Title = "Blah, Blah, Blah";
+            journals[2].Title = "Shifty";
+            journals[1].Title = "Spiffy";
 
             // Act
-            var result = query.SortBy(SortOrder.Descending).ToList();
+            var result = journals.SortBy(SortOrder.Descending);
 
             // Assert
-            result[0].Title.Should().Be(spiffy);
-            result[1].Title.Should().Be(shifty);
-            result[2].Title.Should().Be(blah);
+            result.Should().BeInDescendingOrder(j => j.Title);
         }
     }
 }
