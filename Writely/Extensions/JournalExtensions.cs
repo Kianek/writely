@@ -12,27 +12,5 @@ namespace Writely.Extensions
         
         public static List<JournalDto> MapToDto(this List<Journal> journals) 
             => journals.Select(j => j.ToDto()).ToList();
-
-        public static bool Update(this Journal journal, JournalUpdateModel model)
-        {
-            if (model is null)
-            {
-                throw new ArgumentNullException();
-            }
-                
-            var didUpdate = false;
-            if (model.Title is not null && journal.Title != model.Title)
-            {
-                journal.Title = model.Title;
-                didUpdate = true;
-            }
-
-            if (didUpdate)
-            {
-                journal.LastModified = DateTime.Now;
-            }
-            
-            return didUpdate;
-        }
     }
 }
