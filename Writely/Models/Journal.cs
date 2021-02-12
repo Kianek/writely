@@ -28,6 +28,11 @@ namespace Writely.Models
             UpdateLastModified();
         }
 
+        public bool Update(JournalUpdateModel model)
+        {
+            throw new NotImplementedException();
+        }
+
         public bool Remove(Entry entry)
         {
             if (entry == null)
