@@ -30,7 +30,19 @@ namespace Writely.Models
 
         public bool Update(JournalUpdateModel model)
         {
-            throw new NotImplementedException();
+            if (model == null)
+            {
+                throw new ArgumentNullException(nameof(model));
+            }
+
+            var didUpdate = false;
+            if (model.Title is not null && Title != model.Title)
+            {
+                Title = model.Title;
+                didUpdate = true;
+            }
+            
+            return didUpdate;
         }
 
         public bool Remove(Entry entry)
