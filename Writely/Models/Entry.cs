@@ -54,7 +54,7 @@ namespace Writely.Models
             return didUpdate;
         }
 
-        private string Update(string? property, string? updateProperty, Dictionary<string, bool> updatedProps)
+        private string Update(string? property, string? updateProperty, IDictionary<string, bool> updatedProps)
         {
             if (updateProperty == null || property == updateProperty)
             {
