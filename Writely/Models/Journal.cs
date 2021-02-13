@@ -19,7 +19,7 @@ namespace Writely.Models
         {
             if (entry == null)
             {
-                throw new ArgumentNullException();
+                throw new ArgumentNullException(nameof(entry));
             }
             
             entry.JournalId = Id;
@@ -36,12 +36,10 @@ namespace Writely.Models
             }
 
             var didUpdate = false;
-            if (model.Title is not null && Title != model.Title)
-            {
-                Title = model.Title;
-                didUpdate = true;
-            }
-            
+            if (model.Title is null || Title == model.Title) return didUpdate;
+            Title = model.Title;
+            didUpdate = true;
+
             return didUpdate;
         }
 
@@ -49,7 +47,7 @@ namespace Writely.Models
         {
             if (entry == null)
             {
-                throw new ArgumentNullException();
+                throw new ArgumentNullException(nameof(entry));
             }
             
             var removedSuccessfully = Entries.Remove(entry);
