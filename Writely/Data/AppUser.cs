@@ -5,8 +5,8 @@ namespace Writely.Data
 {
     public class AppUser : IdentityUser
     {
-        public DateTimeOffset? CreatedAt { get; set; }
-        public DateTimeOffset? LastModified { get; set; }
+        public DateTimeOffset CreatedAt { get; }
+        public DateTimeOffset LastModified { get; }
 
         public AppUser()
         {
