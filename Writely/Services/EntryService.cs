@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Writely.Data;
 using Writely.Exceptions;
@@ -61,12 +63,44 @@ namespace Writely.Services
 
         public async Task<Entry> Update(long entryId, EntryUpdateModel updateModel)
         {
-            throw new System.NotImplementedException();
+            if (updateModel == null)
+            {
+                throw new ArgumentNullException(nameof(updateModel));
+            }
+            
+            using var unitOfWork = GetUnitOfWork();
+            var entry = await unitOfWork.Entries.GetById(entryId);
+            if (entry == null)
+            {
+                throw new EntryNotFoundException($"Entry not found: {entryId}");
+            }
+            
+            if (entry.Update(updateModel))
+            {
+                await unitOfWork.Complete();
+            }
+
+            return entry;
         }
 
         public async Task<Entry> Remove(long entryId)
         {
-            throw new System.NotImplementedException();
+            using var unitOfWork = GetUnitOfWork();
+            var journal = await unitOfWork.Journals.GetById(JournalId.GetValueOrDefault());
+            if (journal == null)
+            {
+                throw new JournalNotFoundException($"Journal not found: {JournalId}");
+            }
+
+            var entry = journal.Entries.Find(e => e.Id == entryId);
+            if (entry == null)
+            {
+                throw new EntryNotFoundException($"Entry not found: {entryId}");
+            }
+            journal.Entries = journal.Entries.SkipWhile(e => e.Id == entryId).ToList();
+            await unitOfWork.Complete();
+
+            return entry;
         }
 
         private IUnitOfWork GetUnitOfWork() => new UnitOfWork(_context, null, JournalId);
