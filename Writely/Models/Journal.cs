@@ -39,6 +39,7 @@ namespace Writely.Models
             if (model.Title is null || Title == model.Title) return didUpdate;
             Title = model.Title;
             didUpdate = true;
+            UpdateLastModified();
 
             return didUpdate;
         }
