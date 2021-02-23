@@ -13,10 +13,11 @@ namespace Writely.Models
         public long JournalId { get; set; }
         public Journal? Journal { get; set; }
 
-        public Entry(string title, string? tags, string body, string userId) : base(userId)
+        public Entry(string userId, long journalId, string title, string tags, string body) : base(userId)
         {
+            JournalId = journalId;
             Title = title;
-            Tags = tags ?? "";
+            Tags = tags;
             Body = body;
         }
 
@@ -54,7 +55,7 @@ namespace Writely.Models
             return didUpdate;
         }
 
-        private string Update(string? property, string? updateProperty, IDictionary<string, bool> updatedProps)
+        private static string Update(string? property, string? updateProperty, IDictionary<string, bool> updatedProps)
         {
             if (updateProperty == null || property == updateProperty)
             {
