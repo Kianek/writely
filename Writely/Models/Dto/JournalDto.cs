@@ -6,25 +6,21 @@ namespace Writely.Models.Dto
 {
     public class JournalDto
     {
-        public long Id { get; set; }
-        public string? UserId { get; set; }
-        public string? Title { get; set; }
-        public List<EntryDto> Entries { get; set; } = new List<EntryDto>();
-        public DateTime? CreatedAt { get; set; }
-        public DateTime? LastModifed { get; set; }
+        public long Id { get; }
+        public string UserId { get; }
+        public string Title { get; }
+        public List<EntryDto> Entries { get; }
+        public DateTime CreatedAt { get; }
+        public DateTime LastModified { get; }
 
         public JournalDto(Journal journal)
         {
             Id = journal.Id;
-            UserId = journal.UserId;
-            Title = journal.Title;
+            UserId = journal.UserId!;
+            Title = journal.Title!;
             CreatedAt = journal.CreatedAt;
-            LastModifed = journal.LastModified;
+            LastModified = journal.LastModified;
             Entries = journal.Entries.MapToDto();
-        }
-        
-        public JournalDto()
-        {
         }
     }
 }
