@@ -19,17 +19,17 @@ namespace Writely.Services
             throw new System.NotImplementedException();
         }
 
-        public Task ChangeEmail(UserEmailUpdateModel model)
+        public Task<IdentityResult> ChangeEmail(UserEmailUpdateModel model)
         {
             throw new System.NotImplementedException();
         }
 
-        public Task ChangePassword(UserPasswordUpdateModel model)
+        public Task<IdentityResult> ChangePassword(UserPasswordUpdateModel model)
         {
             throw new System.NotImplementedException();
         }
 
-        public Task DeleteAccount(string userId)
+        public Task<IdentityResult> DeleteAccount(string userId)
         {
             throw new System.NotImplementedException();
         }
