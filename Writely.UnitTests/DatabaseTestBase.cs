@@ -8,7 +8,7 @@ namespace Writely.UnitTests
     public abstract class DatabaseTestBase : IDisposable
     {
         private readonly DatabaseFixture _fixture;
-        public AppDbContext Context { get; set; }
+        public AppDbContext? Context { get; set; }
 
         public DatabaseTestBase()
         {
@@ -24,8 +24,8 @@ namespace Writely.UnitTests
 
         public async Task SaveJournal(Journal journal)
         {
-            Context.Journals.Add(journal);
-            await Context.SaveChangesAsync();
+            Context?.Journals?.Add(journal);
+            await Context?.SaveChangesAsync()!;
         }
 
         public void Dispose()
