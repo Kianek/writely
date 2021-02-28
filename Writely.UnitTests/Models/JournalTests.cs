@@ -34,7 +34,7 @@ namespace Writely.UnitTests.Models
         public void Add_EntryNull_ThrowsArgumentNullException()
         {
             // Assert
-            _journal.Invoking(j => j.Add(null))
+            _journal.Invoking(j => j.Add(null!))
                 .Should()
                 .Throw<ArgumentNullException>();
         }
@@ -68,7 +68,7 @@ namespace Writely.UnitTests.Models
         public void Remove_EntryNull_ThrowsArgumentNullException()
         {
             // Assert
-            _journal.Invoking(j => j.Remove(null))
+            _journal.Invoking(j => j.Remove(null!))
                 .Should()
                 .Throw<ArgumentNullException>();
         }
@@ -110,7 +110,7 @@ namespace Writely.UnitTests.Models
         public void Update_UpdateModelNull_ThrowsArgumentNullException()
         {
             // Assert
-            _journal.Invoking(j => j.Update(null))
+            _journal.Invoking(j => j.Update(null!))
                 .Should()
                 .Throw<ArgumentNullException>();
         }

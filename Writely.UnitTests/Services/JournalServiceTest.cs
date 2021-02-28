@@ -59,9 +59,9 @@ namespace Writely.UnitTests.Services
             // Arrange
             await PrepareDatabase();
             var journals = Helpers.GetJournals(5);
-            Context.Journals!.AddRange(journals);
+            Context?.Journals!.AddRange(journals);
             await Context.SaveChangesAsync();
-            var service = GetJournalService("UserId");
+            var service = GetJournalService();
 
             // Act
             var result = await service.GetAll();
@@ -108,7 +108,7 @@ namespace Writely.UnitTests.Services
             var service = GetJournalService();
 
             // Assert
-            service.Invoking(s => s.Add(null))
+            service.Invoking(s => s.Add(null!))
                 .Should()
                 .Throw<ArgumentNullException>();
         }
@@ -147,10 +147,10 @@ namespace Writely.UnitTests.Services
         {
             // Arrange
             await PrepDbWithJournal();
-            var service = GetJournalService("UserId");
+            var service = GetJournalService();
 
             // Assert
-            service.Invoking(s => s.Update(1L, null))
+            service.Invoking(s => s.Update(1L, null!))
                 .Should()
                 .Throw<ArgumentNullException>();
         }
@@ -195,7 +195,7 @@ namespace Writely.UnitTests.Services
                 .Throw<JournalNotFoundException>();
         }
 
-        private JournalService GetJournalService(string? userId = "UserId") => new(Context, userId);
+        private JournalService GetJournalService(string? userId = "UserId") => new(Context!, userId);
 
         private async Task<Journal> PrepDbWithJournal()
         {
