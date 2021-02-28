@@ -9,11 +9,7 @@ namespace Writely.UnitTests
 {
     public class DatabaseFixture
     {
-        public DbConnection Connection { get; private set; }
-
-        public DatabaseFixture()
-        {
-        }
+        public DbConnection? Connection { get; private set; }
 
         public (DbContextOptions<AppDbContext>, 
             OptionsWrapper<OperationalStoreOptions>) CreateDbContextOptions()
