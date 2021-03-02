@@ -6,7 +6,7 @@ namespace Writely.Models
         public EmailUpdate? EmailUpdate { get; set; }
         public PasswordUpdate? PasswordUpdate { get; set; }
 
-        protected AccountUpdate(string userId, EmailUpdate emailUpdate = null!,
+        public AccountUpdate(string userId, EmailUpdate emailUpdate = null!,
             PasswordUpdate passwordUpdate = null!)
         {
             UserId = userId;
