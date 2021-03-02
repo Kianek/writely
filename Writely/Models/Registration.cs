@@ -1,4 +1,6 @@
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 
 namespace Writely.Models
 {
@@ -21,5 +23,19 @@ namespace Writely.Models
         
         [Required(ErrorMessage = "Confirmation password is required")]
         public string? ConfirmPassword { get; set; }
+
+        public bool IsComplete()
+        {
+            var properties = new Dictionary<string, bool>
+            {
+                [nameof(FirstName)] = string.IsNullOrEmpty(FirstName),
+                [nameof(LastName)] = string.IsNullOrEmpty(LastName),
+                [nameof(Email)] = string.IsNullOrEmpty(Email),
+                [nameof(Username)] = string.IsNullOrEmpty(Username),
+                [nameof(Password)] = string.IsNullOrEmpty(Password),
+                [nameof(ConfirmPassword)] = string.IsNullOrEmpty(ConfirmPassword),
+            };
+            return properties.Values.All(value => !value);
+        }
     }
 }
