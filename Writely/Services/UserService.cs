@@ -1,6 +1,8 @@
+using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Writely.Data;
+using Writely.Exceptions;
 using Writely.Models;
 
 namespace Writely.Services
@@ -14,24 +16,44 @@ namespace Writely.Services
             _userManager = userManager;
         }
 
-        public Task<IdentityResult> CreateAccount(Registration registration)
+        public async Task<IdentityResult> CreateAccount(Registration registration)
         {
-            throw new System.NotImplementedException();
+            if (registration == null)
+            {
+                throw new ArgumentNullException(nameof(registration));
+            }
+            if (!registration.IsComplete())
+            {
+                throw new IncompleteRegistrationException();
+            }
+            if (registration.Password != registration.ConfirmPassword)
+            {
+                throw new PasswordMismatchException("Passwords must match");
+            }
+            
+            var user = await _userManager.FindByEmailAsync(registration.Email);
+            if (user != null)
+            {
+                throw new DuplicateUserException($"That email is already registered: {registration.Email}");
+            }
+            
+            var newUser = new AppUser(registration);
+            return await _userManager.CreateAsync(newUser, registration.Password);
         }
 
-        public Task<IdentityResult> ChangeEmail(EmailUpdate update)
+        public Task<IdentityResult> ChangeEmail(AccountUpdate update)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
-        public Task<IdentityResult> ChangePassword(PasswordUpdate update)
+        public Task<IdentityResult> ChangePassword(AccountUpdate update)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
         public Task<IdentityResult> DeleteAccount(string userId)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
     }
 }
