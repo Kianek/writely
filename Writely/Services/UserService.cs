@@ -14,17 +14,17 @@ namespace Writely.Services
             _userManager = userManager;
         }
 
-        public Task<IdentityResult> CreateAccount(UserRegistrationModel model)
+        public Task<IdentityResult> CreateAccount(Registration registration)
         {
             throw new System.NotImplementedException();
         }
 
-        public Task<IdentityResult> ChangeEmail(UserEmailUpdateModel model)
+        public Task<IdentityResult> ChangeEmail(EmailUpdate update)
         {
             throw new System.NotImplementedException();
         }
 
-        public Task<IdentityResult> ChangePassword(UserPasswordUpdateModel model)
+        public Task<IdentityResult> ChangePassword(PasswordUpdate update)
         {
             throw new System.NotImplementedException();
         }

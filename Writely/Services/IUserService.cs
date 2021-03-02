@@ -7,9 +7,9 @@ namespace Writely.Services
 {
     public interface IUserService
     {
-        Task<IdentityResult> CreateAccount(UserRegistrationModel model);
-        Task<IdentityResult> ChangeEmail(UserEmailUpdateModel model);
-        Task<IdentityResult> ChangePassword(UserPasswordUpdateModel model);
+        Task<IdentityResult> CreateAccount(Registration registration);
+        Task<IdentityResult> ChangeEmail(EmailUpdate update);
+        Task<IdentityResult> ChangePassword(PasswordUpdate update);
         Task<IdentityResult> DeleteAccount(string userId);
     }
 }
