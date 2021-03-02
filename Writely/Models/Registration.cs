@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Writely.Models
 {
-    public class UserRegistrationModel
+    public class Registration
     {
         [Required(ErrorMessage = "First name is required")]
         public string? FirstName { get; set; }

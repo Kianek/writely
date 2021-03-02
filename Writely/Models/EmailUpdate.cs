@@ -1,6 +1,6 @@
 namespace Writely.Models
 {
-    public class UserEmailUpdateModel
+    public class EmailUpdate
     {
         public string? Email { get; set; }
     }
