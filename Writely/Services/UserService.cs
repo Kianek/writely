@@ -41,9 +41,22 @@ namespace Writely.Services
             return await _userManager.CreateAsync(newUser, registration.Password);
         }
 
-        public Task<IdentityResult> ChangeEmail(AccountUpdate update)
+        public async Task<IdentityResult> ChangeEmail(AccountUpdate update)
         {
-            throw new NotImplementedException();
+            var user = await _userManager.FindByIdAsync(update.UserId);
+            if (user == null)
+            {
+                throw new UserNotFoundException();
+            }
+            
+            var email = update.EmailUpdate?.Email;
+            if (user.Email == email)
+            {
+                return IdentityResult.Success;
+            }
+            
+            var emailChangeToken = await _userManager.GenerateChangeEmailTokenAsync(user, email);
+            return await _userManager.ChangeEmailAsync(user, email, emailChangeToken);
         }
 
         public Task<IdentityResult> ChangePassword(AccountUpdate update)
