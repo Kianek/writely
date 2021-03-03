@@ -250,6 +250,9 @@ namespace Writely.UnitTests.Services
                 .ReturnsAsync(() => new AppUser() { Email = email});
             _manager.Setup(um => um.FindByEmailAsync(email))
                 .ReturnsAsync(() => new AppUser());
+            _manager.Setup(um
+                    => um.ChangePasswordAsync(It.IsAny<AppUser>(), It.IsAny<string>(), It.IsAny<string>()))
+                .ReturnsAsync(() => IdentityResult.Success);
             return _manager.Object;
         }
 
@@ -259,6 +262,9 @@ namespace Writely.UnitTests.Services
                 .ReturnsAsync(() => IdentityResult.Success);
             _manager.Setup(um => um.FindByEmailAsync(email))
                 .ReturnsAsync(() => null!);
+            _manager.Setup(um
+                    => um.ChangePasswordAsync(It.IsAny<AppUser>(), It.IsAny<string>(), It.IsAny<string>()))
+                .ReturnsAsync(() => IdentityResult.Failed());
             return _manager.Object;
         }
     }
