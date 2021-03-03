@@ -108,6 +108,11 @@ namespace Writely.UnitTests.Services
             // Arrange
             var service = GetServiceWithUser();
             var update = GetEmailUpdateModel();
+            _manager.Setup(um
+                    => um.GenerateChangeEmailTokenAsync(It.IsAny<AppUser>(), It.IsAny<string>()))
+                .ReturnsAsync(() => "niftyEmailToken");
+            _manager.Setup(um => um.ChangeEmailAsync(It.IsAny<AppUser>(), It.IsAny<string>(), It.IsAny<string>()))
+                .ReturnsAsync(() => IdentityResult.Success);
 
             // Act
             var result = await service.ChangeEmail(update);
@@ -117,17 +122,18 @@ namespace Writely.UnitTests.Services
         }
         
         [Fact]
-        public async Task ChangeEmail_UserFound_NewEmailSameAsOld_NoChangesMade()
+        public async Task ChangeEmail_UserFound_NewEmailSameAsOld_NoChangesMade_ReturnsSuccess()
         {
             // Arrange
-            var service = GetServiceWithUser();
-            var update = GetEmailUpdateModel("bob@gmail.com");
+            var email = "bob@gmail.com";
+            var service = GetServiceWithUser(email);
+            var update = GetEmailUpdateModel(email);
             
             // Act
             var result = await service.ChangeEmail(update);
 
             // Assert
-            result.Succeeded.Should().BeFalse();
+            result.Succeeded.Should().BeTrue();
         }
         
         [Fact]
@@ -238,6 +244,10 @@ namespace Writely.UnitTests.Services
 
         private UserManager<AppUser> PrepUserManagerWithUser(string email = "bob@gmail.com")
         {
+            _manager.Setup(um => um.CreateAsync(It.IsAny<AppUser>(), It.IsAny<string>()))
+                .ReturnsAsync(() => IdentityResult.Failed());
+            _manager.Setup(um => um.FindByIdAsync(It.IsAny<string>()))
+                .ReturnsAsync(() => new AppUser() { Email = email});
             _manager.Setup(um => um.FindByEmailAsync(email))
                 .ReturnsAsync(() => new AppUser());
             return _manager.Object;
@@ -245,6 +255,8 @@ namespace Writely.UnitTests.Services
 
         private UserManager<AppUser> PrepUserManagerWithoutUser(string email = "bob@gmail.com")
         {
+            _manager.Setup(um => um.CreateAsync(It.IsAny<AppUser>(), It.IsAny<string>()))
+                .ReturnsAsync(() => IdentityResult.Success);
             _manager.Setup(um => um.FindByEmailAsync(email))
                 .ReturnsAsync(() => null!);
             return _manager.Object;
