@@ -49,6 +49,8 @@ namespace Writely.UnitTests.Services
         public async Task CreateAccount_AccountExists_ThrowsDuplicateUserException()
         {
             // Arrange
+            _manager.Setup(um => um.FindByEmailAsync(It.IsAny<string>()))
+                .ReturnsAsync(() => new AppUser());
             var service = GetServiceWithUser();
             var registration = GetRegistrationModel();
 
