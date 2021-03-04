@@ -1,21 +1,12 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
-using Microsoft.OpenApi.Models;
-using Scrutor;
 using Writely.Data;
-using Writely.Models;
 using Writely.Services;
 
 namespace Writely
@@ -31,14 +22,9 @@ namespace Writely
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.Scan(scan => scan
-                .FromAssemblyOf<IEntryService>()
-                .AddClasses(classes => classes.AssignableTo(typeof(IEntryService)))
-                    .AsImplementedInterfaces()
-                    .WithTransientLifetime()
-                .AddClasses(classes => classes.AssignableTo(typeof(IJournalService)))
-                .AsImplementedInterfaces()
-                .WithTransientLifetime());
+            services.AddTransient<IEntryService, EntryService>();
+            services.AddTransient<IJournalService, JournalService>();
+            services.AddTransient<IUserService, UserService>();
             
             services.AddDbContext<AppDbContext>(opts =>
             {
