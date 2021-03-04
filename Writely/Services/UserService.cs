@@ -76,9 +76,15 @@ namespace Writely.Services
             return await _userManager.ChangePasswordAsync(user, oldPassword, newPassword);
         }
 
-        public Task<IdentityResult> DeleteAccount(string userId)
+        public async Task<IdentityResult> DeleteAccount(string userId)
         {
-            throw new NotImplementedException();
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null)
+            {
+                throw new UserNotFoundException();
+            }
+            
+            return await _userManager.DeleteAsync(user);
         }
     }
 }
