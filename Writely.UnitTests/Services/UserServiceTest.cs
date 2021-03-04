@@ -253,6 +253,8 @@ namespace Writely.UnitTests.Services
             _manager.Setup(um
                     => um.ChangePasswordAsync(It.IsAny<AppUser>(), It.IsAny<string>(), It.IsAny<string>()))
                 .ReturnsAsync(() => IdentityResult.Success);
+            _manager.Setup(um => um.DeleteAsync(It.IsAny<AppUser>()))
+                .ReturnsAsync(() => IdentityResult.Success);
             return _manager.Object;
         }
 
@@ -264,6 +266,8 @@ namespace Writely.UnitTests.Services
                 .ReturnsAsync(() => null!);
             _manager.Setup(um
                     => um.ChangePasswordAsync(It.IsAny<AppUser>(), It.IsAny<string>(), It.IsAny<string>()))
+                .ReturnsAsync(() => IdentityResult.Failed());
+            _manager.Setup(um => um.DeleteAsync(It.IsAny<AppUser>()))
                 .ReturnsAsync(() => IdentityResult.Failed());
             return _manager.Object;
         }
