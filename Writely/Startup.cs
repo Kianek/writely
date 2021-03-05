@@ -22,9 +22,10 @@ namespace Writely
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddTransient<IEntryService, EntryService>();
-            services.AddTransient<IJournalService, JournalService>();
             services.AddTransient<IUserService, UserService>();
+            services.AddTransient<IUnitOfWork, UnitOfWork>();
+            services.AddTransient<IJournalService, JournalService>();
+            services.AddTransient<IEntryService, EntryService>();
             
             services.AddDbContext<AppDbContext>(opts =>
             {
