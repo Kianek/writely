@@ -1,6 +1,6 @@
 namespace Writely.Models
 {
-    public class NewEntryModel
+    public class NewEntry
     {
         public string? UserId { get; set; }
         public long JournalId { get; set; }
