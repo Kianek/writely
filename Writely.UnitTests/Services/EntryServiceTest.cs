@@ -107,7 +107,7 @@ namespace Writely.UnitTests.Services
             // Arrange
             await PrepDbWithJournalAndEntries();
             var service = GetEntryService();
-            var newEntry = new NewEntryModel
+            var newEntry = new NewEntry
             {
                 Title = "Spiffy New Entry",
                 Tags = "gimme,some,reggae",
@@ -132,7 +132,7 @@ namespace Writely.UnitTests.Services
             var service = await PrepDbAndEntryService(journalId);
 
             // Assert
-            service.Invoking(s => s.Add(new NewEntryModel()))
+            service.Invoking(s => s.Add(new NewEntry()))
                 .Should()
                 .Throw<JournalNotFoundException>();
         }

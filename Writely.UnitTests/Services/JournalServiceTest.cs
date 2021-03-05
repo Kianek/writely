@@ -89,7 +89,7 @@ namespace Writely.UnitTests.Services
             // Arrange
             await PrepareDatabase();
             var service = GetJournalService();
-            var newJournal = new NewJournalModel {Title = "Fancy Journal"};
+            var newJournal = new NewJournal {Title = "Fancy Journal"};
 
             // Act
             var result = await service.Add(newJournal);
@@ -121,7 +121,7 @@ namespace Writely.UnitTests.Services
             var service = GetJournalService(null);
 
             // Assert
-            service.Invoking(s => s.Add(It.IsAny<NewJournalModel>()))
+            service.Invoking(s => s.Add(It.IsAny<NewJournal>()))
                 .Should()
                 .Throw<UserNotFoundException>();
         }

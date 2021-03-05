@@ -36,7 +36,7 @@ namespace Writely.Services
             return await GetUnitOfWork().Entries.GetAllByTag(tags.Split(","), order);
         }
 
-        public async Task<Entry> Add(NewEntryModel model)
+        public async Task<Entry> Add(NewEntry model)
         {
             if (JournalId == null)
             {

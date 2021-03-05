@@ -45,7 +45,7 @@ namespace Writely.Services
             return await unitOfWork.Journals.GetAll(null, orderBy, limit);
         }
 
-        public async Task<Journal> Add(NewJournalModel model)
+        public async Task<Journal> Add(NewJournal model)
         {
             if (UserId == null)
             {
