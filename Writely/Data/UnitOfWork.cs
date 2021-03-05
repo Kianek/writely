@@ -13,7 +13,7 @@ namespace Writely.Data
         private IEntryRepository? _entries;
 
         public IRepository<Journal> Journals => 
-            _journals ??= new JournalRepository(_context, _userId);
+            _journals ??= new JournalRepository(_context, _userId!);
 
         public IEntryRepository Entries =>
             _entries ??= new EntryRepository(_context, _journalId);

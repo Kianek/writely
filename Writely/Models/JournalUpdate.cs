@@ -1,6 +1,6 @@
 namespace Writely.Models
 {
-    public class JournalUpdateModel
+    public class JournalUpdate
     {
         public string? Title { get; set; }
     }

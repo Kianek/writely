@@ -77,7 +77,7 @@ namespace Writely.UnitTests.Models
         public void Update_TitleChanged_ReturnsTrue()
         {
             // Arrange
-            var updateModel = new JournalUpdateModel
+            var updateModel = new JournalUpdate
             {
                 Title = "Spiffy New Title"
             };
@@ -94,7 +94,7 @@ namespace Writely.UnitTests.Models
         public void Update_NoChange_ReturnsFalse()
         {
             // Arrange
-            var updateModel = new JournalUpdateModel
+            var updateModel = new JournalUpdate
             {
                 Title = _journal.Title
             };

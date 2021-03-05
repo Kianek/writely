@@ -12,7 +12,7 @@ namespace Writely.Services
         Task<IEnumerable<Journal>?> GetAll(int limit = 0, string orderBy = "date-desc");
         Task<Journal> Add(NewJournalModel model);
 
-        Task<Journal> Update(long journalId, JournalUpdateModel updateModel);
+        Task<Journal> Update(long journalId, JournalUpdate updateModel);
 
         Task<Journal> Remove(long journalId);
     }

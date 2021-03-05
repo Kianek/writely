@@ -11,7 +11,7 @@ namespace Writely.Services
         Task<IEnumerable<Entry>?> GetAll();
         Task<IEnumerable<Entry>?> GetAllByTag(string tags, string orderBy = "date-desc");
         Task<Entry> Add(NewEntryModel model);
-        Task<Entry> Update(long entryId, EntryUpdateModel updateModel);
+        Task<Entry> Update(long entryId, EntryUpdate updateModel);
         Task<Entry> Remove(long entryId);
     }
 }

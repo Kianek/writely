@@ -131,7 +131,7 @@ namespace Writely.UnitTests.Services
         {
             // Arrange
             var journal = await PrepDbWithJournal();
-            var updateModel = new JournalUpdateModel {Title = "Shiny New Title"};
+            var updateModel = new JournalUpdate {Title = "Shiny New Title"};
             var service = GetJournalService(journal.UserId);
 
             // Act
@@ -163,7 +163,7 @@ namespace Writely.UnitTests.Services
             var service = GetJournalService();
 
             // Assert
-            service.Invoking(s => s.Update(1L, new JournalUpdateModel()))
+            service.Invoking(s => s.Update(1L, new JournalUpdate()))
                 .Should()
                 .Throw<JournalNotFoundException>();
         }

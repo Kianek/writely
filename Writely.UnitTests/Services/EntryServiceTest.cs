@@ -142,7 +142,7 @@ namespace Writely.UnitTests.Services
         {
             // Arrange
             await PrepDbWithJournalAndEntries();
-            var updateModel = new EntryUpdateModel
+            var updateModel = new EntryUpdate
             {
                 Title = "Totally Different Title",
                 Tags = "some,new,tags",
@@ -169,7 +169,7 @@ namespace Writely.UnitTests.Services
             var service = GetEntryService();
             
             // Assert
-            service.Invoking(s => s.Update(3L, new EntryUpdateModel()))
+            service.Invoking(s => s.Update(3L, new EntryUpdate()))
                 .Should()
                 .Throw<EntryNotFoundException>();
         }

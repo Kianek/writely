@@ -61,7 +61,7 @@ namespace Writely.Services
             return entry;
         }
 
-        public async Task<Entry> Update(long entryId, EntryUpdateModel updateModel)
+        public async Task<Entry> Update(long entryId, EntryUpdate updateModel)
         {
             if (updateModel == null)
             {

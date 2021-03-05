@@ -28,7 +28,7 @@ namespace Writely.Models
             UpdateLastModified();
         }
 
-        public bool Update(JournalUpdateModel model)
+        public bool Update(JournalUpdate model)
         {
             if (model == null)
             {

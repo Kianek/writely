@@ -37,7 +37,7 @@ namespace Writely.Models
                 : Tags = SanitizeTags(newTags);
         }
 
-        public bool Update(EntryUpdateModel model)
+        public bool Update(EntryUpdate model)
         {
             if (model is null)
             {

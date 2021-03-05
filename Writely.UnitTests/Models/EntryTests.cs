@@ -88,7 +88,7 @@ namespace Writely.UnitTests.Models
         {
             // Arrange
             var entry = Helpers.GetEntry();
-            var updateModel = new EntryUpdateModel
+            var updateModel = new EntryUpdate
             {
                 Title = "Super New Title",
                 Tags = "some,new,tags",
@@ -111,7 +111,7 @@ namespace Writely.UnitTests.Models
         {
             // Arrange
             var entry = Helpers.GetEntry();
-            var updateModel = new EntryUpdateModel
+            var updateModel = new EntryUpdate
             {
                 Tags = "blah,dee,bloo"
             };
@@ -129,7 +129,7 @@ namespace Writely.UnitTests.Models
         {
             // Arrange
             var entry = Helpers.GetEntry();
-            var updateModel = new EntryUpdateModel();
+            var updateModel = new EntryUpdate();
 
             // Act
             var result = entry.Update(updateModel);

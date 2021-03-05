@@ -64,7 +64,7 @@ namespace Writely.Services
             return newJournal;
         }
 
-        public async Task<Journal> Update(long journalId, JournalUpdateModel updateModel)
+        public async Task<Journal> Update(long journalId, JournalUpdate updateModel)
         {
             using var unitOfWork = GetUnitOfWork();
             var journal = await unitOfWork.Journals.GetById(journalId);
