@@ -19,7 +19,7 @@ namespace Writely.Controllers
         }
 
         [HttpGet("journalId")]
-        public async Task<IActionResult> GetOne(long journalId)
+        public async Task<IActionResult> GetById(long journalId)
         {
             throw new NotImplementedException();
         }
