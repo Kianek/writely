@@ -7,6 +7,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Writely.Data;
+using Writely.Extensions;
 using Writely.Services;
 
 namespace Writely
@@ -22,10 +23,7 @@ namespace Writely
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddTransient<IUserService, UserService>();
-            services.AddTransient<IUnitOfWork, UnitOfWork>();
-            services.AddTransient<IJournalService, JournalService>();
-            services.AddTransient<IEntryService, EntryService>();
+            services.AddWritelyServices();
             
             services.AddDbContext<AppDbContext>(opts =>
             {
