@@ -1,7 +1,9 @@
 using System;
 using System.Linq;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.AspNetCore.TestHost;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -23,7 +25,12 @@ namespace Writely.IntegrationTests
                 services.Remove(descriptor);
                 services.AddDbContext<AppDbContext>(options =>
                     options.UseSqlite("Data Source=:memory:"));
+                
                 services.AddWritelyServices();
+                
+                services.AddAuthentication("Test")
+                    .AddScheme<AuthenticationSchemeOptions, TestAuthenticationHandler>(
+                        "Test", options => { });
 
                 var sp = services.BuildServiceProvider();
                 using var scope = sp.CreateScope();
