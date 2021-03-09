@@ -1,6 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using Writely.Models;
 using Writely.Models.Dto;
 using Writely.Services;
@@ -11,10 +12,12 @@ namespace Writely.Controllers
     [ApiController]
     public class JournalsController : ControllerBase
     {
+        private readonly ILogger<JournalsController> _logger;
         private readonly IJournalService _journalService;
 
-        public JournalsController(IJournalService journalService)
+        public JournalsController(ILogger<JournalsController> logger, IJournalService journalService)
         {
+            _logger = logger;
             _journalService = journalService;
         }
 
