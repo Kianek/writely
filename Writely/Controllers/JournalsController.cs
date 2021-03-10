@@ -45,7 +45,7 @@ namespace Writely.Controllers
             throw new NotImplementedException();
         }
 
-        [HttpDelete("{journalId")]
+        [HttpDelete("{journalId}")]
         public async Task<IActionResult> Delete(long journalId)
         {
             throw new NotImplementedException();
