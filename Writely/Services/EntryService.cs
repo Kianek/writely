@@ -14,10 +14,9 @@ namespace Writely.Services
         
         public long? JournalId { get; set; }
 
-        public EntryService(AppDbContext context, long? journalId)
+        public EntryService(AppDbContext context)
         {
             _context = context;
-            JournalId = journalId;
         }
 
         public async Task<Entry> GetById(long entryId)
@@ -103,6 +102,7 @@ namespace Writely.Services
             return entry;
         }
 
-        private IUnitOfWork GetUnitOfWork() => new UnitOfWork(_context, null, JournalId);
+        private IUnitOfWork GetUnitOfWork() 
+            => new UnitOfWork(_context) { JournalId = JournalId};
     }
 }

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Writely.Data;
 using Writely.Exceptions;
-using Writely.Extensions;
 using Writely.Models;
 using Writely.Models.Dto;
 
@@ -15,10 +14,9 @@ namespace Writely.Services
         
         public string? UserId { get; set; }
 
-        public JournalService(AppDbContext context, string? userId = null)
+        public JournalService(AppDbContext context)
         {
             _context = context;
-            UserId = userId;
         }
 
         public async Task<Journal> GetById(long journalId)
@@ -91,6 +89,7 @@ namespace Writely.Services
             return journal;
         }
 
-        private IUnitOfWork GetUnitOfWork(long? journalId = null) => new UnitOfWork(_context, UserId, journalId);
+        private IUnitOfWork GetUnitOfWork(long? journalId = null) 
+            => new UnitOfWork(_context) { UserId = UserId, JournalId = journalId};
     }
 }
