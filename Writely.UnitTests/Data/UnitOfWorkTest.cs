@@ -16,7 +16,7 @@ namespace Writely.UnitTests.Data
             // Arrange
             await PrepareDatabase();
             var journals = Helpers.GetJournals(numOfJournals);
-            var unitOfWork = new UnitOfWork(Context!, "UserId");
+            var unitOfWork = new UnitOfWork(Context!) { UserId = "UserId"};
 
             // Act
             unitOfWork.Journals.AddRange(journals);

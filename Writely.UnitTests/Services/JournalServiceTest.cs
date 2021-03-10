@@ -195,7 +195,8 @@ namespace Writely.UnitTests.Services
                 .Throw<JournalNotFoundException>();
         }
 
-        private JournalService GetJournalService(string? userId = "UserId") => new(Context!, userId);
+        private JournalService GetJournalService(string? userId = "UserId") 
+            => new(Context!) { UserId = userId};
 
         private async Task<Journal> PrepDbWithJournal()
         {

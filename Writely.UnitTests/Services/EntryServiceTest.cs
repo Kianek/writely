@@ -1,5 +1,4 @@
 using System;
-using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using FluentAssertions;
 using Writely.Exceptions;
@@ -77,8 +76,8 @@ namespace Writely.UnitTests.Services
             entries[1].Tags = "dogs";
             entries[2].Tags = "dogs,cats";
             entries[4].Tags = "dogs,pirates";
-            Context.Journals?.Add(journal);
-            await Context.SaveChangesAsync();
+            Context!.Journals?.Add(journal);
+            await Context!.SaveChangesAsync();
             var service = GetEntryService(journal.Id);
 
             // Act
@@ -181,7 +180,7 @@ namespace Writely.UnitTests.Services
             var service = await PrepDbAndEntryService();
 
             // Assert
-            service.Invoking(s => s.Update(1L, null))
+            service.Invoking(s => s.Update(1L, null!))
                 .Should()
                 .Throw<ArgumentNullException>();
         }
@@ -238,11 +237,11 @@ namespace Writely.UnitTests.Services
             await PrepareDatabase();
             var journal = Helpers.GetJournal();
             Helpers.AddEntriesToJournal(journal, Helpers.GetEntries(numOfEntries));
-            Context.Journals?.Add(journal);
+            Context!.Journals?.Add(journal);
             await Context.SaveChangesAsync();
             return journal;
         }
 
-        private IEntryService GetEntryService(long? journalId = 1L) => new EntryService(Context, journalId);
+        private IEntryService GetEntryService(long? journalId = 1L) => new EntryService(Context!) { JournalId = journalId};
     }
 }

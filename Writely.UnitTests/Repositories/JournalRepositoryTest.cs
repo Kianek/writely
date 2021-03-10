@@ -16,7 +16,7 @@ namespace Writely.UnitTests.Repositories
             // Arrange
             await PrepareDatabase();
             var journal = Helpers.GetJournal();
-            Context.Journals?.Add(journal);
+            Context!.Journals?.Add(journal);
             await Context.SaveChangesAsync();
             var repo = GetJournalRepo();
 
@@ -50,7 +50,7 @@ namespace Writely.UnitTests.Repositories
             var journals = Helpers.GetJournals(5);
             journals[3].UserId = "Blah McBlahston";
             journals[4].UserId = "Blah McBlahston";
-            Context.Journals?.AddRange(journals);
+            Context!.Journals?.AddRange(journals);
             await Context.SaveChangesAsync();
             var repo = GetJournalRepo();
 
@@ -67,7 +67,7 @@ namespace Writely.UnitTests.Repositories
             // Arrange
             await PrepareDatabase();
             var journals = Helpers.GetJournals(5);
-            Context.Journals?.AddRange(journals);
+            Context!.Journals?.AddRange(journals);
             await Context.SaveChangesAsync();
             var repo = GetJournalRepo();
             
@@ -86,7 +86,7 @@ namespace Writely.UnitTests.Repositories
             var journals = Helpers.GetJournals(5);
             journals[1].Title = "A Cat Named the Next Journal";
             journals[2].Title = "aoijeafj aoiewjf awojfi302901 - cat";
-            Context.Journals?.AddRange(journals);
+            Context!.Journals?.AddRange(journals);
             await Context.SaveChangesAsync();
             var repo = GetJournalRepo();
 
@@ -109,7 +109,7 @@ namespace Writely.UnitTests.Repositories
             journals[0].Title = fancyTitle;
             journals[1].Title = xyz;
             journals[2].Title = alphabets;
-            Context.Journals?.AddRange(journals);
+            Context!.Journals?.AddRange(journals);
             await Context.SaveChangesAsync();
             var repo = GetJournalRepo();
 
@@ -141,7 +141,7 @@ namespace Writely.UnitTests.Repositories
             await PrepareDatabase();
             var journals = Helpers.GetJournals(3);
             journals[1].Title = "A Dog Wrote This";
-            Context.Journals?.AddRange(journals);
+            Context!.Journals?.AddRange(journals);
             await Context.SaveChangesAsync();
             var repo = GetJournalRepo();
 
@@ -167,6 +167,6 @@ namespace Writely.UnitTests.Repositories
             result.Should().BeNull();
         }
 
-        private JournalRepository GetJournalRepo() => new (Context, "UserId");
+        private JournalRepository GetJournalRepo() => new (Context!, "UserId");
     }
 }
