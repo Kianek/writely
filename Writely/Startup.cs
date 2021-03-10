@@ -8,7 +8,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Writely.Data;
 using Writely.Extensions;
-using Writely.Services;
 
 namespace Writely
 {
@@ -23,7 +22,6 @@ namespace Writely
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddWritelyServices();
             
             services.AddDbContext<AppDbContext>(opts =>
             {
@@ -31,6 +29,10 @@ namespace Writely
                 var connectionString = Configuration.GetConnectionString("Writely");
                 opts.UseSqlServer($"{connectionString};Password={dbPassword}");
             });
+
+            services.AddIdentityServerAuthenticationWithJwt();
+            
+            services.AddWritelyServices();
 
             services.AddControllers();
         }
@@ -50,6 +52,10 @@ namespace Writely
 
             app.UseRouting();
 
+            app.UseIdentityServer();
+
+            app.UseAuthentication();
+            
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
