@@ -58,5 +58,22 @@ namespace Writely.UnitTests
         {
             entries.ForEach(journal.Add);
         }
+        
+        public static Registration GetRegistration() => new Registration
+        {
+            Username = "bob.loblaw",
+            FirstName = "Bob",
+            LastName = "Loblaw",
+            Email = "bob@loblawlaw.com",
+            Password = "SecretPassword123!",
+            ConfirmPassword = "SecretPassword123!",
+        };
+        
+        public static AccountUpdate GetEmailUpdate(string email = "spiffynewemail@gmail.com")
+            => new("UserId", emailUpdate: new() { Email = email });
+
+        public static AccountUpdate GetPasswordUpdate(string password = "SpiffierPassword123!!")
+            => new("UserId", passwordUpdate: 
+                new(){Password = password, ConfirmPassword = password});
     }
 }
