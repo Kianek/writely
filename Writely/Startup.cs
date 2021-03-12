@@ -60,7 +60,7 @@ namespace Writely
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapGet("/sanity-check", async context =>
+                endpoints.MapGet("api/sanity-check", async context =>
                 {
                     await context.Response.WriteAsync("Hello, world!");
                 });
