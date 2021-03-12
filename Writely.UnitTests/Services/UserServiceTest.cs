@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Identity;
 using Moq;
 using Writely.Data;
 using Writely.Exceptions;
-using Writely.Models;
 using Writely.Services;
 using Xunit;
 
@@ -35,7 +34,7 @@ namespace Writely.UnitTests.Services
         {
             // Arrange
             var service = GetServiceWithoutUser();
-            var registration = GetRegistrationModel();
+            var registration = Helpers.GetRegistration();
 
             // Act
             var result = await service.CreateAccount(registration);
@@ -52,7 +51,7 @@ namespace Writely.UnitTests.Services
             _manager.Setup(um => um.FindByEmailAsync(It.IsAny<string>()))
                 .ReturnsAsync(() => new AppUser());
             var service = GetServiceWithUser();
-            var registration = GetRegistrationModel();
+            var registration = Helpers.GetRegistration();
 
             // Assert
             await service.Invoking(s => s.CreateAccount(registration))
@@ -66,7 +65,7 @@ namespace Writely.UnitTests.Services
         {
             // Arrange
             var service = GetServiceWithoutUser();
-            var registration = GetRegistrationModel();
+            var registration = Helpers.GetRegistration();
             registration.Email = null;
             registration.ConfirmPassword = null;
 
@@ -81,7 +80,7 @@ namespace Writely.UnitTests.Services
         {
             // Arrange
             var service = GetServiceWithoutUser();
-            var registration = GetRegistrationModel();
+            var registration = Helpers.GetRegistration();
             registration.ConfirmPassword = "TotallyMismatchingPW123!";
 
             // Assert
@@ -109,7 +108,7 @@ namespace Writely.UnitTests.Services
         {
             // Arrange
             var service = GetServiceWithUser();
-            var update = GetEmailUpdateModel();
+            var update = Helpers.GetEmailUpdate();
             _manager.Setup(um
                     => um.GenerateChangeEmailTokenAsync(It.IsAny<AppUser>(), It.IsAny<string>()))
                 .ReturnsAsync(() => "niftyEmailToken");
@@ -129,7 +128,7 @@ namespace Writely.UnitTests.Services
             // Arrange
             var email = "bob@gmail.com";
             var service = GetServiceWithUser(email);
-            var update = GetEmailUpdateModel(email);
+            var update = Helpers.GetEmailUpdate(email);
             
             // Act
             var result = await service.ChangeEmail(update);
@@ -143,7 +142,7 @@ namespace Writely.UnitTests.Services
         {
             // Arrange
             var service = GetServiceWithoutUser();
-            var update = GetEmailUpdateModel();
+            var update = Helpers.GetEmailUpdate();
 
             // Assert
             await service.Invoking(s => s.ChangeEmail(update))
@@ -156,7 +155,7 @@ namespace Writely.UnitTests.Services
         {
             // Arrange
             var service = GetServiceWithUser();
-            var update = GetPasswordUpdateModel();
+            var update = Helpers.GetPasswordUpdate();
             
             // Act
             var result = await service.ChangePassword(update);
@@ -171,7 +170,7 @@ namespace Writely.UnitTests.Services
         {
             // Arrange
             var service = GetServiceWithUser();
-            var update = GetPasswordUpdateModel();
+            var update = Helpers.GetPasswordUpdate();
             update.PasswordUpdate!.ConfirmPassword = "ATotallyDifferentPW123!";
 
             // Assert
@@ -185,7 +184,7 @@ namespace Writely.UnitTests.Services
         {
             // Arrange
             var service = GetServiceWithoutUser();
-            var update = GetPasswordUpdateModel();
+            var update = Helpers.GetPasswordUpdate();
 
             // Assert
             await service.Invoking(s => s.ChangePassword(update))
@@ -221,28 +220,11 @@ namespace Writely.UnitTests.Services
 
         private IUserService GetUserService(UserManager<AppUser> userManager) => new UserService(userManager);
 
-        private Registration GetRegistrationModel() => new Registration
-        {
-            Username = "bob.loblaw",
-            FirstName = "Bob",
-            LastName = "Loblaw",
-            Email = "bob@loblawlaw.com",
-            Password = "SecretPassword123!",
-            ConfirmPassword = "SecretPassword123!",
-        };
-
         private IUserService GetServiceWithUser(string email = "bob@gmail.com") => 
             GetUserService(PrepUserManagerWithUser(email));
         
         private IUserService GetServiceWithoutUser(string email = "bob@gmail.com") =>
             GetUserService(PrepUserManagerWithoutUser(email));
-
-        private AccountUpdate GetEmailUpdateModel(string email = "spiffynewemail@gmail.com")
-            => new("UserId", emailUpdate: new() { Email = email });
-
-        private AccountUpdate GetPasswordUpdateModel(string password = "SpiffierPassword123!!")
-            => new("UserId", passwordUpdate: 
-                new(){Password = password, ConfirmPassword = password});
 
         private UserManager<AppUser> PrepUserManagerWithUser(string email = "bob@gmail.com")
         {
