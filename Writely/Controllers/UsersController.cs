@@ -24,13 +24,13 @@ namespace Writely.Controllers
         }
 
         [HttpPatch("change-email")]
-        public async Task<IActionResult> ChangePassword(EmailUpdate update)
+        public async Task<IActionResult> ChangeEmail(AccountUpdate update)
         {
             throw new NotImplementedException();
         }
         
         [HttpPatch("change-password")]
-        public async Task<IActionResult> ChangePassword(PasswordUpdate update)
+        public async Task<IActionResult> ChangePassword(AccountUpdate update)
         {
             throw new NotImplementedException();
         }
