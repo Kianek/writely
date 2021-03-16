@@ -24,7 +24,7 @@ namespace Writely.Services
             }
             if (!registration.IsComplete())
             {
-                throw new IncompleteRegistrationException();
+                throw new MissingInformationException();
             }
             if (registration.Password != registration.ConfirmPassword)
             {
