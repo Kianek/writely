@@ -72,7 +72,7 @@ namespace Writely.UnitTests.Services
             // Assert
             await service.Invoking(s => s.CreateAccount(registration))
                 .Should()
-                .ThrowAsync<IncompleteRegistrationException>();
+                .ThrowAsync<MissingInformationException>();
         }
         
         [Fact]
