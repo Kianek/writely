@@ -17,15 +17,7 @@ namespace Writely.UnitTests.Controllers
         public async Task Register_NewUser_ReturnsCreated()
         {
             // Arrange
-            var registration = new Registration
-            {
-                Username = "fancy.mcfancypants",
-                Email = "fancy@gmail.com",
-                FirstName = "Fancy",
-                LastName = "McFancypants",
-                Password = "SuperSecretPassword123!",
-                ConfirmPassword = "SuperSecretPassword123!"
-            };
+            var registration = CompleteRegistration();
             var controller = new UsersController(PrepUserServiceWithoutUser());
 
             // Act
@@ -39,16 +31,14 @@ namespace Writely.UnitTests.Controllers
         public async Task Register_IncompleteRegistration_ReturnsBadRequest()
         {
             // Arrange
-            var registration = Helpers.GetRegistration();
-            registration.FirstName = null;
-            registration.ConfirmPassword = null;
-            var controller = PrepControllerWithoutUser();
+            var registration = IncompleteRegistration();
+            var controller = PrepControllerForIncompleteInfo();
 
             // Act
             var response = await controller.Register(registration);
 
             // Assert
-            response.Should().BeOfType<BadRequestResult>();
+            response.Should().BeOfType<BadRequestObjectResult>();
         }
         
         [Fact]
@@ -62,21 +52,21 @@ namespace Writely.UnitTests.Controllers
             var response = await controller.Register(registration);
 
             // Assert
-            response.Should().BeOfType<BadRequestResult>();
+            response.Should().BeOfType<BadRequestObjectResult>();
         }
         
         [Fact]
-        public async Task ChangeEmail_ChangeSuccessful_ReturnsNoContent()
+        public async Task ChangeEmail_ChangeSuccessful_ReturnsOk()
         {
             // Arrange
             var emailUpdate = Helpers.GetEmailUpdate();
-            var controller = PrepUserServiceWithUser();
+            var controller = PrepControllerWithUser();
 
             // Act
             var response = await controller.ChangeEmail(emailUpdate);
 
             // Assert
-            response.Should().BeOfType<NoContentResult>();
+            response.Should().BeOfType<OkResult>();
         }
         
         [Fact]
@@ -85,17 +75,17 @@ namespace Writely.UnitTests.Controllers
             // Arrange
             var accountUpdate = Helpers.GetEmailUpdate();
             accountUpdate.EmailUpdate!.Email = null;
-            var controller = PrepControllerWithUser();
+            var controller = PrepControllerForIncompleteInfo();
 
             // Act
             var response = await controller.ChangeEmail(accountUpdate);
 
             // Assert
-            response.Should().BeOfType<BadRequestResult>();
+            response.Should().BeOfType<BadRequestObjectResult>();
         }
         
         [Fact]
-        public async Task ChangePassword_ChangeSuccessful_ReturnsCreated()
+        public async Task ChangePassword_ChangeSuccessful_ReturnsOk()
         {
             // Arrange
             var accountUpdate = Helpers.GetPasswordUpdate();
@@ -149,11 +139,27 @@ namespace Writely.UnitTests.Controllers
             response.Should().BeOfType<BadRequestResult>();
         }
 
+        private Registration CompleteRegistration()
+            => new()
+            {
+                Username = "fancy.mcfancypants",
+                Email = "fancy@gmail.com",
+                FirstName = "Fancy",
+                LastName = "McFancypants",
+                Password = "SuperSecretPassword123!",
+                ConfirmPassword = "SuperSecretPassword123!"
+            };
+
+        private Registration IncompleteRegistration() => new();
+
         private IUserService PrepUserServiceWithoutUser()
         {
             var userService = GetMockUserService();
             userService.Setup(us => us.CreateAccount(It.IsAny<Registration>()))
                 .ReturnsAsync(() => IdentityResult.Success);
+
+            userService.Setup(us => us.CreateAccount(IncompleteRegistration()))
+                .Throws<IncompleteRegistrationException>();
             
             return userService.Object;
         }
@@ -163,6 +169,10 @@ namespace Writely.UnitTests.Controllers
             var userService = GetMockUserService();
             userService.Setup(us => us.CreateAccount(It.IsAny<Registration>()))
                 .Throws<DuplicateUserException>();
+            userService.Setup(us => us.ChangeEmail(It.IsAny<AccountUpdate>()))
+                .ReturnsAsync(() => IdentityResult.Success);
+            userService.Setup(us => us.ChangePassword(It.IsAny<AccountUpdate>()))
+                .ReturnsAsync(() => IdentityResult.Success);
             userService.Setup(us => us.DeleteAccount("UserId"))
                 .ReturnsAsync(() => IdentityResult.Success);
             userService.Setup(us => us.DeleteAccount("UserIdDelete"))
@@ -170,6 +180,22 @@ namespace Writely.UnitTests.Controllers
             
             return userService.Object;
         }
+
+        private IUserService PrepUserServiceForIncompleteInfo()
+        {
+            var userService = GetMockUserService();
+            userService.Setup(us => us.CreateAccount(It.IsAny<Registration>()))
+                .Throws<MissingInformationException>();
+            userService.Setup(us => us.ChangeEmail(It.IsAny<AccountUpdate>()))
+                .Throws<MissingInformationException>();
+            userService.Setup(us => us.ChangePassword(It.IsAny<AccountUpdate>()))
+                .Throws<MissingInformationException>();
+            
+            return userService.Object;
+        }
+
+        private UsersController PrepControllerForIncompleteInfo()
+            => new(PrepUserServiceForIncompleteInfo());
 
         private UsersController PrepControllerWithoutUser()
             => new (PrepUserServiceWithoutUser());
