@@ -52,7 +52,7 @@ namespace Writely.Services
             var email = update.EmailUpdate?.Email;
             if (user.Email == email)
             {
-                return IdentityResult.Success;
+                return IdentityResult.Failed();
             }
             
             var emailChangeToken = await _userManager.GenerateChangeEmailTokenAsync(user, email);
