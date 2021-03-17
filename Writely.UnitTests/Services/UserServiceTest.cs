@@ -134,7 +134,7 @@ namespace Writely.UnitTests.Services
             var result = await service.ChangeEmail(update);
 
             // Assert
-            result.Succeeded.Should().BeTrue();
+            result.Succeeded.Should().BeFalse();
         }
         
         [Fact]
