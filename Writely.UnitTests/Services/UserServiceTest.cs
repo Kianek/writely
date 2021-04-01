@@ -164,6 +164,20 @@ namespace Writely.UnitTests.Services
             result.Succeeded.Should().BeTrue();
 
         }
+
+        [Fact]
+        public async Task ChangePassword_PasswordUpdateMissing_ThrowsMissingInformationException()
+        {
+            // Arrange
+            var service = GetServiceWithUser();
+            var update = Helpers.GetPasswordUpdate();
+            update.PasswordUpdate = null;
+
+            // Assert
+            await service.Invoking(us => us.ChangePassword(update))
+                .Should()
+                .ThrowAsync<MissingInformationException>();
+        }
         
         [Fact]
         public async Task ChangePassword_UserFound_ConfirmationPasswordMismatch_ThrowsPasswordMismatchException()
