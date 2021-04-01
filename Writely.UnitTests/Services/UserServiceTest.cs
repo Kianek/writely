@@ -121,6 +121,20 @@ namespace Writely.UnitTests.Services
             // Assert
             result.Succeeded.Should().BeTrue();
         }
+
+        [Fact]
+        public async Task ChangeEmail_EmailUpdateMissing_ThrowsMissingInformationException()
+        {
+            // Arrange
+            var service = GetServiceWithUser();
+            var update = Helpers.GetEmailUpdate();
+            update.EmailUpdate = null;
+
+            // Assert
+            await service.Invoking(us => us.ChangeEmail(update))
+                .Should()
+                .ThrowAsync<MissingInformationException>();
+        }
         
         [Fact]
         public async Task ChangeEmail_UserFound_NewEmailSameAsOld_NoChangesMade_ReturnsSuccess()
@@ -149,6 +163,18 @@ namespace Writely.UnitTests.Services
                 .Should()
                 .ThrowAsync<UserNotFoundException>();
         }
+
+        [Fact]
+        public async Task ChangeEmail_AccountUpdateNull_ThrowsArgumentNullException()
+        {
+            // Arrange
+            var service = GetServiceWithUser();
+
+            // Assert
+            await service.Invoking(us => us.ChangeEmail(null!))
+                .Should()
+                .ThrowAsync<ArgumentNullException>();
+        }
         
         [Fact]
         public async Task ChangePassword_UserFound_ConfirmationPasswordMatches_PasswordChanged()
@@ -163,6 +189,18 @@ namespace Writely.UnitTests.Services
             // Assert
             result.Succeeded.Should().BeTrue();
 
+        }
+
+        [Fact]
+        public async Task ChangePassword_AccountUpdateNull_ThrowsArgumentNullException()
+        {
+            // Arrange
+            var service = GetServiceWithUser();
+
+            // Assert
+            await service.Invoking(us => us.ChangePassword(null!))
+                .Should()
+                .ThrowAsync<ArgumentNullException>();
         }
 
         [Fact]
