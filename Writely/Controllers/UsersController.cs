@@ -46,14 +46,14 @@ namespace Writely.Controllers
         public async Task<IActionResult> ChangeEmail(AccountUpdate update)
         {
             IdentityResult result;
-            
+
             try
             {
                 result = await _userService.ChangeEmail(update);
             }
-            catch (MissingInformationException ex)
+            catch (Exception ex)
             {
-                return BadRequest(ex);
+                return BadRequest(ex.Message);
             }
 
             if (!result.Succeeded)
@@ -67,7 +67,16 @@ namespace Writely.Controllers
         [HttpPatch("change-password")]
         public async Task<IActionResult> ChangePassword(AccountUpdate update)
         {
-            throw new NotImplementedException();
+            try
+            {
+                await _userService.ChangePassword(update);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            
+            return Ok();
         }
 
         [HttpDelete("{userId:string}")]
