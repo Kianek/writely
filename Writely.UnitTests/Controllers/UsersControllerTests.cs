@@ -83,6 +83,24 @@ namespace Writely.UnitTests.Controllers
             // Assert
             response.Should().BeOfType<BadRequestObjectResult>();
         }
+
+        [Fact]
+        public async Task ChangeEmail_NewEmailSameAsOld_ReturnsBadRequest()
+        {
+            // Arrange
+            var accountUpdate = Helpers.GetEmailUpdate("old@email.com");
+            var mockUserService = GetMockUserService();
+            mockUserService.Setup(us =>
+                    us.ChangeEmail(It.IsAny<AccountUpdate>()))
+                .ReturnsAsync(() => IdentityResult.Failed());
+            var controller = new UsersController(mockUserService.Object);
+
+            // Act
+            var response = await controller.ChangeEmail(accountUpdate);
+
+            // Assert
+            response.Should().BeOfType<BadRequestResult>();
+        }
         
         [Fact]
         public async Task ChangePassword_ChangeSuccessful_ReturnsOk()
