@@ -43,6 +43,15 @@ namespace Writely.Services
 
         public async Task<IdentityResult> ChangeEmail(AccountUpdate update)
         {
+            if (update == null)
+            {
+                throw new ArgumentNullException(nameof(update));
+            }
+            if (update.EmailUpdate == null)
+            {
+                throw new MissingInformationException("Missing email update");
+            }
+            
             var user = await _userManager.FindByIdAsync(update.UserId);
             if (user == null)
             {
@@ -61,6 +70,10 @@ namespace Writely.Services
 
         public async Task<IdentityResult> ChangePassword(AccountUpdate update)
         {
+            if (update == null)
+            {
+                throw new ArgumentNullException(nameof(update));
+            }
             if (update.PasswordUpdate == null)
             {
                 throw new MissingInformationException();
