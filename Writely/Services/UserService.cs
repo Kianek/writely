@@ -61,7 +61,11 @@ namespace Writely.Services
 
         public async Task<IdentityResult> ChangePassword(AccountUpdate update)
         {
-            if (update.PasswordUpdate != null && !update.PasswordUpdate.PasswordsMatch())
+            if (update.PasswordUpdate == null)
+            {
+                throw new MissingInformationException();
+            }
+            if (!update.PasswordUpdate.PasswordsMatch())
             {
                 throw new PasswordMismatchException();
             }
