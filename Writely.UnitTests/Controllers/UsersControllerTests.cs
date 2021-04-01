@@ -68,6 +68,19 @@ namespace Writely.UnitTests.Controllers
             // Assert
             response.Should().BeOfType<OkResult>();
         }
+
+        [Fact]
+        public async Task ChangeEmail_AccountUpdateNull_ReturnsBadRequest()
+        {
+            // Arrange
+            var controller = PrepControllerForIncompleteInfo();
+
+            // Act
+            var response = await controller.ChangeEmail(null!);
+
+            // Assert
+            response.Should().BeOfType<BadRequestObjectResult>();
+        }
         
         [Fact]
         public async Task ChangeEmail_IncompleteAccountUpdate_ReturnsBadRequest()
@@ -121,14 +134,14 @@ namespace Writely.UnitTests.Controllers
         {
             // Arrange
             var accountUpdate = Helpers.GetPasswordUpdate();
-            accountUpdate.PasswordUpdate!.ConfirmPassword = "TotallyDifferentPW123!";
+            accountUpdate.PasswordUpdate = null;
             var controller = PrepControllerForIncompleteInfo();
 
             // Act
             var response = await controller.ChangePassword(accountUpdate);
 
             // Assert
-            response.Should().BeOfType<BadRequestResult>();
+            response.Should().BeOfType<BadRequestObjectResult>();
         }
         
         [Fact]
@@ -137,13 +150,16 @@ namespace Writely.UnitTests.Controllers
             // Arrange
             var accountUpdate = Helpers.GetPasswordUpdate();
             accountUpdate.PasswordUpdate!.Password = "Goobledyblech";
-            var controller = PrepControllerWithUser();
+            var service = GetMockUserService();
+            service.Setup(us => us.ChangePassword(accountUpdate))
+                .Throws<PasswordMismatchException>();
+            var controller = new UsersController(service.Object);
 
             // Act
             var response = await controller.ChangePassword(accountUpdate);
 
             // Assert
-            response.Should().BeOfType<BadRequestResult>();
+            response.Should().BeOfType<BadRequestObjectResult>();
         }
         
         [Fact]
