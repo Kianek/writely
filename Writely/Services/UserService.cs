@@ -76,7 +76,7 @@ namespace Writely.Services
             }
             if (update.PasswordUpdate == null)
             {
-                throw new MissingInformationException();
+                throw new MissingInformationException("Missing password update");
             }
             if (!update.PasswordUpdate.PasswordsMatch())
             {
