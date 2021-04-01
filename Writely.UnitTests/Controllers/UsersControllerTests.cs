@@ -115,6 +115,21 @@ namespace Writely.UnitTests.Controllers
             // Assert
             response.Should().BeOfType<OkResult>();
         }
+
+        [Fact]
+        public async Task ChangePassword_PasswordUpdateNull_ReturnsBadRequest()
+        {
+            // Arrange
+            var accountUpdate = Helpers.GetPasswordUpdate();
+            accountUpdate.PasswordUpdate!.ConfirmPassword = "TotallyDifferentPW123!";
+            var controller = PrepControllerForIncompleteInfo();
+
+            // Act
+            var response = await controller.ChangePassword(accountUpdate);
+
+            // Assert
+            response.Should().BeOfType<BadRequestResult>();
+        }
         
         [Fact]
         public async Task ChangePassword_IncompleteAccountUpdate_ReturnsBadRequest()
