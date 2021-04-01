@@ -1,6 +1,8 @@
 using System;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Writely.Exceptions;
 using Writely.Models;
 using Writely.Services;
 
@@ -20,13 +22,46 @@ namespace Writely.Controllers
         [HttpPost("register")]
         public async Task<IActionResult> Register(Registration registration)
         {
-            throw new NotImplementedException();
+            try
+            {
+                await _userService.CreateAccount(registration);
+            }
+            catch (MissingInformationException ex)
+            {
+                return BadRequest(ex);
+            }
+            catch (DuplicateUserException ex)
+            {
+                return BadRequest(ex);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+            }
+            
+            return Ok();
         }
 
         [HttpPatch("change-email")]
         public async Task<IActionResult> ChangeEmail(AccountUpdate update)
         {
-            throw new NotImplementedException();
+            IdentityResult result;
+            
+            try
+            {
+                result = await _userService.ChangeEmail(update);
+            }
+            catch (MissingInformationException ex)
+            {
+                return BadRequest(ex);
+            }
+
+            if (!result.Succeeded)
+            {
+                return BadRequest();
+            }
+            
+            return Ok();
         }
         
         [HttpPatch("change-password")]
@@ -35,7 +70,7 @@ namespace Writely.Controllers
             throw new NotImplementedException();
         }
 
-        [HttpDelete("{userId}")]
+        [HttpDelete("{userId:string}")]
         public async Task<IActionResult> DeleteAccount(string userId)
         {
             throw new NotImplementedException();
