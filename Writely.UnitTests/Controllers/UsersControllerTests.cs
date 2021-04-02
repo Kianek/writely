@@ -185,7 +185,7 @@ namespace Writely.UnitTests.Controllers
             var response = await controller.DeleteAccount("UserIdDelete");
 
             // Assert
-            response.Should().BeOfType<BadRequestResult>();
+            response.Should().BeOfType<BadRequestObjectResult>();
         }
 
         private Registration CompleteRegistration()
@@ -225,7 +225,7 @@ namespace Writely.UnitTests.Controllers
             userService.Setup(us => us.DeleteAccount("UserId"))
                 .ReturnsAsync(() => IdentityResult.Success);
             userService.Setup(us => us.DeleteAccount("UserIdDelete"))
-                .ReturnsAsync(() => IdentityResult.Failed());
+                .Throws<UserNotFoundException>();
             
             return userService.Object;
         }
