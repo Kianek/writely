@@ -98,7 +98,7 @@ namespace Writely.Services
             var user = await _userManager.FindByIdAsync(userId);
             if (user == null)
             {
-                throw new UserNotFoundException();
+                throw new UserNotFoundException($"Unable to locate user: {userId}");
             }
             
             return await _userManager.DeleteAsync(user);
