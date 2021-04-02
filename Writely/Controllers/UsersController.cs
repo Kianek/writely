@@ -82,7 +82,16 @@ namespace Writely.Controllers
         [HttpDelete("{userId:string}")]
         public async Task<IActionResult> DeleteAccount(string userId)
         {
-            throw new NotImplementedException();
+            try
+            {
+                await _userService.DeleteAccount(userId);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+
+            return Ok();
         }
     }
 }
