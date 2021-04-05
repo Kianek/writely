@@ -55,7 +55,7 @@ namespace Writely.Services
             var user = await _userManager.FindByIdAsync(update.UserId);
             if (user == null)
             {
-                throw new UserNotFoundException();
+                throw new UserNotFoundException($"Unable to locate user: {update.UserId}");
             }
             
             var email = update.EmailUpdate?.Email;
@@ -86,7 +86,7 @@ namespace Writely.Services
             var user = await _userManager.FindByIdAsync(update.UserId);
             if (user == null)
             {
-                throw new UserNotFoundException();
+                throw new UserNotFoundException($"Unable to locate user: {update.UserId}");
             }
             
             var (oldPassword, newPassword) = update.PasswordUpdate!;
