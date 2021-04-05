@@ -70,6 +70,20 @@ namespace Writely.UnitTests.Controllers
         }
 
         [Fact]
+        public async Task ChangeEmail_UserNotFound_ReturnsNotFound()
+        {
+            // Arrange
+            var emailUpdate = Helpers.GetEmailUpdate();
+            var controller = PrepControllerWithoutUser();
+
+            // Act
+            var response = await controller.ChangeEmail(emailUpdate);
+
+            // Assert
+            response.Should().BeOfType<NotFoundResult>();
+        }
+
+        [Fact]
         public async Task ChangeEmail_AccountUpdateNull_ReturnsBadRequest()
         {
             // Arrange
@@ -127,6 +141,20 @@ namespace Writely.UnitTests.Controllers
 
             // Assert
             response.Should().BeOfType<OkResult>();
+        }
+
+        [Fact]
+        public async Task ChangePassword_UserNotFound_ReturnsNotFound()
+        {
+            // Arrange
+            var passwordUpdate = Helpers.GetPasswordUpdate();
+            var controller = PrepControllerWithoutUser();
+
+            // Act
+            var response = await controller.ChangeEmail(passwordUpdate);
+
+            // Assert
+            response.Should().BeOfType<NotFoundResult>();
         }
 
         [Fact]
@@ -206,9 +234,12 @@ namespace Writely.UnitTests.Controllers
             var userService = GetMockUserService();
             userService.Setup(us => us.CreateAccount(It.IsAny<Registration>()))
                 .ReturnsAsync(() => IdentityResult.Success);
-
             userService.Setup(us => us.CreateAccount(IncompleteRegistration()))
                 .Throws<IncompleteRegistrationException>();
+            userService.Setup(us => us.ChangeEmail(It.IsAny<AccountUpdate>()))
+                .Throws<UserNotFoundException>();
+            userService.Setup(us => us.ChangePassword(It.IsAny<AccountUpdate>()))
+                .Throws<UserNotFoundException>();
             
             return userService.Object;
         }
