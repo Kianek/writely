@@ -87,7 +87,7 @@ namespace Writely.Controllers
             return Ok();
         }
 
-        [HttpDelete("{userId:string}")]
+        [HttpDelete("{userId}")]
         public async Task<IActionResult> DeleteAccount(string userId)
         {
             try
