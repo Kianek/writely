@@ -51,6 +51,10 @@ namespace Writely.Controllers
             {
                 result = await _userService.ChangeEmail(update);
             }
+            catch (UserNotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
             catch (Exception ex)
             {
                 return BadRequest(ex.Message);
@@ -70,6 +74,10 @@ namespace Writely.Controllers
             try
             {
                 await _userService.ChangePassword(update);
+            }
+            catch (UserNotFoundException ex)
+            {
+                return NotFound(ex.Message);
             }
             catch (Exception ex)
             {
