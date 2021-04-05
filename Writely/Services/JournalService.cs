@@ -70,6 +70,7 @@ namespace Writely.Services
             {
                 throw new JournalNotFoundException($"Journal not found: {journalId}");
             }
+            
             journal.Update(updateModel);
             await unitOfWork.Complete();
             return journal;
