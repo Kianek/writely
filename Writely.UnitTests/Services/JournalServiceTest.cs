@@ -180,7 +180,7 @@ namespace Writely.UnitTests.Services
             var result = await service.Remove(journal.Id);
 
             // Assert
-            result.Should().NotBeNull();
+            result.Should().Be(1);
         }
 
         [Fact]
