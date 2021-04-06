@@ -2,6 +2,7 @@ using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Writely.Data;
 using Writely.Models;
 using Writely.Models.Dto;
 using Writely.Services;
@@ -14,11 +15,13 @@ namespace Writely.Controllers
     {
         private readonly ILogger<JournalsController> _logger;
         private readonly IJournalService _journalService;
+        private readonly AppDbContext _context;
 
-        public JournalsController(ILogger<JournalsController> logger, IJournalService journalService)
+        public JournalsController(ILogger<JournalsController> logger, IJournalService journalService, AppDbContext context)
         {
             _logger = logger;
             _journalService = journalService;
+            _context = context;
         }
 
         [HttpGet("journalId")]
