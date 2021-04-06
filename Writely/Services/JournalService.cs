@@ -75,7 +75,7 @@ namespace Writely.Services
             return await unitOfWork.Complete();
         }
 
-        public async Task<Journal> Remove(long journalId)
+        public async Task<int> Remove(long journalId)
         {
             using var unitOfWork = GetUnitOfWork();
             var journal = await unitOfWork.Journals.GetById(journalId);
@@ -85,8 +85,7 @@ namespace Writely.Services
             }
             
             unitOfWork.Journals.Remove(journal);
-            await unitOfWork.Complete();
-            return journal;
+            return await unitOfWork.Complete();
         }
 
         private IUnitOfWork GetUnitOfWork(long? journalId = null) 
