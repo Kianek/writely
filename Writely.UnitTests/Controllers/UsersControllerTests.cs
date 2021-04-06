@@ -18,7 +18,7 @@ namespace Writely.UnitTests.Controllers
         {
             // Arrange
             var registration = CompleteRegistration();
-            var controller = new UsersController(PrepUserServiceWithoutUser());
+            var controller = PrepControllerWithoutUser();
 
             // Act
             var response = await controller.Register(registration);
@@ -229,7 +229,7 @@ namespace Writely.UnitTests.Controllers
 
         private Registration IncompleteRegistration() => new();
 
-        private IUserService PrepUserServiceWithoutUser()
+        private UsersController PrepControllerWithoutUser()
         {
             var userService = GetMockUserService();
             userService.Setup(us => us.CreateAccount(It.IsAny<Registration>()))
@@ -241,10 +241,10 @@ namespace Writely.UnitTests.Controllers
             userService.Setup(us => us.ChangePassword(It.IsAny<AccountUpdate>()))
                 .Throws<UserNotFoundException>();
             
-            return userService.Object;
+            return new (userService.Object);
         }
         
-        private IUserService PrepUserServiceWithUser()
+        private UsersController PrepControllerWithUser()
         {
             var userService = GetMockUserService();
             userService.Setup(us => us.CreateAccount(It.IsAny<Registration>()))
@@ -258,10 +258,10 @@ namespace Writely.UnitTests.Controllers
             userService.Setup(us => us.DeleteAccount("UserIdDelete"))
                 .Throws<UserNotFoundException>();
             
-            return userService.Object;
+            return new (userService.Object);
         }
 
-        private IUserService PrepUserServiceForIncompleteInfo()
+        private UsersController PrepControllerForIncompleteInfo()
         {
             var userService = GetMockUserService();
             userService.Setup(us => us.CreateAccount(It.IsAny<Registration>()))
@@ -271,17 +271,8 @@ namespace Writely.UnitTests.Controllers
             userService.Setup(us => us.ChangePassword(It.IsAny<AccountUpdate>()))
                 .Throws<MissingInformationException>();
             
-            return userService.Object;
+            return new (userService.Object);
         }
-
-        private UsersController PrepControllerForIncompleteInfo()
-            => new(PrepUserServiceForIncompleteInfo());
-
-        private UsersController PrepControllerWithoutUser()
-            => new (PrepUserServiceWithoutUser());
-
-        private UsersController PrepControllerWithUser()
-            => new(PrepUserServiceWithUser());
 
         private Mock<IUserService> GetMockUserService() => new ();
     }
