@@ -127,7 +127,7 @@ namespace Writely.UnitTests.Services
         }
 
         [Fact]
-        public async Task Update_JournalFound_UpdateSuccessful_ReturnsUpdatedJournal()
+        public async Task Update_JournalFound_UpdateSuccessful_ReturnsNumberOfUpdatedEntities()
         {
             // Arrange
             var journal = await PrepDbWithJournal();
@@ -138,8 +138,9 @@ namespace Writely.UnitTests.Services
             var result = await service.Update(journal.Id, updateModel);
 
             // Assert
-            result.Title.Should().Be(updateModel.Title);
-            result.CreatedAt.Should().BeBefore(result.LastModified);
+            result.Should().Be(1);
+            // result.Title.Should().Be(updateModel.Title);
+            // result.CreatedAt.Should().BeBefore(result.LastModified);
         }
 
         [Fact]
