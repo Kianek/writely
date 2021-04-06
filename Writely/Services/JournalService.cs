@@ -62,7 +62,7 @@ namespace Writely.Services
             return newJournal;
         }
 
-        public async Task<Journal> Update(long journalId, JournalUpdate updateModel)
+        public async Task<int> Update(long journalId, JournalUpdate updateModel)
         {
             using var unitOfWork = GetUnitOfWork();
             var journal = await unitOfWork.Journals.GetById(journalId);
@@ -72,8 +72,7 @@ namespace Writely.Services
             }
             
             journal.Update(updateModel);
-            await unitOfWork.Complete();
-            return journal;
+            return await unitOfWork.Complete();
         }
 
         public async Task<Journal> Remove(long journalId)
