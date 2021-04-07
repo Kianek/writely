@@ -42,8 +42,8 @@ namespace Writely.Controllers
             throw new NotImplementedException();
         }
 
-        [HttpPatch]
-        public async Task<IActionResult> Update(JournalUpdate update)
+        [HttpPatch("{journalId}")]
+        public async Task<IActionResult> Update(long journalId, JournalUpdate update)
         {
             throw new NotImplementedException();
         }
