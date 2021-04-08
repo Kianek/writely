@@ -1,8 +1,9 @@
 using System;
 using System.Threading.Tasks;
+using IdentityServer4.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Writely.Data;
+using Writely.Exceptions;
 using Writely.Models;
 using Writely.Models.Dto;
 using Writely.Services;
@@ -15,19 +16,36 @@ namespace Writely.Controllers
     {
         private readonly ILogger<JournalsController> _logger;
         private readonly IJournalService _journalService;
-        private readonly AppDbContext _context;
 
-        public JournalsController(ILogger<JournalsController> logger, IJournalService journalService, AppDbContext context)
+        public JournalsController(ILogger<JournalsController> logger, IJournalService journalService)
         {
             _logger = logger;
             _journalService = journalService;
-            _context = context;
+            _journalService.UserId ??= HttpContext.User.Identity.GetSubjectId();
         }
 
         [HttpGet("journalId")]
         public async Task<IActionResult> GetById(long journalId)
         {
-            throw new NotImplementedException();
+            Journal journal;
+            try
+            {
+                journal = await _journalService.GetById(journalId);
+            }
+            catch (UserNotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (JournalNotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            
+            return Ok(journal);
         }
 
         [HttpGet]
@@ -49,7 +67,7 @@ namespace Writely.Controllers
         }
 
         [HttpDelete("{journalId}")]
-        public async Task<IActionResult> Delete(long journalId)
+        public async Task<IActionResult> Remove(long journalId)
         {
             throw new NotImplementedException();
         }
