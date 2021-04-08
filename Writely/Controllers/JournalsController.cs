@@ -4,6 +4,7 @@ using IdentityServer4.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Writely.Exceptions;
+using Writely.Extensions;
 using Writely.Models;
 using Writely.Models.Dto;
 using Writely.Services;
@@ -27,10 +28,10 @@ namespace Writely.Controllers
         [HttpGet("journalId")]
         public async Task<IActionResult> GetById(long journalId)
         {
-            Journal journal;
+            JournalDto journal;
             try
             {
-                journal = await _journalService.GetById(journalId);
+                journal = (await _journalService.GetById(journalId)).ToDto();
             }
             catch (UserNotFoundException ex)
             {
