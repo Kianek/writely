@@ -91,7 +91,20 @@ namespace Writely.Controllers
         [HttpPatch("{journalId}")]
         public async Task<IActionResult> Update(long journalId, JournalUpdate update)
         {
-            throw new NotImplementedException();
+            try
+            {
+                await _journalService.Update(journalId, update);
+            }
+            catch (ArgumentNullException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (JournalNotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            
+            return NoContent();
         }
 
         [HttpDelete("{journalId}")]
