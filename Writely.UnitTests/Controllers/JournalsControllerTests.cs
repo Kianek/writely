@@ -91,7 +91,7 @@ namespace Writely.UnitTests.Controllers
             var response = await controller.Add(newJournal);
 
             // Assert
-            response.Should().BeOfType<CreatedResult>();
+            response.Should().BeOfType<CreatedAtActionResult>();
         }
 
         [Fact]
@@ -118,7 +118,7 @@ namespace Writely.UnitTests.Controllers
             var response = await controller.Add(null!);
 
             // Assert
-            response.Should().BeOfType<BadRequestResult>();
+            response.Should().BeOfType<BadRequestObjectResult>();
         }
 
         [Fact]
@@ -198,6 +198,8 @@ namespace Writely.UnitTests.Controllers
                 .ReturnsAsync(Helpers.GetJournal);
             service.Setup(js => js.GetAll(0, "date-desc"))
                 .ReturnsAsync(Helpers.GetJournals(5));
+            service.Setup(js => js.Add(It.IsAny<NewJournal>()))
+                .ReturnsAsync(Helpers.GetJournal);
             service.Setup(js => js.Update(It.IsAny<long>(), It.IsAny<JournalUpdate>()))
                 .ReturnsAsync(1);
             service.Setup(js => js.Remove(It.IsAny<long>()))
@@ -223,6 +225,10 @@ namespace Writely.UnitTests.Controllers
                 .Throws<JournalNotFoundException>();
             service.Setup(js => js.GetAll(0, "date-desc"))
                 .Throws<UserNotFoundException>();
+            service.Setup(js => js.Add(It.IsAny<NewJournal>()))
+                .Throws<UserNotFoundException>();
+            service.Setup(js => js.Add(null!))
+                .Throws<ArgumentNullException>();
             service.Setup(js => js.Update(It.IsAny<long>(), It.IsAny<JournalUpdate>()))
                 .Throws<JournalNotFoundException>();
             service.Setup(js => js.Update(It.IsAny<long>(), null!))
