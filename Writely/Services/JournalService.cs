@@ -21,7 +21,7 @@ namespace Writely.Services
 
         public async Task<Journal> GetById(long journalId)
         {
-            if (UserId == null)
+            if (string.IsNullOrEmpty(UserId))
             {
                 throw new UserNotFoundException();
             }
@@ -34,7 +34,7 @@ namespace Writely.Services
         public async Task<IEnumerable<Journal>?> GetAll(int limit = 0, string orderBy = "date-desc")
         
         {
-            if (UserId == null)
+            if (string.IsNullOrEmpty(UserId))
             {
                 throw new UserNotFoundException();
             }
@@ -45,7 +45,7 @@ namespace Writely.Services
 
         public async Task<Journal> Add(NewJournal model)
         {
-            if (UserId == null)
+            if (string.IsNullOrEmpty(UserId))
             {
                 throw new UserNotFoundException();
             }
