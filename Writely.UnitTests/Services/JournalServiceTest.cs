@@ -139,8 +139,6 @@ namespace Writely.UnitTests.Services
 
             // Assert
             result.Should().Be(1);
-            // result.Title.Should().Be(updateModel.Title);
-            // result.CreatedAt.Should().BeBefore(result.LastModified);
         }
 
         [Fact]
