@@ -71,7 +71,21 @@ namespace Writely.Controllers
         [HttpPost]
         public async Task<IActionResult> Add(NewJournal newJournal)
         {
-            throw new NotImplementedException();
+            JournalDto journal;
+            try
+            {
+                journal = (await _journalService.Add(newJournal)).ToDto();
+            }
+            catch (ArgumentNullException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (UserNotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            
+            return CreatedAtAction(nameof(Add), journal);
         }
 
         [HttpPatch("{journalId}")]
