@@ -110,7 +110,15 @@ namespace Writely.Controllers
         [HttpDelete("{journalId}")]
         public async Task<IActionResult> Remove(long journalId)
         {
-            throw new NotImplementedException();
+            try
+            {
+                await _journalService.Remove(journalId);
+            }
+            catch (JournalNotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            return Ok();
         }
     }
 }
