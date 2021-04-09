@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using IdentityServer4.Extensions;
 using Microsoft.AspNetCore.Mvc;
@@ -50,9 +52,20 @@ namespace Writely.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAll()
+        public async Task<IActionResult> GetAll([FromQuery] int limit = 0, [FromQuery] string order = "date-desc")
         {
-            throw new NotImplementedException();
+            List<JournalDto>? journals;
+
+            try
+            {
+                journals = (await _journalService.GetAll(limit, order))?.ToList().MapToDto();
+            }
+            catch (UserNotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            
+            return Ok(journals);
         }
 
         [HttpPost]
