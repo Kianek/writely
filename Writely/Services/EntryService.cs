@@ -37,6 +37,10 @@ namespace Writely.Services
 
         public async Task<Entry> Add(NewEntry model)
         {
+            if (model == null)
+            {
+                throw new ArgumentNullException(nameof(model));
+            }
             if (JournalId == null)
             {
                 throw new JournalNotFoundException();
