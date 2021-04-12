@@ -20,21 +20,25 @@ namespace Writely.Controllers
             _entryService = entryService;
         }
 
+        [HttpGet("{entryId:long}")]
         public async Task<IActionResult> GetById(long entryId)
         {
             throw new NotImplementedException();
         }
 
+        [HttpGet]
         public async Task<IActionResult> Add(NewEntry newEntry)
         {
             throw new NotImplementedException();
         }
 
-        public async Task<IActionResult> Update(EntryUpdate update)
+        [HttpPatch("{entryId:long}")]
+        public async Task<IActionResult> Update(long entryId, EntryUpdate update)
         {
             throw new NotImplementedException();
         }
 
+        [HttpDelete("{entryId:long}")]
         public async Task<IActionResult> Delete(long entryId)
         {
             throw new NotImplementedException();
