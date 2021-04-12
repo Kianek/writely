@@ -120,6 +120,18 @@ namespace Writely.UnitTests.Services
             result.Should().NotBeNull();
             result.Title.Should().Be(newEntry.Title);
         }
+
+        [Fact]
+        public async Task Add_NewEntryNull_ThrowArgumentNullException()
+        {
+            // Arrange
+            var service = await PrepDbAndEntryService();
+
+            // Act
+            service.Invoking(s => s.Add(null!))
+                .Should()
+                .Throw<ArgumentNullException>();
+        }
         
         [Theory]
         [InlineData(null)]
