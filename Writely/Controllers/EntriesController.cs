@@ -26,7 +26,7 @@ namespace Writely.Controllers
             throw new NotImplementedException();
         }
 
-        [HttpGet]
+        [HttpPost]
         public async Task<IActionResult> Add(NewEntry newEntry)
         {
             throw new NotImplementedException();
