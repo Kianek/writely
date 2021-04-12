@@ -121,7 +121,6 @@ namespace Writely.UnitTests.Services
             result.Title.Should().Be(newEntry.Title);
         }
         
-        // [Fact]
         [Theory]
         [InlineData(null)]
         [InlineData(3L)]
