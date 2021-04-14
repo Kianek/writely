@@ -32,7 +32,6 @@ namespace Writely.Services
         }
 
         public async Task<IEnumerable<Journal>?> GetAll(int limit = 0, string orderBy = "date-desc")
-        
         {
             if (string.IsNullOrEmpty(UserId))
             {
