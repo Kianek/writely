@@ -1,5 +1,7 @@
 using System.Threading.Tasks;
+using Writely.Controllers;
 using Writely.Models;
+using Writely.Services;
 using Xunit;
 
 namespace Writely.IntegrationTests
@@ -40,8 +42,8 @@ namespace Writely.IntegrationTests
             
             // Assert
         }
-        [Fact]
         
+        [Fact]
         public async Task ChangeEmail_IncompleteAccountUpdate_Returns400()
         {
             // Arrange
@@ -70,8 +72,8 @@ namespace Writely.IntegrationTests
             
             // Assert
         }
-        [Fact]
         
+        [Fact]
         public async Task DeleteAccount_AccountDeleted_Returns200()
         {
             // Arrange
@@ -90,6 +92,5 @@ namespace Writely.IntegrationTests
             
             // Assert
         }
-        
     }
 }
