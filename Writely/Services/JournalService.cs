@@ -51,7 +51,7 @@ namespace Writely.Services
 
             if (model == null)
             {
-                throw new ArgumentNullException();
+                throw new ArgumentNullException(nameof(model));
             }
             
             var unitOfWork = GetUnitOfWork();
