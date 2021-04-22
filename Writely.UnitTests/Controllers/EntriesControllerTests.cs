@@ -164,10 +164,6 @@ namespace Writely.UnitTests.Controllers
 
             service.Setup(s => s.GetById(It.IsAny<long>()))
                 .ReturnsAsync(Helpers.GetEntry);
-            service.Setup(s => s.GetAll())
-                .ReturnsAsync(Helpers.GetEntries(5));
-            service.Setup(s => s.GetAllByTag("one", "date-desc"))
-                .ReturnsAsync(Helpers.GetEntries(5));
             service.Setup(s => s.Add(It.IsAny<NewEntry>()))
                 .ReturnsAsync(Helpers.GetEntry);
             service.Setup(s => s.Update(1L, new EntryUpdate()))
@@ -185,12 +181,6 @@ namespace Writely.UnitTests.Controllers
 
             service.Setup(s => s.GetById(1L))
                 .Throws<EntryNotFoundException>();
-            service.Setup(s => s.GetAll())
-                .Throws<JournalNotFoundException>();
-            service.Setup(s => s.GetAllByTag("", "date-desc"))
-                .Throws<EmptyTagsException>();
-            service.Setup(s => s.GetAllByTag("one,two", "date-desc"))
-                .Throws<JournalNotFoundException>();
             service.Setup(s => s.Add(null!))
                 .Throws<JournalNotFoundException>();
             service.Setup(s => s.Add(It.IsAny<NewEntry>()))
