@@ -11,7 +11,9 @@ namespace Writely.Services
         
         Task<Journal> GetById(long journalId);
         
-        Task<IEnumerable<Journal>?> GetAll(int limit = 0, string orderBy = "date-desc");
+        Task<IEnumerable<Journal>?> GetAll(QueryFilter filter);
+
+        Task<IEnumerable<Entry>?> GetEntriesByJournal(long journalId, QueryFilter filter);
         
         Task<Journal> Add(NewJournal model);
 
