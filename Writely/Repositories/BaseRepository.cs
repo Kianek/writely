@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Writely.Data;
+using Writely.Models;
 
 namespace Writely.Repositories
 {
@@ -20,9 +21,7 @@ namespace Writely.Repositories
             return await _context.Set<TEntity>().FindAsync(id);
         }
 
-        public abstract Task<IEnumerable<TEntity>?> GetAll(Expression<Func<TEntity, bool>>? filter = null,
-            string? order = null,
-            int limit = 0);
+        public abstract Task<IEnumerable<TEntity>?> GetAll(QueryFilter? filter = null);
 
         public abstract Task<TEntity?> Find(Expression<Func<TEntity, bool>> predicate);
 
