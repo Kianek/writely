@@ -52,13 +52,13 @@ namespace Writely.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAll([FromQuery] int limit = 0, [FromQuery] string order = "date-desc")
+        public async Task<IActionResult> GetAll([FromQuery] QueryFilter filter)
         {
             List<JournalDto>? journals;
 
             try
             {
-                journals = (await _journalService.GetAll(limit, order))?.ToList().MapToDto();
+                journals = (await _journalService.GetAll(filter))?.ToList().MapToDto();
             }
             catch (UserNotFoundException ex)
             {
@@ -66,6 +66,12 @@ namespace Writely.Controllers
             }
             
             return Ok(journals);
+        }
+
+        [HttpGet("{journalId}/entries")]
+        public async Task<IActionResult> GetEntriesByJournal(long journalId, [FromQuery] QueryFilter filter)
+        {
+            throw new NotImplementedException();
         }
 
         [HttpPost]
