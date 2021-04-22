@@ -19,7 +19,7 @@ namespace Writely.Repositories
             _userId = userId;
         }
         
-        public override async Task<IEnumerable<Journal>?> GetAll(Expression<Func<Journal, bool>>? filter = null, string? order = null, int limit = 0)
+        public override async Task<IEnumerable<Journal>?> GetAll(QueryFilter? filter = null)
         {
             var query = _context.Journals!
                 .AsNoTracking()
@@ -27,17 +27,12 @@ namespace Writely.Repositories
             
             if (filter != null)
             {
-                query = query.Where(filter);
+                query = query.SortBy(filter.OrderBy);
             }
 
-            if (order != null)
+            if (filter?.Limit > 0)
             {
-                query = query.SortBy(order);
-            }
-
-            if (limit > 0)
-            {
-                query = query.Take(limit);
+                query = query.Take(filter.Limit);
             }
 
             return await query.Include(j => j.Entries).ToListAsync();
