@@ -72,29 +72,10 @@ namespace Writely.UnitTests.Repositories
             var repo = GetJournalRepo();
             
             // Act
-            var result = await repo.GetAll(limit: 2);
+            var result = await repo.GetAll(new QueryFilter { Limit = 2 });
 
             // Assert
             result!.Count().Should().Be(2);
-        }
-
-        [Fact]
-        public async Task GetAll_JournalsFound_FilterByCatsInTitle_ReturnsFilteredJournals()
-        {
-            // Arrange
-            await PrepareDatabase();
-            var journals = Helpers.GetJournals(5);
-            journals[1].Title = "A Cat Named the Next Journal";
-            journals[2].Title = "aoijeafj aoiewjf awojfi302901 - cat";
-            Context!.Journals?.AddRange(journals);
-            await Context.SaveChangesAsync();
-            var repo = GetJournalRepo();
-
-            // Act
-            var result = await repo.GetAll(filter: j => j.Title!.Contains("Cat"));
-
-            // Assert
-            result!.Count().Should().Be(1);
         }
 
         [Fact]
@@ -114,7 +95,7 @@ namespace Writely.UnitTests.Repositories
             var repo = GetJournalRepo();
 
             // Act
-            var result = await repo.GetAll(order: "asc") as List<Journal>;
+            var result = await repo.GetAll(new QueryFilter { OrderBy = "asc" }) as List<Journal>;
 
             // Assert
             result.Should().BeInAscendingOrder(j => j.Title);
