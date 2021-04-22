@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using FluentAssertions;
 using Moq;
@@ -60,11 +61,11 @@ namespace Writely.UnitTests.Services
             await PrepareDatabase();
             var journals = Helpers.GetJournals(5);
             Context?.Journals!.AddRange(journals);
-            await Context.SaveChangesAsync();
+            await Context!.SaveChangesAsync();
             var service = GetJournalService();
 
             // Act
-            var result = await service.GetAll();
+            var result = await service.GetAll(new QueryFilter());
 
             // Assert
             result.Should().HaveCount(5);
@@ -78,9 +79,36 @@ namespace Writely.UnitTests.Services
             var service = GetJournalService(null);
 
             // Assert
-            service.Invoking(s => s.GetAll())
+            service.Invoking(s => s.GetAll(new QueryFilter()))
                 .Should()
                 .Throw<UserNotFoundException>();
+        }
+
+        [Fact]
+        public async Task GetEntriesByJournal_EntriesFound_ReturnsEntries()
+        {
+            // Arrange
+            var journal = await PrepDbWithJournal();
+            var service = GetJournalService();
+
+            // Act
+            var result = (await service.GetEntriesByJournal(journal.Id, new QueryFilter()))?.ToList();
+
+            // Assert
+            result?.Count.Should().Be(5);
+        }
+
+        [Fact]
+        public async Task GetEntriesByJournal_JournalNotFound_ThrowsJournalNotFoundException()
+        {
+            // Arrange
+            await PrepareDatabase();
+            var service = GetJournalService();
+
+            // Assert
+            service.Invoking(s => s.GetEntriesByJournal(9L, new QueryFilter()))
+                .Should()
+                .Throw<JournalNotFoundException>();
         }
 
         [Fact]
@@ -178,7 +206,7 @@ namespace Writely.UnitTests.Services
             var result = await service.Remove(journal.Id);
 
             // Assert
-            result.Should().Be(1);
+            result.Should().BeGreaterOrEqualTo(1);
         }
 
         [Fact]
@@ -201,6 +229,7 @@ namespace Writely.UnitTests.Services
         {
             await PrepareDatabase();
             var journal = Helpers.GetJournal();
+            Helpers.AddEntriesToJournal(journal, Helpers.GetEntries(5));
             await SaveJournal(journal);
             return journal;
         }
