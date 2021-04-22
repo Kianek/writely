@@ -1,8 +1,10 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Writely.Data;
 using Writely.Exceptions;
+using Writely.Extensions;
 using Writely.Models;
 using Writely.Models.Dto;
 
@@ -31,7 +33,25 @@ namespace Writely.Services
             return journal ?? throw new JournalNotFoundException($"Journal not found: {journalId}");
         }
 
-        public async Task<IEnumerable<Journal>?> GetAll(int limit = 0, string orderBy = "date-desc")
+        public async Task<IEnumerable<Entry>?> GetEntriesByJournal(long journalId, QueryFilter filter)
+        {
+            using var unitOfWork = GetUnitOfWork();
+            var journal = await unitOfWork.Journals.GetById(journalId);
+            if (journal == null)
+            {
+                throw new JournalNotFoundException($"Journal not found: {journalId}");
+            }
+            
+            var entries = journal.Entries
+                .SortBy(filter.OrderBy);
+            
+            return filter.Limit > 0 ? 
+                entries.Take(filter.Limit).ToList() 
+                : 
+                entries.ToList();
+        }
+
+        public async Task<IEnumerable<Journal>?> GetAll(QueryFilter? filter)
         {
             if (string.IsNullOrEmpty(UserId))
             {
@@ -39,7 +59,7 @@ namespace Writely.Services
             }
             
             using var unitOfWork = GetUnitOfWork();
-            return await unitOfWork.Journals.GetAll(null, orderBy, limit);
+            return await unitOfWork.Journals.GetAll(null, filter?.OrderBy, filter.Limit);
         }
 
         public async Task<Journal> Add(NewJournal model)
