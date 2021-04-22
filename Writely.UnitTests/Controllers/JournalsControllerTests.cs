@@ -61,7 +61,7 @@ namespace Writely.UnitTests.Controllers
             var controller = PrepControllerForSuccessfulRequests();
 
             // Act
-            var response = await controller.GetAll();
+            var response = await controller.GetAll(new QueryFilter());
 
             // Assert
             response.Should().BeOfType<OkObjectResult>();
@@ -74,7 +74,7 @@ namespace Writely.UnitTests.Controllers
             var controller = PrepControllerForFailedRequests();
 
             // Act
-            var response = await controller.GetAll();
+            var response = await controller.GetAll(new QueryFilter());
 
             // Assert
             response.Should().BeOfType<NotFoundObjectResult>();
@@ -196,7 +196,7 @@ namespace Writely.UnitTests.Controllers
             service.SetupProperty(js => js.UserId, "UserId");
             service.Setup(js => js.GetById(It.IsAny<long>()))
                 .ReturnsAsync(Helpers.GetJournal);
-            service.Setup(js => js.GetAll(0, "date-desc"))
+            service.Setup(js => js.GetAll(new QueryFilter()))
                 .ReturnsAsync(Helpers.GetJournals(5));
             service.Setup(js => js.Add(It.IsAny<NewJournal>()))
                 .ReturnsAsync(Helpers.GetJournal);
@@ -223,7 +223,7 @@ namespace Writely.UnitTests.Controllers
             }
             service.Setup(js => js.GetById(It.IsAny<long>()))
                 .Throws<JournalNotFoundException>();
-            service.Setup(js => js.GetAll(0, "date-desc"))
+            service.Setup(js => js.GetAll(new QueryFilter()))
                 .Throws<UserNotFoundException>();
             service.Setup(js => js.Add(It.IsAny<NewJournal>()))
                 .Throws<UserNotFoundException>();
