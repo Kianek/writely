@@ -25,14 +25,9 @@ namespace Writely.Services
                    ?? throw new EntryNotFoundException($"Entry not found: {entryId}");
         }
 
-        public async Task<IEnumerable<Entry>?> GetAll()
+        public async Task<IEnumerable<Entry>?> GetAllByTag(QueryFilter? filter)
         {
-            return await GetUnitOfWork().Entries.GetAll();
-        }
-
-        public async Task<IEnumerable<Entry>?> GetAllByTag(string tags, string order = "date-desc")
-        {
-            return await GetUnitOfWork().Entries.GetAllByTag(tags.Split(","), order);
+            return await GetUnitOfWork().Entries.GetAllByTag(filter);
         }
 
         public async Task<Entry> Add(NewEntry model)
