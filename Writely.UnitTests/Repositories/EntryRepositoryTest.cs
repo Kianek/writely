@@ -79,26 +79,6 @@ namespace Writely.UnitTests.Repositories
         }
 
         [Fact]
-        public async Task GetAll_CanFilter_ReturnsFilteredEntries()
-        {
-            // Arrange
-            await PrepareDatabase();
-            var journal = Helpers.GetJournal();
-            var entries = Helpers.GetEntries(5);
-            entries[2].Title = "I Look Like a Turtle";
-            entries[3].Title = "I Was a Teenage Mutant Ninja Turtle";
-            Helpers.AddEntriesToJournal(journal, entries);
-            await SaveJournal(journal);
-            var repo = GetEntryRepo(journal.Id);
-
-            // Act
-            var result = await repo.GetAll(filter: e => e.Title!.Contains("Turtle"));
-
-            // Assert
-            result?.Count().Should().Be(2);
-        }
-
-        [Fact]
         public async Task GetAll_CanSetOrderOfSequence_ReturnsOrderedEntries()
         {
             // Arrange
@@ -114,9 +94,9 @@ namespace Writely.UnitTests.Repositories
             Helpers.AddEntriesToJournal(journal, entries);
             await SaveJournal(journal);
             var repo = GetEntryRepo(journal.Id);
-
+            
             // Act
-            var result = await repo.GetAll(order: SortOrder.Descending) as List<Entry>;
+            var result = await repo.GetAll(new QueryFilter { OrderBy = SortOrder.Descending }) as List<Entry>;
 
             // Assert
             result!.Should().BeInDescendingOrder(e => e.Title);
@@ -134,7 +114,7 @@ namespace Writely.UnitTests.Repositories
             var repo = GetEntryRepo(journal.Id);
 
             // Act
-            var result = await repo.GetAll(limit: 4);
+            var result = await repo.GetAll(new QueryFilter { Limit = 4 });
 
             // Assert
             result?.Count().Should().Be(4);
@@ -151,7 +131,7 @@ namespace Writely.UnitTests.Repositories
             var repo = GetEntryRepo(journal.Id);
 
             // Act
-            var result = await repo.GetAll(limit: -4);
+            var result = await repo.GetAll(new QueryFilter { Limit = -4 });
 
             // Assert
             result?.Count().Should().Be(5);
@@ -172,7 +152,7 @@ namespace Writely.UnitTests.Repositories
             var repo = GetEntryRepo(journal.Id);
 
             // Act
-            var result = await repo.GetAllByTag(new[] {"cats"}) as List<Entry>;
+            var result = await repo.GetAllByTag(new QueryFilter { Tags = "cats" }) as List<Entry>;
 
             // Assert
             result?.Count.Should().Be(3);
@@ -196,7 +176,7 @@ namespace Writely.UnitTests.Repositories
             var repo = GetEntryRepo(journal.Id);
 
             // Act
-            var result = await repo.GetAllByTag(new [] {tag}, SortOrder.Descending) as List<Entry>;
+            var result = await repo.GetAllByTag(new QueryFilter { Tags = tag, OrderBy = SortOrder.Descending } ) as List<Entry>;
 
             // Assert
             result!.Count.Should().Be(3);
@@ -215,7 +195,7 @@ namespace Writely.UnitTests.Repositories
             var repo = GetEntryRepo(journal.Id);
 
             // Act
-            var result = await repo.GetAllByTag(new[]{ "blah" }) as List<Entry>;
+            var result = await repo.GetAllByTag(new QueryFilter { Tags = "blah" }) as List<Entry>;
 
             // Assert
             result?.Count.Should().Be(0);
@@ -230,7 +210,7 @@ namespace Writely.UnitTests.Repositories
             var repo = GetEntryRepo(1L);
 
             // Assert
-            repo.Invoking(r => r.GetAllByTag(new[] {"Dogs"}))
+            repo.Invoking(r => r.GetAllByTag(new QueryFilter { Tags = "Dogs" }))
                 .Should()
                 .Throw<JournalNotFoundException>();
         }
@@ -243,7 +223,7 @@ namespace Writely.UnitTests.Repositories
             var repo = GetEntryRepo(1L);
             
             // Assert
-            repo.Invoking(r => r.GetAllByTag(new string[]{}))
+            repo.Invoking(r => r.GetAllByTag(new QueryFilter()))
                 .Should()
                 .Throw<EmptyTagsException>();
         }
