@@ -38,69 +38,6 @@ namespace Writely.UnitTests.Services
         }
 
         [Fact]
-        public async Task GetAll_JournalFound_ReturnsEntries()
-        {
-            // Arrange
-            var journal = await PrepDbWithJournalAndEntries(10);
-            var service = GetEntryService();
-
-            // Act
-            var result = await service.GetAll();
-
-            // Assert
-            result.Should().HaveCount(journal.Entries.Count);
-        }
-
-        [Fact]
-        public async Task GetAll_JournalNotFound_ReturnsEmptySequence()
-        {
-            // Arrange
-            await PrepareDatabase();
-            var service = GetEntryService(null);
-            
-            // Act
-            var result = await service.GetAll();
-
-            // Assert
-            result.Should().BeEmpty();
-        }
-
-        [Fact]
-        public async Task GetAllByTag_JournalFound_ReturnsEntriesByTag()
-        {
-            // Arrange
-            await PrepareDatabase();
-            var journal = Helpers.GetJournal();
-            var entries = Helpers.GetEntries(10);
-            Helpers.AddEntriesToJournal(journal, entries);
-            entries[1].Tags = "dogs";
-            entries[2].Tags = "dogs,cats";
-            entries[4].Tags = "dogs,pirates";
-            Context!.Journals?.Add(journal);
-            await Context!.SaveChangesAsync();
-            var service = GetEntryService(journal.Id);
-
-            // Act
-            var result = await service.GetAllByTag("dogs");
-
-            // Assert
-            result.Should().HaveCount(3);
-        }
-
-        [Fact]
-        public async Task GetAllByTag_JournalNotFound_ThrowsJournalNotFoundException()
-        {
-            // Arrange
-            await PrepareDatabase();
-            var service = GetEntryService();
-
-            // Assert
-            service.Invoking(s => s.GetAllByTag("blah,tags"))
-                .Should()
-                .Throw<JournalNotFoundException>();
-        }
-
-        [Fact]
         public async Task Add_JournalFound_EntrySaved_ReturnsEntry()
         {
             // Arrange
