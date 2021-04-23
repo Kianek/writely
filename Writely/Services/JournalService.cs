@@ -59,7 +59,7 @@ namespace Writely.Services
             }
             
             using var unitOfWork = GetUnitOfWork();
-            return await unitOfWork.Journals.GetAll(null, filter?.OrderBy, filter.Limit);
+            return await unitOfWork.Journals.GetAll(filter);
         }
 
         public async Task<Journal> Add(NewJournal model)
