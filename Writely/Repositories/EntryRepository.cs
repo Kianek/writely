@@ -20,31 +20,30 @@ namespace Writely.Repositories
             _journalId = journalId;
         }
 
-        public override async Task<IEnumerable<Entry>?> GetAll(
-            Expression<Func<Entry, bool>>? filter = null, string? order = null, int limit = 0)
+        public override async Task<IEnumerable<Entry>?> GetAll(QueryFilter? filter = null)
         {
             var query = _context.Entries?.Where(e => e.JournalId == _journalId);
-            if (filter != null)
+            if (filter == null)
             {
-                query = query!.Where(filter);
+                return await query!.ToListAsync();
             }
-
-            if (order != null)
+            
+            if (!string.IsNullOrEmpty(filter.OrderBy))
             {
-                query = query!.SortBy(order);
+                query = query!.SortBy(filter.OrderBy);
             }
-
-            if (limit > 0)
+            
+            if (filter.Limit > 0)
             {
-                query = query!.Take(limit);
+                query = query!.Take(filter.Limit);
             }
             
             return await query!.ToListAsync();
         }
 
-        public async Task<IEnumerable<Entry>?> GetAllByTag(string[] tags, string order = "date-desc")
+        public async Task<IEnumerable<Entry>?> GetAllByTag(QueryFilter? filter)
         {
-            if (tags.Length <= 0)
+            if (string.IsNullOrEmpty(filter?.Tags))
             {
                 throw new EmptyTagsException("No tags to search by");
             }
@@ -60,8 +59,8 @@ namespace Writely.Repositories
             }
 
             return journal.Entries
-                .GetByTag(tags)
-                .SortBy(order)
+                .GetByTag(filter.Tags.Split(","))
+                .SortBy(filter.OrderBy)
                 .ToList();
         }
 
