@@ -6,6 +6,6 @@ namespace Writely.Repositories
 {
     public interface IEntryRepository : IRepository<Entry>
     {
-        Task<IEnumerable<Entry>?> GetAllByTag(string[] tags, string orderBy = "date-desc");
+        Task<IEnumerable<Entry>?> GetAllByTag(QueryFilter? filter);
     }
 }
