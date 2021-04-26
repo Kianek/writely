@@ -63,7 +63,17 @@ namespace Writely.Controllers
         [HttpDelete("{entryId:long}")]
         public async Task<IActionResult> Delete(long entryId)
         {
-            throw new NotImplementedException();
+            Entry entry;
+            try
+            {
+                entry = await _entryService.Remove(entryId);
+            }
+            catch (Exception ex)
+            {
+                return NotFound(ex.Message);
+            }
+            
+            return Ok(entry);
         }
     }
 }
