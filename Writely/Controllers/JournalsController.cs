@@ -71,7 +71,18 @@ namespace Writely.Controllers
         [HttpGet("{journalId}/entries")]
         public async Task<IActionResult> GetEntriesByJournal(long journalId, [FromQuery] QueryFilter filter)
         {
-            throw new NotImplementedException();
+            IEnumerable<EntryDto>? entries;
+            try
+            {
+                entries = (await _journalService.GetEntriesByJournal(journalId, filter))
+                    ?.ToList().MapToDto();
+            }
+            catch (JournalNotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            
+            return Ok(entries);
         }
 
         [HttpPost]
