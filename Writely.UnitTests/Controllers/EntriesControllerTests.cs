@@ -44,26 +44,13 @@ namespace Writely.UnitTests.Controllers
         public async Task Add_CanAddNewEntry_ReturnsCreatedAt()
         {
             // Arrange
-            var controller = PrepControllerForFailureRequests();
+            var controller = PrepControllerForSuccessfulRequests();
 
             // Act
             var response = await controller.Add(new NewEntry());
 
             // Assert
-            response.Should().BeOfType<CreatedAtActionResult>();
-        }
-
-        [Fact]
-        public async Task Add_NewEntryNull_ReturnsBadRequest()
-        {
-            // Arrange
-            var controller = PrepControllerForFailureRequests();
-
-            // Act
-            var response = await controller.Add(null!);
-
-            // Assert
-            response.Should().BeOfType<BadRequestResult>();
+            response.Should().BeOfType<CreatedResult>();
         }
 
         [Fact]
