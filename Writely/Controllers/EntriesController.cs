@@ -57,7 +57,16 @@ namespace Writely.Controllers
         [HttpPatch("{entryId:long}")]
         public async Task<IActionResult> Update(long entryId, EntryUpdate update)
         {
-            throw new NotImplementedException();
+            try
+            {
+                await _entryService.Update(entryId, update);
+            }
+            catch (EntryNotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            
+            return NoContent();
         }
 
         [HttpDelete("{entryId:long}")]
