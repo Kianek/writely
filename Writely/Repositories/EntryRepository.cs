@@ -22,23 +22,29 @@ namespace Writely.Repositories
 
         public override async Task<IEnumerable<Entry>?> GetAll(QueryFilter? filter = null)
         {
-            var query = _context.Entries?.Where(e => e.JournalId == _journalId);
-            if (filter == null)
+            var journal = await _context.Journals!.FindAsync(_journalId);
+            if (journal == null)
             {
-                return await query!.ToListAsync();
+                throw new JournalNotFoundException($"Journal not found: {_journalId}");
             }
             
+            if (filter == null)
+            {
+                return journal.Entries;
+            }
+            
+            var entries = journal.Entries as IEnumerable<Entry>;
             if (!string.IsNullOrEmpty(filter.OrderBy))
             {
-                query = query!.SortBy(filter.OrderBy);
+                entries = entries.SortBy(filter.OrderBy);
             }
             
             if (filter.Limit > 0)
             {
-                query = query!.Take(filter.Limit);
+                entries = entries.Take(filter.Limit);
             }
             
-            return await query!.ToListAsync();
+            return entries.ToList();
         }
 
         public async Task<IEnumerable<Entry>?> GetAllByTag(QueryFilter? filter)
