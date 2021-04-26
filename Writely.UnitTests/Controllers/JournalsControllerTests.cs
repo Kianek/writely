@@ -71,12 +71,37 @@ namespace Writely.UnitTests.Controllers
         public async Task GetAll_UserNotFound_ReturnsNotFound()
         {
             // Arrange
-            var controller = PrepControllerForFailedRequests();
+            var controller = PrepControllerForFailedRequests(null!);
 
             // Act
             var response = await controller.GetAll(new QueryFilter());
 
             // Assert
+            response.Should().BeOfType<NotFoundObjectResult>();
+        }
+
+        [Fact]
+        public async Task GetEntriesByJournal_JournalFound_ReturnsEntries()
+        {
+            // Arrange
+            var controller = PrepControllerForSuccessfulRequests();
+
+            // Act
+            var response = await controller.GetEntriesByJournal(1L, new QueryFilter());
+
+            // Assert
+            response.Should().BeOfType<OkObjectResult>();
+        }
+        
+        [Fact]
+        public async Task GetEntriesByJournal_JournalNotFound_ThrowsNotFoundException() {
+            // Arrange
+            var controller = PrepControllerForFailedRequests();
+
+            // Act
+            var response = await controller.GetEntriesByJournal(1L, new QueryFilter());
+            
+            // Act
             response.Should().BeOfType<NotFoundObjectResult>();
         }
 
@@ -198,6 +223,8 @@ namespace Writely.UnitTests.Controllers
                 .ReturnsAsync(Helpers.GetJournal);
             service.Setup(js => js.GetAll(new QueryFilter()))
                 .ReturnsAsync(Helpers.GetJournals(5));
+            service.Setup(js => js.GetEntriesByJournal(It.IsAny<long>(), It.IsAny<QueryFilter>()))
+                .ReturnsAsync(Helpers.GetEntries(5));
             service.Setup(js => js.Add(It.IsAny<NewJournal>()))
                 .ReturnsAsync(Helpers.GetJournal);
             service.Setup(js => js.Update(It.IsAny<long>(), It.IsAny<JournalUpdate>()))
@@ -223,8 +250,10 @@ namespace Writely.UnitTests.Controllers
             }
             service.Setup(js => js.GetById(It.IsAny<long>()))
                 .Throws<JournalNotFoundException>();
-            service.Setup(js => js.GetAll(new QueryFilter()))
+            service.Setup(js => js.GetAll(It.IsAny<QueryFilter>()))
                 .Throws<UserNotFoundException>();
+            service.Setup(js => js.GetEntriesByJournal(It.IsAny<long>(), It.IsAny<QueryFilter>()))
+                .Throws<JournalNotFoundException>();
             service.Setup(js => js.Add(It.IsAny<NewJournal>()))
                 .Throws<UserNotFoundException>();
             service.Setup(js => js.Add(null!))
