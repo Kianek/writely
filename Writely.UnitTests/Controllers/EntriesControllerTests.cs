@@ -138,7 +138,7 @@ namespace Writely.UnitTests.Controllers
             var controller = PrepControllerForFailureRequests();
 
             // Act
-            var response = await controller.Delete(1L);
+            var response = await controller.Delete(2L);
 
             // Assert
             response.Should().BeOfType<NotFoundObjectResult>();
@@ -178,6 +178,8 @@ namespace Writely.UnitTests.Controllers
                 .Throws<EntryNotFoundException>();
             service.Setup(s => s.Remove(1L))
                 .Throws<JournalNotFoundException>();
+            service.Setup(s => s.Remove(2L))
+                .Throws<EntryNotFoundException>();
 
             return new EntriesController(logger.Object, service.Object);
         }
