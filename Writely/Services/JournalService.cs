@@ -38,8 +38,7 @@ namespace Writely.Services
                 throw new UserNotFoundException();
             }
             
-            using var unitOfWork = GetUnitOfWork();
-            unitOfWork.JournalId = journalId;
+            using var unitOfWork = GetUnitOfWork(journalId);
             
             return await unitOfWork.Entries.GetAll(filter);
         }
