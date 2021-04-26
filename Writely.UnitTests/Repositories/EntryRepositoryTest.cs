@@ -65,17 +65,16 @@ namespace Writely.UnitTests.Repositories
         }
 
         [Fact]
-        public async Task GetAll_JournalNotFound_ReturnsEmptySequence()
+        public async Task GetAll_JournalNotFound_ThrowsJournalNotFoundException()
         {
             // Arrange
             await PrepareDatabase();
-            var repo = GetEntryRepo(5L);
-
-            // Act
-            var result = await repo.GetAll();
+            var repo = GetEntryRepo(null!);
 
             // Assert
-            result.Should().BeEmpty();
+            repo.Invoking(r => r.GetAll())
+                .Should()
+                .Throw<JournalNotFoundException>();
         }
 
         [Fact]
@@ -262,7 +261,7 @@ namespace Writely.UnitTests.Repositories
             result.Should().BeNull();
         }
 
-        private EntryRepository GetEntryRepo(long journalId) => new EntryRepository(Context, journalId);
+        private EntryRepository GetEntryRepo(long? journalId) => new EntryRepository(Context, journalId);
 
         private void SetTitleAndTags(Entry entry, string title, string tags)
         {
