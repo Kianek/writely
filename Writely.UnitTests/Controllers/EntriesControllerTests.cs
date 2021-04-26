@@ -80,26 +80,13 @@ namespace Writely.UnitTests.Controllers
         }
 
         [Fact]
-        public async Task Update_EntryUpdateNull_ReturnsBadRequest()
-        {
-            // Arrange
-            var controller = PrepControllerForFailureRequests();
-
-            // Act
-            var response = await controller.Update(1L, null!);
-
-            // Assert
-            response.Should().BeOfType<BadRequestObjectResult>();
-        }
-
-        [Fact]
         public async Task Update_EntryNotFound_ReturnsNotFound()
         {
             // Arrange
             var controller = PrepControllerForFailureRequests();
 
             // Act
-            var response = await controller.Update(1L, new EntryUpdate());
+            var response = await controller.Update(2L, new EntryUpdate());
 
             // Assert
             response.Should().BeOfType<NotFoundObjectResult>();
@@ -174,7 +161,7 @@ namespace Writely.UnitTests.Controllers
                 .Throws<JournalNotFoundException>();
             service.Setup(s => s.Update(1L, null!))
                 .Throws<ArgumentNullException>();
-            service.Setup(s => s.Update(1L, new EntryUpdate()))
+            service.Setup(s => s.Update(2L, It.IsAny<EntryUpdate>()))
                 .Throws<EntryNotFoundException>();
             service.Setup(s => s.Remove(1L))
                 .Throws<JournalNotFoundException>();
