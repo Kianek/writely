@@ -2,6 +2,8 @@ using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Writely.Exceptions;
+using Writely.Extensions;
 using Writely.Models;
 using Writely.Services;
 
@@ -23,13 +25,33 @@ namespace Writely.Controllers
         [HttpGet("{entryId:long}")]
         public async Task<IActionResult> GetById(long entryId)
         {
-            throw new NotImplementedException();
+            Entry entry;
+            try
+            {
+                entry = await _entryService.GetById(entryId);
+            }
+            catch (EntryNotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            
+            return Ok(entry);
         }
 
         [HttpPost]
         public async Task<IActionResult> Add(NewEntry newEntry)
         {
-            throw new NotImplementedException();
+            Entry entry;
+            try
+            {
+                entry = await _entryService.Add(newEntry);
+            }
+            catch (JournalNotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            
+            return Created(nameof(Add), entry.ToDto());
         }
 
         [HttpPatch("{entryId:long}")]
