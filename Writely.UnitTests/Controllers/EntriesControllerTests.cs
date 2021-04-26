@@ -144,7 +144,7 @@ namespace Writely.UnitTests.Controllers
             response.Should().BeOfType<NotFoundObjectResult>();
         }
 
-        public EntriesController PrepControllerForSuccessfulRequests()
+        private EntriesController PrepControllerForSuccessfulRequests()
         {
             var logger = new Mock<ILogger<EntriesController>>();
             var service = new Mock<IEntryService>();
@@ -161,7 +161,7 @@ namespace Writely.UnitTests.Controllers
             return new EntriesController(logger.Object, service.Object);
         }
         
-        public EntriesController PrepControllerForFailureRequests()
+        private EntriesController PrepControllerForFailureRequests()
         {
             var logger = new Mock<ILogger<EntriesController>>();
             var service = new Mock<IEntryService>();
