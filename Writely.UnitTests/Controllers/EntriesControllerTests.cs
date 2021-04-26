@@ -106,7 +106,7 @@ namespace Writely.UnitTests.Controllers
         }
 
         [Fact]
-        public async Task Remove_CanRemoveEntry_ReturnsOk()
+        public async Task Delete_CanRemoveEntry_ReturnsOk()
         {
             // Arrange
             var controller = PrepControllerForSuccessfulRequests();
@@ -119,7 +119,7 @@ namespace Writely.UnitTests.Controllers
         }
 
         [Fact]
-        public async Task Remove_JournalNotFound_ReturnsNotFound()
+        public async Task Delete_JournalNotFound_ReturnsNotFound()
         {
             // Arrange
             var controller = PrepControllerForFailureRequests();
@@ -132,7 +132,7 @@ namespace Writely.UnitTests.Controllers
         }
 
         [Fact]
-        public async Task Remove_EntryNotFound_ReturnsNotFound()
+        public async Task Delete_EntryNotFound_ReturnsNotFound()
         {
             // Arrange
             var controller = PrepControllerForFailureRequests();
