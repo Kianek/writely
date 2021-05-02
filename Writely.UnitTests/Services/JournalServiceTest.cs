@@ -222,6 +222,24 @@ namespace Writely.UnitTests.Services
                 .Throw<JournalNotFoundException>();
         }
 
+        [Fact]
+        public async Task RemoveAllByUser_UserFound_JournalsRemoved()
+        {
+            // Arrange
+            await PrepareDatabase();
+            var service = GetJournalService();
+            var journals = Helpers.GetJournals(3);
+            Helpers.AddEntriesToJournal(journals[2], Helpers.GetEntries(20));
+            Context.Journals.AddRange(journals);
+            await Context.SaveChangesAsync();
+
+            // Act
+            var result = await service.RemoveAllByUser("UserId");
+
+            // Assert
+            result.Should().BeGreaterOrEqualTo(20);
+        }
+
         private JournalService GetJournalService(string? userId = "UserId") 
             => new(Context!) { UserId = userId};
 
