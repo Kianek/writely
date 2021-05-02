@@ -2,17 +2,13 @@ namespace Writely.Models
 {
     public class PasswordUpdate
     {
-        public string? Password { get; set; }
-        public string? ConfirmPassword { get; set; }
+        public string? CurrentPassword { get; set; }
+        public string? NewPassword { get; set; }
 
-        public void Deconstruct(out string? password, out string? confirmPassword)
+        public void Deconstruct(out string? password, out string? newPassword)
         {
-            password = Password;
-            confirmPassword = ConfirmPassword;
+            password = CurrentPassword;
+            newPassword = NewPassword;
         }
-        
-        public bool PasswordsMatch()
-            => !(string.IsNullOrEmpty(Password) && string.IsNullOrEmpty(ConfirmPassword))
-                && Password == ConfirmPassword;
     }
 }
