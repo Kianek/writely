@@ -2,6 +2,7 @@ using System;
 using System.Threading.Tasks;
 using FluentAssertions;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Logging;
 using Moq;
 using Writely.Data;
 using Writely.Exceptions;
@@ -218,20 +219,6 @@ namespace Writely.UnitTests.Services
         }
         
         [Fact]
-        public async Task ChangePassword_UserFound_ConfirmationPasswordMismatch_ThrowsPasswordMismatchException()
-        {
-            // Arrange
-            var service = GetServiceWithUser();
-            var update = Helpers.GetPasswordUpdate();
-            update.PasswordUpdate!.ConfirmPassword = "ATotallyDifferentPW123!";
-
-            // Assert
-            await service.Invoking(s => s.ChangePassword(update))
-                .Should()
-                .ThrowAsync<PasswordMismatchException>();
-        }
-        
-        [Fact]
         public async Task ChangePassword_UserNotFound_ThrowsUserNotFoundException()
         {
             // Arrange
@@ -270,7 +257,11 @@ namespace Writely.UnitTests.Services
                 .ThrowAsync<UserNotFoundException>();
         }
 
-        private IUserService GetUserService(UserManager<AppUser> userManager) => new UserService(userManager);
+        private IUserService GetUserService(UserManager<AppUser> userManager)
+        {
+            var mockLogger = new Mock<ILogger<UserService>>();
+            return new UserService(userManager, mockLogger.Object); 
+        }
 
         private IUserService GetServiceWithUser(string email = "bob@gmail.com") => 
             GetUserService(PrepUserManagerWithUser(email));
