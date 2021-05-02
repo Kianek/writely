@@ -20,5 +20,7 @@ namespace Writely.Services
         Task<int> Update(long journalId, JournalUpdate updateModel);
 
         Task<int> Remove(long journalId);
+
+        Task<int> RemoveAllByUser(string userId);
     }
 }
