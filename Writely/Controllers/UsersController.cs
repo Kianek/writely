@@ -1,5 +1,6 @@
 using System;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Writely.Exceptions;
@@ -8,6 +9,7 @@ using Writely.Services;
 
 namespace Writely.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class UsersController : ControllerBase
@@ -19,6 +21,7 @@ namespace Writely.Controllers
             _userService = userService;
         }
 
+        [AllowAnonymous]
         [HttpPost("register")]
         public async Task<IActionResult> Register(Registration registration)
         {
@@ -26,17 +29,9 @@ namespace Writely.Controllers
             {
                 await _userService.CreateAccount(registration);
             }
-            catch (MissingInformationException ex)
-            {
-                return BadRequest(ex);
-            }
-            catch (DuplicateUserException ex)
-            {
-                return BadRequest(ex);
-            }
             catch (Exception ex)
             {
-                return BadRequest(ex);
+                return BadRequest(ex.Message);
             }
             
             return Ok();
@@ -65,7 +60,7 @@ namespace Writely.Controllers
                 return BadRequest();
             }
             
-            return Ok();
+            return NoContent();
         }
         
         [HttpPatch("change-password")]
@@ -84,7 +79,7 @@ namespace Writely.Controllers
                 return BadRequest(ex.Message);
             }
             
-            return Ok();
+            return NoContent();
         }
 
         [HttpDelete("{userId}")]
