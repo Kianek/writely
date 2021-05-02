@@ -1,5 +1,6 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
+using Writely.Data;
 using Writely.Models;
 
 namespace Writely.Services
