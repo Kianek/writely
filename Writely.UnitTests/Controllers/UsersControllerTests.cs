@@ -66,7 +66,7 @@ namespace Writely.UnitTests.Controllers
             var response = await controller.ChangeEmail(emailUpdate);
 
             // Assert
-            response.Should().BeOfType<OkResult>();
+            response.Should().BeOfType<NoContentResult>();
         }
 
         [Fact]
@@ -140,7 +140,7 @@ namespace Writely.UnitTests.Controllers
             var response = await controller.ChangePassword(accountUpdate);
 
             // Assert
-            response.Should().BeOfType<OkResult>();
+            response.Should().BeOfType<NoContentResult>();
         }
 
         [Fact]
