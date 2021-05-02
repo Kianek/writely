@@ -177,7 +177,7 @@ namespace Writely.UnitTests.Controllers
         {
             // Arrange
             var accountUpdate = Helpers.GetPasswordUpdate();
-            accountUpdate.PasswordUpdate!.Password = "Goobledyblech";
+            accountUpdate.PasswordUpdate!.CurrentPassword = "Goobledyblech";
             var service = GetMockUserService();
             service.Setup(us => us.ChangePassword(accountUpdate))
                 .Throws<PasswordMismatchException>();
