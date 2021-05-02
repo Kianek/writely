@@ -46,9 +46,8 @@ namespace Writely
             else
             {
                 app.UseExceptionHandler("/error");
+                app.UseHttpsRedirection();
             }
-
-            app.UseHttpsRedirection();
 
             app.UseRouting();
 
