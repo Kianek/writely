@@ -1,96 +1,154 @@
+using System.Net;
 using System.Threading.Tasks;
-using Writely.Controllers;
+using FluentAssertions;
 using Writely.Models;
-using Writely.Services;
 using Xunit;
 
 namespace Writely.IntegrationTests
 {
-    public class UsersControllerTests : TestBase,  IClassFixture<WebAppFactory<Startup>>
+    public class UsersControllerTests
     {
-        
-        public UsersControllerTests(WebAppFactory<Startup> factory) : base(factory)
+        public class UnregisteredUsersControllerTests : TestBase, IClassFixture<WebAppFactory<Startup>>
         {
+            private Registration _registration;
+            
+            public UnregisteredUsersControllerTests(WebAppFactory<Startup> factory) : base(factory)
+            {
+                _registration = new Registration
+                {
+                    FirstName = "Robert",
+                    LastName = "Zombie",
+                    Username = "Dragula666",
+                    Email = "rob@scaryguy.com",
+                    Password = "SecretScaryPassword123!",
+                    ConfirmPassword = "SecretScaryPassword123!",
+                };
+            }
+
+
+            [Fact]
+            public async Task Register_NewUser_Returns200()
+            {
+                // Arrange
+                var registrationJson = _registration.ToJson();
+
+                // Act
+                var response = await _client.PostAsync("api/users/register", registrationJson);
+
+                // Assert
+                response.EnsureSuccessStatusCode();
+                response.StatusCode.Should().Be(HttpStatusCode.OK);
+            }
+
+            [Fact]
+            public async Task Register_UserAlreadyRegistered_Returns400()
+            {
+                // Arrange
+                var registrationJson = _registration.ToJson();
+
+                // Act
+                var response = await _client.PostAsync("api/users/register", registrationJson);
+
+                // Assert
+                response.IsSuccessStatusCode.Should().BeFalse();
+                response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+            }
         }
 
-        [Fact]
-        public async Task Register_NewUser_Returns201()
+        public class RegisteredUserUpdateTests : TestBase, IClassFixture<WebAppFactory<Startup>>
         {
-            // Arrange
+            public RegisteredUserUpdateTests(WebAppFactory<Startup> factory) : base(factory)
+            {
+            }
 
-            // Act
+            [Fact]
+            public async Task ChangeEmail_ChangeSuccessful_Returns204()
+            {
+                // Arrange
+                var update = new AccountUpdate("UserIdBob", new EmailUpdate("bob@newmail.com"))
+                    .ToJson();
 
-            // Assert
+                // Act
+                var response = await _client.PatchAsync("api/users/change-email", update);
+
+                // Assert
+                response.StatusCode.Should().Be(HttpStatusCode.NoContent);
+            }
+
+            [Fact]
+            public async Task ChangeEmail_IncompleteAccountUpdate_Returns400()
+            {
+                // Arrange
+                var update = new AccountUpdate("UserIdBob", new EmailUpdate(null!)).ToJson();
+
+                // Act
+                var response = await _client.PatchAsync("api/users/change-email", update);
+
+                // Assert
+                response.IsSuccessStatusCode.Should().BeFalse();
+            }
+
+            [Fact]
+            public async Task ChangePassword_ChangeSuccessful_Returns204()
+            {
+                // Arrange
+                var passwordUpdate = new PasswordUpdate
+                {
+                    CurrentPassword = "TotallyHashedPassword123!",
+                    NewPassword = "SuperCoolNewPassword123!",
+                };
+                var update = new AccountUpdate("UserIdBob",
+                    passwordUpdate: passwordUpdate).ToJson();
+
+                // Act
+                var response = await _client.PatchAsync("api/users/change-password", update);
+
+                // Assert
+                response.StatusCode.Should().Be(HttpStatusCode.NoContent);
+            }
+
+            [Fact]
+            public async Task ChangePassword_IncompleteAccountUpdate_Returns400()
+            {
+                // Arrange
+                var update = new AccountUpdate("UserIdBob",
+                        passwordUpdate: new PasswordUpdate {NewPassword = "Ladeedaa3333$4@"})
+                    .ToJson();
+
+                // Act
+                var response = await _client.PatchAsync("api/users/change-password", update);
+
+                // Assert
+                response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+            }
         }
-        
-        [Fact]
-        public async Task Register_UserAlreadyRegistered_Returns400()
+
+        public class DeleteUserTests : TestBase, IClassFixture<WebAppFactory<Startup>>
         {
-            // Arrange
-            
-            // Act
-            
-            // Assert
-        }
-        
-        [Fact]
-        public async Task ChangeEmail_ChangeSuccessful_Returns201()
-        {
-            // Arrange
-            
-            // Act
-            
-            // Assert
-        }
-        
-        [Fact]
-        public async Task ChangeEmail_IncompleteAccountUpdate_Returns400()
-        {
-            // Arrange
-            
-            // Act
-            
-            // Assert
-        }
-        
-        [Fact]
-        public async Task ChangePassword_ChangeSuccessful_Returns201()
-        {
-            // Arrange
-            
-            // Act
-            
-            // Assert
-        }
-        
-        [Fact]
-        public async Task ChangePassword_IncompleteAccountUpdate_Returns400()
-        {
-            // Arrange
-            
-            // Act
-            
-            // Assert
-        }
-        
-        [Fact]
-        public async Task DeleteAccount_AccountDeleted_Returns200()
-        {
-            // Arrange
-            
-            // Act
-            
-            // Assert
-        }
-        
-        [Fact]
-        public async Task DeleteAccount_AccountNotFound_Returns400()
-        {
-            // Arrange
-            
-            // Act
-            
-            // Assert
+            public DeleteUserTests(WebAppFactory<Startup> factory) : base(factory)
+            {
+            }
+
+
+            [Fact]
+            public async Task DeleteAccount_AccountDeleted_Returns200()
+            {
+                // Act
+                var response = await _client.DeleteAsync("api/users/UserIdBob");
+
+                // Assert
+                response.EnsureSuccessStatusCode();
+            }
+
+            [Fact]
+            public async Task DeleteAccount_AccountNotFound_Returns400()
+            {
+                // Act
+                var response = await _client.DeleteAsync("api/users/SomeUserWhoDoesntExist");
+
+                // Assert
+                response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+            }
         }
     }
 }
