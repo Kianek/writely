@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Microsoft.AspNetCore.Identity;
 using Writely.Data;
 using Writely.Models;
 
@@ -9,24 +10,30 @@ namespace Writely.IntegrationTests
     {
         public static void InitializeDatabase(AppDbContext context)
         {
+            var hasher = new PasswordHasher<AppUser>();
+            var password = "TotallyHashedPassword123!";
             var bob = new AppUser
             {
-                Id = Guid.NewGuid().ToString(),
+                Id = "UserIdBob",
                 UserName = "bob.loblaw",
                 FirstName = "Bob",
                 LastName = "Loblaw",
                 Email = "bob@gmail.com",
-                PasswordHash = "TotallyHashedPassword123!"
             };
+            var hashedPassword = hasher.HashPassword(bob, password);
+            bob.PasswordHash = hashedPassword;
+            
             var flem = new AppUser
             {
-                Id = Guid.NewGuid().ToString(),
+                Id = "UserIdFlem",
                 UserName = "flimmy.mcflimflam",
                 FirstName = "Flem",
                 LastName = "McFlimFlam",
                 Email = "flem@gmail.com",
-                PasswordHash = "TotallyHashedPassword123!"
             };
+           hashedPassword = hasher.HashPassword(flem, password);
+           flem.PasswordHash = hashedPassword;
+           
             context.Users.AddRange(bob, flem);
 
             var bobJournals = new List<Journal>
@@ -38,7 +45,7 @@ namespace Writely.IntegrationTests
                 }
             };
             bobJournals[0].Entries = AddEntries(bobJournals[0], 4);
-            context.Journals.AddRange(bobJournals);
+            context.Journals!.AddRange(bobJournals);
             
             var flemJournals = new List<Journal>
             {
