@@ -70,10 +70,10 @@ namespace Writely.UnitTests
         };
         
         public static AccountUpdate GetEmailUpdate(string email = "spiffynewemail@gmail.com")
-            => new("UserId", emailUpdate: new() { Email = email });
+            => new("UserId", new (email));
 
         public static AccountUpdate GetPasswordUpdate(string password = "SpiffierPassword123!!")
             => new("UserId", passwordUpdate: 
-                new(){Password = password, ConfirmPassword = password});
+                new PasswordUpdate {CurrentPassword = password, NewPassword = password});
     }
 }
