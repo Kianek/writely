@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using Writely.Data;
 using Writely.Exceptions;
 using Writely.Models;
@@ -97,6 +99,17 @@ namespace Writely.Services
             
             unitOfWork.Journals.Remove(journal);
             return await unitOfWork.Complete();
+        }
+
+        public async Task<int> RemoveAllByUser(string userId)
+        {
+            var journals = await _context.Journals
+                .Where(j => j.UserId == userId)
+                    .Include(j => j.Entries)
+                .ToListAsync();
+            
+            _context.Journals.RemoveRange(journals);
+            return await _context.SaveChangesAsync();
         }
 
         private IUnitOfWork GetUnitOfWork(long? journalId = null) 
