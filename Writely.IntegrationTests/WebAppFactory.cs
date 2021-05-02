@@ -3,6 +3,7 @@ using System.Linq;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -14,6 +15,7 @@ namespace Writely.IntegrationTests
     public class WebAppFactory<TStartup> 
         : WebApplicationFactory<TStartup> where TStartup : class
     {
+        
         protected override void ConfigureWebHost(IWebHostBuilder builder)
         {
             builder.ConfigureServices(services =>
@@ -22,8 +24,10 @@ namespace Writely.IntegrationTests
                     d => d.ServiceType ==
                          typeof(DbContextOptions<AppDbContext>));
                 services.Remove(descriptor);
+                var connection = new SqliteConnection("Data Source=:memory:;Foreign Keys=false");
+                connection.Open();
                 services.AddDbContext<AppDbContext>(options =>
-                    options.UseSqlite("Data Source=:memory:"));
+                    options.UseSqlite(connection));
                 
                 services.AddWritelyServices();
                 
