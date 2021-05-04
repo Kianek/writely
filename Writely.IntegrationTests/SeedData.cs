@@ -23,18 +23,7 @@ namespace Writely.IntegrationTests
             var hashedPassword = hasher.HashPassword(bob, password);
             bob.PasswordHash = hashedPassword;
             
-            var flem = new AppUser
-            {
-                Id = "UserIdFlem",
-                UserName = "flimmy.mcflimflam",
-                FirstName = "Flem",
-                LastName = "McFlimFlam",
-                Email = "flem@gmail.com",
-            };
-           hashedPassword = hasher.HashPassword(flem, password);
-           flem.PasswordHash = hashedPassword;
-           
-            context.Users.AddRange(bob, flem);
+            context.Users.Add(bob);
 
             var bobJournals = new List<Journal>
             {
@@ -46,17 +35,6 @@ namespace Writely.IntegrationTests
             };
             bobJournals[0].Entries = AddEntries(bobJournals[0], 4);
             context.Journals!.AddRange(bobJournals);
-            
-            var flemJournals = new List<Journal>
-            {
-                new Journal
-                {
-                    UserId = flem.Id,
-                    Title = "Flem's Journal",
-                }
-            };
-            flemJournals[0].Entries = AddEntries(flemJournals[0], 4);
-            context.Journals.AddRange(flemJournals);
 
             context.SaveChanges();
         }
