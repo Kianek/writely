@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using IdentityServer4.Extensions;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Writely.Exceptions;
@@ -13,8 +14,9 @@ using Writely.Services;
 
 namespace Writely.Controllers
 {
-    [Route("api/[controller]")]
+    [Authorize]
     [ApiController]
+    [Route("api/[controller]")]
     public class JournalsController : ControllerBase
     {
         private readonly ILogger<JournalsController> _logger;
@@ -24,12 +26,12 @@ namespace Writely.Controllers
         {
             _logger = logger;
             _journalService = journalService;
-            _journalService.UserId ??= HttpContext.User.Identity.GetSubjectId();
         }
 
-        [HttpGet("journalId")]
+        [HttpGet("{journalId}")]
         public async Task<IActionResult> GetById(long journalId)
         {
+            PrepJournalServiceWithUserId();
             JournalDto journal;
             try
             {
@@ -54,6 +56,7 @@ namespace Writely.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAll([FromQuery] QueryFilter filter)
         {
+            PrepJournalServiceWithUserId();
             List<JournalDto>? journals;
 
             try
@@ -71,6 +74,7 @@ namespace Writely.Controllers
         [HttpGet("{journalId}/entries")]
         public async Task<IActionResult> GetEntriesByJournal(long journalId, [FromQuery] QueryFilter filter)
         {
+            PrepJournalServiceWithUserId();
             IEnumerable<EntryDto>? entries;
             try
             {
@@ -88,6 +92,7 @@ namespace Writely.Controllers
         [HttpPost]
         public async Task<IActionResult> Add(NewJournal newJournal)
         {
+            PrepJournalServiceWithUserId();
             JournalDto journal;
             try
             {
@@ -108,6 +113,7 @@ namespace Writely.Controllers
         [HttpPatch("{journalId}")]
         public async Task<IActionResult> Update(long journalId, JournalUpdate update)
         {
+            PrepJournalServiceWithUserId();
             try
             {
                 await _journalService.Update(journalId, update);
@@ -127,6 +133,7 @@ namespace Writely.Controllers
         [HttpDelete("{journalId}")]
         public async Task<IActionResult> Remove(long journalId)
         {
+            PrepJournalServiceWithUserId();
             try
             {
                 await _journalService.Remove(journalId);
@@ -138,5 +145,7 @@ namespace Writely.Controllers
             
             return Ok();
         }
+
+        private void PrepJournalServiceWithUserId() => _journalService.UserId = HttpContext?.User.GetSubjectId();
     }
 }
