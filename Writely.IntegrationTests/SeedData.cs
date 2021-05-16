@@ -31,6 +31,16 @@ namespace Writely.IntegrationTests
                 {
                     UserId = bob.Id,
                     Title = "Bob's Journal",
+                },
+                new Journal
+                {
+                    UserId = bob.Id,
+                    Title = "Bob's Second Journal",
+                },
+                new Journal
+                {
+                    UserId = bob.Id,
+                    Title = "Bob's Worst Journal",
                 }
             };
             bobJournals[0].Entries = AddEntries(bobJournals[0], 4);
