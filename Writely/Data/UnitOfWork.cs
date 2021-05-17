@@ -1,10 +1,11 @@
+using System;
 using System.Threading.Tasks;
 using Writely.Models;
 using Writely.Repositories;
 
 namespace Writely.Data
 {
-    public class UnitOfWork : IUnitOfWork
+    public sealed class UnitOfWork : IUnitOfWork
     {
         public string? UserId { get; set; }
         public long? JournalId { get; set; }
@@ -18,10 +19,7 @@ namespace Writely.Data
         public IEntryRepository Entries =>
             _entries ??= new EntryRepository(_context, JournalId);
 
-        public UnitOfWork(AppDbContext context)
-        {
-            _context = context;
-        }
+        public UnitOfWork(AppDbContext context) => _context = context;
         
         public async Task<int> Complete()
         {
