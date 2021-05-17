@@ -22,7 +22,7 @@ namespace Writely.UnitTests.Services
         }
 
         [Fact]
-        public async Task GetById_EntryFound_ReturnsEntry()
+        public void GetById_EntryFound_ReturnsEntry()
         {
             // Act
             var result = _service.GetById(_journal, 2L);
@@ -33,7 +33,7 @@ namespace Writely.UnitTests.Services
         }
 
         [Fact]
-        public async Task GetById_EntryNotFound_ThrowsEntryNotFoundException()
+        public void GetById_EntryNotFound_ThrowsEntryNotFoundException()
         {
             // Assert
             _service.Invoking(s => s.GetById(_journal, 5L))
@@ -42,11 +42,11 @@ namespace Writely.UnitTests.Services
         }
 
         [Fact]
-        public async Task Add_JournalFound_EntrySaved_ReturnsEntry()
+        public void Add_JournalFound_EntrySaved_ReturnsEntry()
         {
             // Arrange
             var newEntry = new NewEntry(
-                _journal.UserId, _journal.Id,
+                _journal.UserId!, _journal.Id,
                 "Spiffy New Entry",
                 "gimme,some,reggae",
                 "Axl Rose is the best evar");
@@ -60,7 +60,7 @@ namespace Writely.UnitTests.Services
         }
 
         [Fact]
-        public async Task Add_NewEntryNull_ThrowArgumentNullException()
+        public void Add_NewEntryNull_ThrowArgumentNullException()
         {
             // Act
             _service.Invoking(s => s.Add(_journal, null!))
@@ -69,16 +69,16 @@ namespace Writely.UnitTests.Services
         }
         
         [Fact]
-        public async Task Add_JournalNull_ThrowsArgumentNullException()
+        public void Add_JournalNull_ThrowsArgumentNullException()
         {
             // Assert
             _service.Invoking(s => s.Add(null!, new NewEntry("", 0L, "", "", "")))
                 .Should()
-                .Throw<JournalNotFoundException>();
+                .Throw<ArgumentNullException>();
         }
         
         [Fact]
-        public async Task Update_EntryFound_EntryUpdated_ReturnsEntry() 
+        public void Update_EntryFound_EntryUpdated_ReturnsEntry() 
         {
             // Arrange
             var updateModel = new EntryUpdate
@@ -100,7 +100,7 @@ namespace Writely.UnitTests.Services
         }
 
         [Fact]
-        public async Task Update_EntryNotFound_ThrowsEntryNotFoundException()
+        public void Update_EntryNotFound_ThrowsEntryNotFoundException()
         {
             // Assert
             _service.Invoking(s => s.Update(_journal, 9L, new EntryUpdate()))
@@ -109,7 +109,7 @@ namespace Writely.UnitTests.Services
         }
         
         [Fact]
-        public async Task Update_JournalNull_ThrowsArgumentNullException()
+        public void Update_JournalNull_ThrowsArgumentNullException()
         {
             // Assert
             _service.Invoking(s => s.Update(null!, 1L, new EntryUpdate()))
@@ -118,7 +118,7 @@ namespace Writely.UnitTests.Services
         }
         
         [Fact]
-        public async Task Update_UpdateModelNull_ThrowsArgumentNullException()
+        public void Update_UpdateModelNull_ThrowsArgumentNullException()
         {
             // Assert
             _service.Invoking(s => s.Update(_journal, 1L, null!))
@@ -127,7 +127,7 @@ namespace Writely.UnitTests.Services
         }
 
         [Fact]
-        public async Task Remove_EntryFound_Removed()
+        public void Remove_EntryFound_Removed()
         {
             // Act
             var removedEntry = _service.Remove(_journal, 1L);
@@ -138,7 +138,7 @@ namespace Writely.UnitTests.Services
         }
 
         [Fact]
-        public async Task Remove_JournalNull_ThrowsArgumentNullException()
+        public void Remove_JournalNull_ThrowsArgumentNullException()
         {
             // Assert
             _service.Invoking(s => s.Remove(null!, 1L))
@@ -147,7 +147,7 @@ namespace Writely.UnitTests.Services
         }
 
         [Fact]
-        public async Task Remove_EntryNotFound_ThrowsEntryNotFoundException()
+        public void Remove_EntryNotFound_ThrowsEntryNotFoundException()
         {
             // Assert
             _service.Invoking(s => s.Remove(_journal, 8L))
