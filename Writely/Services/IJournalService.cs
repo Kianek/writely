@@ -13,8 +13,6 @@ namespace Writely.Services
         
         Task<IEnumerable<Journal>?> GetAll(QueryFilter filter);
 
-        Task<IEnumerable<Entry>?> GetEntriesByJournal(long journalId, QueryFilter filter);
-        
         Task<Journal> Add(NewJournal model);
 
         Task<int> Update(long journalId, JournalUpdate updateModel);
@@ -22,5 +20,16 @@ namespace Writely.Services
         Task<int> Remove(long journalId);
 
         Task<int> RemoveAllByUser(string userId);
+        
+        // Entry-specific methods
+        Task<Entry> GetEntry(long journalId, long entryId);
+        
+        Task<IEnumerable<Entry>?> GetAllEntries(long journalId, QueryFilter filter);
+
+        Task<Entry> AddEntry(long journalId, NewEntry newEntry);
+
+        Task<Entry> UpdateEntry(long journalId, long entryId, EntryUpdate updateModel);
+
+        Task<Entry> RemoveEntry(long journalId, long entryId);
     }
 }
