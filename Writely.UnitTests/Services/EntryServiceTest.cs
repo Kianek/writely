@@ -154,7 +154,5 @@ namespace Writely.UnitTests.Services
                 .Should()
                 .Throw<EntryNotFoundException>();
         }
-
-        private IEntryService GetEntryService() => new EntryService();
     }
 }
