@@ -1,5 +1,6 @@
 using System;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Writely.Exceptions;
@@ -9,6 +10,7 @@ using Writely.Services;
 
 namespace Writely.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class EntriesController : ControllerBase
@@ -42,6 +44,8 @@ namespace Writely.Controllers
         public async Task<IActionResult> Add(NewEntry newEntry)
         {
             Entry entry;
+            // TODO: refactor this
+            _entryService.JournalId = newEntry.JournalId;
             try
             {
                 entry = await _entryService.Add(newEntry);
