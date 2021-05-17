@@ -13,12 +13,14 @@ namespace Writely.Services
     public class JournalService : IJournalService
     {
         private readonly AppDbContext _context;
+        private readonly IEntryService _entryService;
         
         public string? UserId { get; set; }
 
-        public JournalService(AppDbContext context)
+        public JournalService(AppDbContext context, IEntryService entryService)
         {
             _context = context;
+            _entryService = entryService;
         }
 
         public async Task<Journal> GetById(long journalId)
@@ -110,6 +112,90 @@ namespace Writely.Services
             
             _context.Journals.RemoveRange(journals);
             return await _context.SaveChangesAsync();
+        }
+        
+        // Entry-specific methods
+
+        public async Task<Entry> GetEntry(long journalId, long entryId)
+        {
+            using var unitOfWork = GetUnitOfWork();
+            var journal = await unitOfWork
+                .Journals.Find(j => j.Id == journalId);
+            if (journal is null)
+            {
+                throw new JournalNotFoundException($"Journal not found: {journalId}");
+            }
+
+            return _entryService.GetById(journal, entryId)!;
+        }
+
+        public async Task<IEnumerable<Entry>?> GetAllEntries(long journalId, QueryFilter filter)
+        {
+            using var unitOfWork = GetUnitOfWork();
+            var journal = await unitOfWork
+                .Journals.Find(j => j.Id == journalId);
+            if (journal is null)
+            {
+                throw new JournalNotFoundException($"Journal not found: {journalId}");
+            }
+
+            return journal.Entries;
+        }
+
+        public async Task<Entry> AddEntry(long journalId, NewEntry newEntry)
+        {
+            using var unitOfWork = GetUnitOfWork();
+            var journal = await unitOfWork
+                .Journals.Find(j => j.Id == journalId);
+            if (journal is null)
+            {
+                throw new JournalNotFoundException($"Journal not found: {journalId}");
+            }
+
+            if (newEntry is null)
+            {
+                throw new ArgumentNullException(nameof(newEntry));
+            }
+            var entry = _entryService.Add(journal, newEntry);
+            await unitOfWork.Complete();
+            
+            return entry;
+        }
+
+        public async Task<Entry> UpdateEntry(long journalId, long entryId, EntryUpdate updateModel)
+        {
+            if (updateModel is null)
+            {
+                throw new ArgumentNullException(nameof(updateModel));
+            }
+            
+            using var unitOfWork = GetUnitOfWork();
+            var journal = await unitOfWork
+                .Journals.Find(j => j.Id == journalId);
+            if (journal is null)
+            {
+                throw new JournalNotFoundException($"Journal not found: {journalId}");
+            }
+            
+            var entry = _entryService.Update(journal, entryId, updateModel);
+            await unitOfWork.Complete();
+            
+            return entry;
+        }
+
+        public async Task<Entry> RemoveEntry(long journalId, long entryId)
+        {
+            using var unitOfWork = GetUnitOfWork();
+            var journal = await unitOfWork
+                .Journals.Find(j => j.Id == journalId);
+            if (journal is null)
+            {
+                throw new JournalNotFoundException($"Journal not found: {journalId}");
+            }
+            
+            var entry = _entryService.Remove(journal, entryId);
+            await unitOfWork.Complete();
+            return entry;
         }
 
         private IUnitOfWork GetUnitOfWork(long? journalId = null) 
