@@ -8,31 +8,35 @@ using Xunit;
 
 namespace Writely.UnitTests.Services
 {
-    public class EntryServiceTest : DatabaseTestBase
+    public class EntryServiceTest
     {
+        private readonly Journal _journal;
+        private readonly IEntryService _service;
+        
+        public EntryServiceTest()
+        {
+            _service = new EntryService();
+            _journal = Helpers.GetJournal();
+            var entries = Helpers.GetEntries(4, _journal.Id);
+            Helpers.AddEntriesToJournal(_journal, entries);
+        }
+
         [Fact]
         public async Task GetById_EntryFound_ReturnsEntry()
         {
-            // Arrange
-            await PrepDbWithJournalAndEntries();
-            var service = GetEntryService();
-
             // Act
-            var result = await service.GetById(2L);
+            var result = _service.GetById(_journal, 2L);
 
             // Assert
             result.Should().NotBeNull();
-            result.Title.Should().Contain("2");
+            result?.Title.Should().Contain("2");
         }
 
         [Fact]
         public async Task GetById_EntryNotFound_ThrowsEntryNotFoundException()
         {
-            // Arrange
-            var service = await PrepDbAndEntryService();
-
             // Assert
-            service.Invoking(s => s.GetById(5L))
+            _service.Invoking(s => s.GetById(_journal, 5L))
                 .Should()
                 .Throw<EntryNotFoundException>();
         }
@@ -41,17 +45,14 @@ namespace Writely.UnitTests.Services
         public async Task Add_JournalFound_EntrySaved_ReturnsEntry()
         {
             // Arrange
-            await PrepDbWithJournalAndEntries();
-            var service = GetEntryService();
-            var newEntry = new NewEntry
-            {
-                Title = "Spiffy New Entry",
-                Tags = "gimme,some,reggae",
-                Body =  "Axl Rose is the best evar"
-            };
+            var newEntry = new NewEntry(
+                _journal.UserId, _journal.Id,
+                "Spiffy New Entry",
+                "gimme,some,reggae",
+                "Axl Rose is the best evar");
 
             // Act
-            var result = await service.Add(newEntry);
+            var result = _service.Add(_journal, newEntry);
 
             // Assert
             result.Should().NotBeNull();
@@ -61,25 +62,17 @@ namespace Writely.UnitTests.Services
         [Fact]
         public async Task Add_NewEntryNull_ThrowArgumentNullException()
         {
-            // Arrange
-            var service = await PrepDbAndEntryService();
-
             // Act
-            service.Invoking(s => s.Add(null!))
+            _service.Invoking(s => s.Add(_journal, null!))
                 .Should()
                 .Throw<ArgumentNullException>();
         }
         
-        [Theory]
-        [InlineData(null)]
-        [InlineData(3L)]
-        public async Task Add_JournalNotFound_ThrowsJournalNotFoundException(long? journalId)
+        [Fact]
+        public async Task Add_JournalNull_ThrowsArgumentNullException()
         {
-            // Arrange
-            var service = await PrepDbAndEntryService(journalId);
-
             // Assert
-            service.Invoking(s => s.Add(new NewEntry()))
+            _service.Invoking(s => s.Add(null!, new NewEntry("", 0L, "", "", "")))
                 .Should()
                 .Throw<JournalNotFoundException>();
         }
@@ -88,17 +81,15 @@ namespace Writely.UnitTests.Services
         public async Task Update_EntryFound_EntryUpdated_ReturnsEntry() 
         {
             // Arrange
-            await PrepDbWithJournalAndEntries();
             var updateModel = new EntryUpdate
             {
                 Title = "Totally Different Title",
                 Tags = "some,new,tags",
                 Body = "And now for something completely different."
             };
-            var service = GetEntryService();
 
             // Act
-            var result = await service.Update(1L, updateModel);
+            var result = _service.Update(_journal, 2L, updateModel);
 
             // Assert
             result.Should().NotBeNull();
@@ -111,24 +102,26 @@ namespace Writely.UnitTests.Services
         [Fact]
         public async Task Update_EntryNotFound_ThrowsEntryNotFoundException()
         {
-            // Arrange
-            await PrepDbWithJournalAndEntries(0);
-            var service = GetEntryService();
-            
             // Assert
-            service.Invoking(s => s.Update(3L, new EntryUpdate()))
+            _service.Invoking(s => s.Update(_journal, 9L, new EntryUpdate()))
                 .Should()
                 .Throw<EntryNotFoundException>();
         }
         
         [Fact]
+        public async Task Update_JournalNull_ThrowsArgumentNullException()
+        {
+            // Assert
+            _service.Invoking(s => s.Update(null!, 1L, new EntryUpdate()))
+                .Should()
+                .Throw<ArgumentNullException>();
+        }
+        
+        [Fact]
         public async Task Update_UpdateModelNull_ThrowsArgumentNullException()
         {
-            // Arrange
-            var service = await PrepDbAndEntryService();
-
             // Assert
-            service.Invoking(s => s.Update(1L, null!))
+            _service.Invoking(s => s.Update(_journal, 1L, null!))
                 .Should()
                 .Throw<ArgumentNullException>();
         }
@@ -136,60 +129,32 @@ namespace Writely.UnitTests.Services
         [Fact]
         public async Task Remove_EntryFound_Removed()
         {
-            // Arrange
-            var journal = await PrepDbWithJournalAndEntries();
-            var service = GetEntryService();
-
             // Act
-            var removedEntry = await service.Remove(1L);
+            var removedEntry = _service.Remove(_journal, 1L);
 
             // Assert
             removedEntry.Should().NotBeNull();
-            journal.Entries.Should().NotContain(removedEntry);
+            _journal.Entries.Should().NotContain(removedEntry);
         }
 
         [Fact]
-        public async Task Remove_JournalNotFound_ThrowsJournalNotFoundException()
+        public async Task Remove_JournalNull_ThrowsArgumentNullException()
         {
-            // Arrange
-            var service = await PrepDbAndEntryService();
-            service.JournalId = 0L;
-
             // Assert
-            service.Invoking(s => s.Remove(1L))
+            _service.Invoking(s => s.Remove(null!, 1L))
                 .Should()
-                .Throw<JournalNotFoundException>();
+                .Throw<ArgumentNullException>();
         }
 
         [Fact]
         public async Task Remove_EntryNotFound_ThrowsEntryNotFoundException()
         {
-            // Arrange
-            await PrepDbWithJournalAndEntries(1);
-            var service = GetEntryService();
-
             // Assert
-            service.Invoking(s => s.Remove(5L))
+            _service.Invoking(s => s.Remove(_journal, 8L))
                 .Should()
                 .Throw<EntryNotFoundException>();
         }
 
-        private async Task<IEntryService> PrepDbAndEntryService(long? journalId = 1L)
-        {
-            await PrepareDatabase();
-            return GetEntryService(journalId);
-        }
-
-        private async Task<Journal> PrepDbWithJournalAndEntries(int numOfEntries = 5)
-        {
-            await PrepareDatabase();
-            var journal = Helpers.GetJournal();
-            Helpers.AddEntriesToJournal(journal, Helpers.GetEntries(numOfEntries));
-            Context!.Journals?.Add(journal);
-            await Context.SaveChangesAsync();
-            return journal;
-        }
-
-        private IEntryService GetEntryService(long? journalId = 1L) => new EntryService(Context!) { JournalId = journalId};
+        private IEntryService GetEntryService() => new EntryService();
     }
 }
