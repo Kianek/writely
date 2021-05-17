@@ -21,6 +21,14 @@ namespace Writely.Models
             Body = body;
         }
 
+        public Entry(long journalId, NewEntry model)
+        {
+            JournalId = journalId;
+            Title = model.Title;
+            Tags = model.Tags;
+            Body = model.Body;
+        }
+
         public Entry()
         {
         }
