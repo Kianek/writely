@@ -1,8 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Writely.Data;
 using Writely.Exceptions;
 using Writely.Models;
 
@@ -10,98 +6,66 @@ namespace Writely.Services
 {
     public class EntryService : IEntryService
     {
-        private AppDbContext _context;
-        
-        public long? JournalId { get; set; }
-
-        public EntryService(AppDbContext context)
+        public Entry? GetById(Journal journal, long entryId)
         {
-            _context = context;
+            var entry = journal.Entries.Find(e => e.Id == entryId);
+            if (entry is null)
+            {
+                throw new EntryNotFoundException($"Entry not found: {entryId}");
+            }
+            
+            return entry;
         }
 
-        public async Task<Entry> GetById(long entryId)
+        public Entry Add(Journal journal, NewEntry model)
         {
-            return await GetUnitOfWork().Entries.GetById(entryId) 
-                   ?? throw new EntryNotFoundException($"Entry not found: {entryId}");
-        }
+            if (journal is null)
+            {
+                throw new ArgumentNullException(nameof(journal));
+            }
 
-        public async Task<IEnumerable<Entry>?> GetAllByTag(QueryFilter? filter)
-        {
-            return await GetUnitOfWork().Entries.GetAllByTag(filter);
-        }
-
-        public async Task<Entry> Add(NewEntry model)
-        {
-            if (model == null)
+            if (model is null)
             {
                 throw new ArgumentNullException(nameof(model));
             }
-            if (JournalId == null)
-            {
-                throw new JournalNotFoundException();
-            }
             
-            var unitOfWork = GetUnitOfWork();
-            var journal = await unitOfWork.Journals.GetById(JournalId.GetValueOrDefault());
-            if (journal == null)
-            {
-                throw new JournalNotFoundException();
-            }
-            var entry = new Entry
-            {
-                Title = model.Title,
-                Tags = model.Tags,
-                Body = model.Body
-            };
-            journal.Add(entry);
-            await unitOfWork.Complete();
-            
-            return entry;
+            var newEntry = new Entry(journal.Id, model);
+            journal.Entries.Add(newEntry);
+            return newEntry;
         }
 
-        public async Task<Entry> Update(long entryId, EntryUpdate updateModel)
+        public Entry Update(Journal journal, long entryId, EntryUpdate updateModel)
         {
-            if (updateModel == null)
+            if (journal is null)
             {
-                throw new ArgumentNullException(nameof(updateModel));
+                throw new ArgumentNullException(nameof(journal));
             }
             
-            using var unitOfWork = GetUnitOfWork();
-            var entry = await unitOfWork.Entries.GetById(entryId);
-            if (entry == null)
-            {
-                throw new EntryNotFoundException($"Entry not found: {entryId}");
-            }
-            
-            if (entry.Update(updateModel))
-            {
-                await unitOfWork.Complete();
-            }
-
-            return entry;
-        }
-
-        public async Task<Entry> Remove(long entryId)
-        {
-            using var unitOfWork = GetUnitOfWork();
-            var journal = await unitOfWork.Journals.GetById(JournalId.GetValueOrDefault());
-            if (journal == null)
-            {
-                throw new JournalNotFoundException($"Journal not found: {JournalId}");
-            }
-
             var entry = journal.Entries.Find(e => e.Id == entryId);
-            if (entry == null)
+            if (entry is null)
             {
-                throw new EntryNotFoundException($"Entry not found: {entryId}");
+                throw new EntryNotFoundException($"Entry not found");
             }
-            journal.Entries = journal.Entries.SkipWhile(e => e.Id == entryId).ToList();
-            await unitOfWork.Complete();
-
+            
+            entry.Update(updateModel);
             return entry;
         }
 
-        private IUnitOfWork GetUnitOfWork() 
-            => new UnitOfWork(_context) { JournalId = JournalId};
+        public Entry Remove(Journal journal, long entryId)
+        {
+            if (journal is null)
+            {
+                throw new ArgumentNullException(nameof(journal));
+            }
+            
+            var entry = journal.Entries.Find(e => e.Id == entryId);
+            if (entry is null)
+            {
+                throw new EntryNotFoundException($"Entry not found: {entryId}");
+            }
+            
+            journal.Entries.Remove(entry);
+            return entry;
+        }
     }
 }

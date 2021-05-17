@@ -6,10 +6,9 @@ namespace Writely.Services
 {
     public interface IEntryService
     {
-        long? JournalId { get; set; }
-        Task<Entry> GetById(long entryId);
-        Task<Entry> Add(NewEntry model);
-        Task<Entry> Update(long entryId, EntryUpdate updateModel);
-        Task<Entry> Remove(long entryId);
+        Entry? GetById(Journal journal, long entryId);
+        Entry Add(Journal journal, NewEntry model);
+        Entry Update(Journal journal, long entryId, EntryUpdate updateModel);
+        Entry Remove(Journal journal, long entryId);
     }
 }
