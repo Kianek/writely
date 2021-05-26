@@ -28,7 +28,7 @@ namespace Writely.Controllers
             _journalService = journalService;
         }
 
-        [HttpGet("{journalId}")]
+        [HttpGet("{journalId:long}")]
         public async Task<IActionResult> GetById(long journalId)
         {
             PrepJournalServiceWithUserId();
@@ -71,14 +71,14 @@ namespace Writely.Controllers
             return Ok(journals);
         }
 
-        [HttpGet("{journalId}/entries")]
-        public async Task<IActionResult> GetEntriesByJournal(long journalId, [FromQuery] QueryFilter filter)
+        [HttpGet("{journalId:long}/entries")]
+        public async Task<IActionResult> GetAllJournalEntries(long journalId, [FromQuery] QueryFilter filter)
         {
             PrepJournalServiceWithUserId();
             IEnumerable<EntryDto>? entries;
             try
             {
-                entries = (await _journalService.GetEntriesByJournal(journalId, filter))
+                entries = (await _journalService.GetAllEntries(journalId, filter))
                     ?.ToList().MapToDto();
             }
             catch (JournalNotFoundException ex)
@@ -110,7 +110,7 @@ namespace Writely.Controllers
             return CreatedAtAction(nameof(Add), journal);
         }
 
-        [HttpPatch("{journalId}")]
+        [HttpPatch("{journalId:long}")]
         public async Task<IActionResult> Update(long journalId, JournalUpdate update)
         {
             PrepJournalServiceWithUserId();
@@ -130,7 +130,7 @@ namespace Writely.Controllers
             return NoContent();
         }
 
-        [HttpDelete("{journalId}")]
+        [HttpDelete("{journalId:long}")]
         public async Task<IActionResult> Remove(long journalId)
         {
             PrepJournalServiceWithUserId();
@@ -144,6 +144,31 @@ namespace Writely.Controllers
             }
             
             return Ok();
+        }
+        
+        // Entry methods
+        [HttpGet("{journalId:long}/entries/{entryId:long}")]
+        public async Task<IActionResult> GetEntry(long journalId, long entryId)
+        {
+            throw new NotImplementedException();
+        }
+        
+        [HttpPost("{journalId:long}/entries")]
+        public async Task<IActionResult> AddEntry(long journalId, [FromBody] NewEntry newEntry)
+        {
+            throw new NotImplementedException();
+        }
+        
+        [HttpPatch("{journalId:long}/entries/{entryId:long}")]
+        public async Task<IActionResult> UpdateEntry(long journalId, long entryId, [FromBody] EntryUpdate update)
+        {
+            throw new NotImplementedException();
+        }
+        
+        [HttpDelete("{journalId:long}/entries/{entryId:long}")]
+        public async Task<IActionResult> DeleteEntry(long journalId, long entryId)
+        {
+            throw new NotImplementedException();
         }
 
         private void PrepJournalServiceWithUserId() => _journalService.UserId = HttpContext?.User.GetSubjectId();
