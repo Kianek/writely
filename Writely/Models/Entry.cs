@@ -68,7 +68,7 @@ namespace Writely.Models
             if (updateProperty == null || property == updateProperty)
             {
                 updatedProps[property!] = false;
-                return property;
+                return property!;
             }
 
             updatedProps[property!] = true;
