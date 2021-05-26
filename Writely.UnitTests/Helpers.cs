@@ -75,5 +75,15 @@ namespace Writely.UnitTests
         public static AccountUpdate GetPasswordUpdate(string password = "SpiffierPassword123!!")
             => new("UserId", passwordUpdate: 
                 new PasswordUpdate {CurrentPassword = password, NewPassword = password});
+        
+        public static NewEntry GetNewEntry(long journalId = 1L) =>
+            new NewEntry(
+                "UserId", 
+                journalId, 
+                "Spiffy Title", 
+                "tag1,tag2,tag3,", 
+                "Stuff goes here");
+        
+        
     }
 }
