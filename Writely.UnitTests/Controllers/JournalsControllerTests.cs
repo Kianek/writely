@@ -338,7 +338,7 @@ namespace Writely.UnitTests.Controllers
             var controller = PrepControllerForFailedRequests();
 
             // Act
-            var response = await controller.UpdateEntry(1L, 5L, null!);
+            var response = await controller.UpdateEntry(1L, 1L, null!);
 
             // Assert
             response.Should().BeOfType<BadRequestObjectResult>();
@@ -451,13 +451,13 @@ namespace Writely.UnitTests.Controllers
                 .Throws<ArgumentNullException>();
             service.Setup(js => js.UpdateEntry(It.IsAny<long>(), It.IsAny<long>(), null!))
                 .Throws<ArgumentNullException>();
-            service.Setup(js => js.UpdateEntry(1L, It.IsAny<long>(), It.IsAny<EntryUpdate>()))
+            service.Setup(js => js.UpdateEntry(5L, It.IsAny<long>(), It.IsAny<EntryUpdate>()))
                 .Throws<JournalNotFoundException>();
-            service.Setup(js => js.UpdateEntry(It.IsAny<long>(), 1L, It.IsAny<EntryUpdate>()))
+            service.Setup(js => js.UpdateEntry(It.IsAny<long>(), 5L, It.IsAny<EntryUpdate>()))
                 .Throws<EntryNotFoundException>();
-            service.Setup(js => js.RemoveEntry(It.IsAny<long>(), 1L))
+            service.Setup(js => js.RemoveEntry(It.IsAny<long>(), 5L))
                 .Throws<EntryNotFoundException>();
-            service.Setup(js => js.RemoveEntry(1L, It.IsAny<long>()))
+            service.Setup(js => js.RemoveEntry(5L, It.IsAny<long>()))
                 .Throws<JournalNotFoundException>();
 
             return new(logger.Object, service.Object);
