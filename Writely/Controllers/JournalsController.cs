@@ -150,7 +150,21 @@ namespace Writely.Controllers
         [HttpGet("{journalId:long}/entries/{entryId:long}")]
         public async Task<IActionResult> GetEntry(long journalId, long entryId)
         {
-            throw new NotImplementedException();
+            Entry entry;
+            try
+            {
+                entry = await _journalService.GetEntry(journalId, entryId);
+            }
+            catch (JournalNotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (EntryNotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            
+            return Ok(entry);
         }
         
         [HttpPost("{journalId:long}/entries")]
