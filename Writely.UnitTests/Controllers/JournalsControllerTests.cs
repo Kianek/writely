@@ -227,13 +227,26 @@ namespace Writely.UnitTests.Controllers
         }
 
         [Fact]
+        public async Task GetEntry_JournalNotFound_ReturnsNotFound()
+        {
+            // Arrange
+            var controller = PrepControllerForFailedRequests();
+
+            // Act
+            var response = await controller.GetEntry(5L, 1L);
+
+            // Assert
+            response.Should().BeOfType<NotFoundObjectResult>();
+        }
+        
+        [Fact]
         public async Task GetEntry_EntryNotFound_ReturnsNotFound()
         {
             // Arrange
             var controller = PrepControllerForFailedRequests();
 
             // Act
-            var response = await controller.GetEntry(1L, 1L);
+            var response = await controller.GetEntry(1L, 5L);
 
             // Assert
             response.Should().BeOfType<NotFoundObjectResult>();
@@ -428,9 +441,9 @@ namespace Writely.UnitTests.Controllers
                 .Throws<ArgumentNullException>();
             service.Setup(js => js.Remove(It.IsAny<long>()))
                 .Throws<JournalNotFoundException>();
-            service.Setup(js => js.GetEntry(It.IsAny<long>(), 1L))
+            service.Setup(js => js.GetEntry(It.IsAny<long>(), 5L))
                 .Throws<EntryNotFoundException>();
-            service.Setup(js => js.GetEntry(1L, It.IsAny<long>()))
+            service.Setup(js => js.GetEntry(5L, It.IsAny<long>()))
                 .Throws<JournalNotFoundException>();
             service.Setup(js => js.AddEntry(1L, It.IsAny<NewEntry>()))
                 .Throws<JournalNotFoundException>();
