@@ -256,7 +256,7 @@ namespace Writely.UnitTests.Controllers
         public async Task AddEntry_EntryCreated_ReturnsCreated()
         {
             // Arrange
-            var controller = PrepControllerForFailedRequests();
+            var controller = PrepControllerForSuccessfulRequests();
 
             // Act
             var response = await controller.AddEntry(1L, Helpers.GetNewEntry());
@@ -272,7 +272,7 @@ namespace Writely.UnitTests.Controllers
             var controller = PrepControllerForFailedRequests();
 
             // Act
-            var response = await controller.AddEntry(4L, Helpers.GetNewEntry());
+            var response = await controller.AddEntry(5L, Helpers.GetNewEntry());
 
             // Assert
             response.Should().BeOfType<NotFoundObjectResult>();
@@ -445,7 +445,7 @@ namespace Writely.UnitTests.Controllers
                 .Throws<EntryNotFoundException>();
             service.Setup(js => js.GetEntry(5L, It.IsAny<long>()))
                 .Throws<JournalNotFoundException>();
-            service.Setup(js => js.AddEntry(1L, It.IsAny<NewEntry>()))
+            service.Setup(js => js.AddEntry(5L, It.IsAny<NewEntry>()))
                 .Throws<JournalNotFoundException>();
             service.Setup(js => js.AddEntry(It.IsAny<long>(), null!))
                 .Throws<ArgumentNullException>();
