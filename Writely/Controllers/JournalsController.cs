@@ -170,7 +170,22 @@ namespace Writely.Controllers
         [HttpPost("{journalId:long}/entries")]
         public async Task<IActionResult> AddEntry(long journalId, [FromBody] NewEntry newEntry)
         {
-            throw new NotImplementedException();
+            Entry entry;
+            
+            try
+            {
+                entry = await _journalService.AddEntry(journalId, newEntry);
+            }
+            catch (JournalNotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            
+            return CreatedAtAction(nameof(AddEntry), entry);
         }
         
         [HttpPatch("{journalId:long}/entries/{entryId:long}")]
