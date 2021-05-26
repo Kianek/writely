@@ -191,7 +191,26 @@ namespace Writely.Controllers
         [HttpPatch("{journalId:long}/entries/{entryId:long}")]
         public async Task<IActionResult> UpdateEntry(long journalId, long entryId, [FromBody] EntryUpdate update)
         {
-            throw new NotImplementedException();
+            Entry entry;
+
+            try
+            {
+                entry = await _journalService.UpdateEntry(journalId, entryId, update);
+            }
+            catch (ArgumentNullException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (JournalNotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (EntryNotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            
+            return NoContent();
         }
         
         [HttpDelete("{journalId:long}/entries/{entryId:long}")]
