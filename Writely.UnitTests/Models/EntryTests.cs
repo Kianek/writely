@@ -145,7 +145,7 @@ namespace Writely.UnitTests.Models
             var entry = Helpers.GetEntry();
 
             // Assert
-            entry.Invoking(e => e.Update(null))
+            entry.Invoking(e => e.Update(null!))
                 .Should()
                 .Throw<ArgumentNullException>();
         }

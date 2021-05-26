@@ -13,7 +13,7 @@ namespace Writely.UnitTests.Services
 {
     public class JournalServiceTest : DatabaseTestBase
     {
-        private JournalService _service;
+        private JournalService? _service;
         
         [Fact]
         public async Task GetById_UserFound_ReturnsJournal()
@@ -289,7 +289,7 @@ namespace Writely.UnitTests.Services
         {
             // Arrange
             var journal = await PrepDbWithJournal();
-            var newEntry = GetValidEntry(journal.UserId, journal.Id);
+            var newEntry = GetValidEntry(journal.UserId!, journal.Id);
             _service = GetJournalService();
 
             // Act

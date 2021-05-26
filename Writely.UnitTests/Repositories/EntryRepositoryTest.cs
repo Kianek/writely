@@ -261,7 +261,7 @@ namespace Writely.UnitTests.Repositories
             result.Should().BeNull();
         }
 
-        private EntryRepository GetEntryRepo(long? journalId) => new EntryRepository(Context, journalId);
+        private EntryRepository GetEntryRepo(long? journalId) => new EntryRepository(Context!, journalId);
 
         private void SetTitleAndTags(Entry entry, string title, string tags)
         {
