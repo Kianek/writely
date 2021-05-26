@@ -12,7 +12,7 @@ namespace Writely.UnitTests.Extensions
     {
         
         [Fact]
-        public async Task SortBy_Default_SortByDateDescending()
+        public void SortBy_Default_SortByDateDescending()
         {
             // Arrange
             var journals = Helpers.GetJournals( 3);
@@ -33,7 +33,7 @@ namespace Writely.UnitTests.Extensions
         }
 
         [Fact]
-        public async Task SortBy_SortByDateAscending()
+        public void SortBy_SortByDateAscending()
         {
             // Arrange
             var journals = Helpers.GetJournals( 3);
@@ -54,7 +54,7 @@ namespace Writely.UnitTests.Extensions
         }
 
         [Fact]
-        public async Task SortBy_SortByTitleAscending()
+        public void SortBy_SortByTitleAscending()
         {
             // Arrange
             var journals = Helpers.GetJournals(3);
@@ -79,7 +79,7 @@ namespace Writely.UnitTests.Extensions
         }
 
         [Fact]
-        public async Task SortBy_SortByTitleDescending()
+        public void SortBy_SortByTitleDescending()
         {
             // Arrange
             var entries = Helpers.GetEntries( 3);
