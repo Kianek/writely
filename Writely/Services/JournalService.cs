@@ -105,12 +105,12 @@ namespace Writely.Services
 
         public async Task<int> RemoveAllByUser(string userId)
         {
-            var journals = await _context.Journals
+            var journals = await _context.Journals!
                 .Where(j => j.UserId == userId)
                     .Include(j => j.Entries)
                 .ToListAsync();
             
-            _context.Journals.RemoveRange(journals);
+            _context.Journals?.RemoveRange(journals);
             return await _context.SaveChangesAsync();
         }
         
