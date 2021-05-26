@@ -216,7 +216,20 @@ namespace Writely.Controllers
         [HttpDelete("{journalId:long}/entries/{entryId:long}")]
         public async Task<IActionResult> DeleteEntry(long journalId, long entryId)
         {
-            throw new NotImplementedException();
+            try
+            {
+                await _journalService.RemoveEntry(journalId, entryId);
+            }
+            catch (JournalNotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (EntryNotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            
+            return Ok();
         }
 
         private void PrepJournalServiceWithUserId() => _journalService.UserId = HttpContext?.User.GetSubjectId();
