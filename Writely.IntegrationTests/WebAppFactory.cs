@@ -35,6 +35,8 @@ namespace Writely.IntegrationTests
                     .AddScheme<AuthenticationSchemeOptions, TestAuthenticationHandler>(
                         "Test", options => { });
 
+                services.AddAuthorization();
+
                 var sp = services.BuildServiceProvider();
                 using var scope = sp.CreateScope();
                 var scopedServices = scope.ServiceProvider;
