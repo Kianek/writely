@@ -17,17 +17,7 @@ namespace Writely.UnitTests.Services
         
         public UserServiceTest()
         {
-            _manager = new Mock<UserManager<AppUser>>(
-                new Mock<IUserStore<AppUser>>().Object, 
-                null, 
-                null,
-                null, 
-                null, 
-                null,
-                null, 
-                null, 
-                null
-                );
+            _manager = Helpers.GetMockUserManager();
         }
         
         [Fact]
