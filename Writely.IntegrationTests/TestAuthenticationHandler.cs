@@ -10,13 +10,18 @@ namespace Writely.IntegrationTests
 {
     public class TestAuthenticationHandler : AuthenticationHandler<AuthenticationSchemeOptions>
     {
-        public TestAuthenticationHandler(IOptionsMonitor<AuthenticationSchemeOptions> options, ILoggerFactory logger, UrlEncoder encoder, ISystemClock clock) : base(options, logger, encoder, clock)
+        public TestAuthenticationHandler(IOptionsMonitor<AuthenticationSchemeOptions> options, ILoggerFactory logger,
+            UrlEncoder encoder, ISystemClock clock) : base(options, logger, encoder, clock)
         {
         }
 
         protected override Task<AuthenticateResult> HandleAuthenticateAsync()
         {
-            var claims = new[] {new Claim(JwtClaimTypes.Subject, "UserIdBob")};
+            var claims = new[]
+            {
+                new Claim(JwtClaimTypes.Subject, "UserIdBob"),
+                new Claim(JwtClaimTypes.Email, "bob@gmail.com"),
+            };
             var identity = new ClaimsIdentity(claims, "Test");
             var principal = new ClaimsPrincipal(identity);
             var ticket = new AuthenticationTicket(principal, "Test");
