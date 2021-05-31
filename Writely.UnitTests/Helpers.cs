@@ -1,4 +1,7 @@
 using System.Collections.Generic;
+using Microsoft.AspNetCore.Identity;
+using Moq;
+using Writely.Data;
 using Writely.Models;
 
 namespace Writely.UnitTests
@@ -83,7 +86,12 @@ namespace Writely.UnitTests
                 "Spiffy Title", 
                 "tag1,tag2,tag3,", 
                 "Stuff goes here");
-        
-        
+
+        public static Credentials GetCredentials() 
+            => new Credentials("bob@gmail.com", "Password123!");
+
+        public static Mock<UserManager<AppUser>> GetMockUserManager()
+            => new (new Mock<IUserStore<AppUser>>().Object,
+                null, null, null, null, null, null, null, null);
     }
 }
