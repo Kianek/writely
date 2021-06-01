@@ -13,6 +13,7 @@ namespace Writely
 {
     public class Startup
     {
+        private readonly string _allowedOrigins = "_allowedOrigins";
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -34,6 +35,16 @@ namespace Writely
             
             services.AddWritelyServices();
 
+            services.AddCors(opts =>
+            {
+                opts.AddPolicy(name: _allowedOrigins, builder =>
+                {
+                    builder.WithOrigins("https://writely.netlify.app");
+                });
+            });
+
+            services.AddResponseCaching();
+
             services.AddControllers();
         }
 
@@ -50,6 +61,10 @@ namespace Writely
             }
 
             app.UseRouting();
+
+            app.UseCors();
+
+            app.UseResponseCaching();
 
             app.UseIdentityServer();
 
