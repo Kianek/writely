@@ -71,24 +71,6 @@ namespace Writely.Controllers
             return Ok(journals);
         }
 
-        [HttpGet("{journalId:long}/entries")]
-        public async Task<IActionResult> GetAllJournalEntries(long journalId, [FromQuery] QueryFilter filter)
-        {
-            PrepJournalServiceWithUserId();
-            IEnumerable<EntryDto>? entries;
-            try
-            {
-                entries = (await _journalService.GetAllEntries(journalId, filter))
-                    ?.ToList().MapToDto();
-            }
-            catch (JournalNotFoundException ex)
-            {
-                return NotFound(ex.Message);
-            }
-            
-            return Ok(entries);
-        }
-
         [HttpPost]
         public async Task<IActionResult> Add(NewJournal newJournal)
         {
@@ -147,6 +129,24 @@ namespace Writely.Controllers
         }
         
         // Entry methods
+        [HttpGet("{journalId:long}/entries")]
+        public async Task<IActionResult> GetAllJournalEntries(long journalId, [FromQuery] QueryFilter filter)
+        {
+            PrepJournalServiceWithUserId();
+            IEnumerable<EntryDto>? entries;
+            try
+            {
+                entries = (await _journalService.GetAllEntries(journalId, filter))
+                    ?.ToList().MapToDto();
+            }
+            catch (JournalNotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            
+            return Ok(entries);
+        }
+        
         [HttpGet("{journalId:long}/entries/{entryId:long}")]
         public async Task<IActionResult> GetEntry(long journalId, long entryId)
         {
