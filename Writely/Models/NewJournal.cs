@@ -1,4 +1,4 @@
-namespace Writely.Models.Dto
+namespace Writely.Models
 {
     public class NewJournal
     {
