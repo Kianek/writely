@@ -2,9 +2,9 @@ namespace Writely.Models
 {
     public static class SortOrder
     {
-        public static string Ascending { get; } = "asc";
-        public static string Descending { get; } = "desc";
-        public static string DateAscending { get; } = "date-asc";
-        public static string DateDescending { get; } = "date-desc";
+        public static string Ascending => "asc";
+        public static string Descending => "desc";
+        public static string DateAscending => "date-asc";
+        public static string DateDescending => "date-desc";
     }
 }
