@@ -65,7 +65,7 @@ namespace Writely.IntegrationTests
             public async Task ChangeEmail_ChangeSuccessful_Returns204()
             {
                 // Arrange
-                var update = new AccountUpdate("UserIdBob", new EmailUpdate("bob@newmail.com"))
+                var update =  new EmailUpdate("UserIdBob","bob@newmail.com")
                     .ToJson();
 
                 // Act
@@ -79,7 +79,7 @@ namespace Writely.IntegrationTests
             public async Task ChangeEmail_IncompleteAccountUpdate_Returns400()
             {
                 // Arrange
-                var update = new AccountUpdate("UserIdBob", new EmailUpdate(null!)).ToJson();
+                var update = new EmailUpdate("UserIdBob", null!).ToJson();
 
                 // Act
                 var response = await _client.PatchAsync("api/users/change-email", update);
@@ -92,13 +92,10 @@ namespace Writely.IntegrationTests
             public async Task ChangePassword_ChangeSuccessful_Returns204()
             {
                 // Arrange
-                var passwordUpdate = new PasswordUpdate
-                {
-                    CurrentPassword = "TotallyHashedPassword123!",
-                    NewPassword = "SuperCoolNewPassword123!",
-                };
-                var update = new AccountUpdate("UserIdBob",
-                    passwordUpdate: passwordUpdate).ToJson();
+                var update = new PasswordUpdate
+                ("UserIdBob",
+                    "TotallyHashedPassword123!",
+                    "SuperCoolNewPassword123!").ToJson();
 
                 // Act
                 var response = await _client.PatchAsync("api/users/change-password", update);
@@ -111,8 +108,7 @@ namespace Writely.IntegrationTests
             public async Task ChangePassword_IncompleteAccountUpdate_Returns400()
             {
                 // Arrange
-                var update = new AccountUpdate("UserIdBob",
-                        passwordUpdate: new PasswordUpdate {NewPassword = "Ladeedaa3333$4@"})
+                var update = new PasswordUpdate("UserIdBob", null!, "Ladeedaa3333$4@")
                     .ToJson();
 
                 // Act

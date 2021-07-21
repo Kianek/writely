@@ -38,7 +38,7 @@ namespace Writely.Controllers
         }
 
         [HttpPatch("change-email")]
-        public async Task<IActionResult> ChangeEmail(AccountUpdate update)
+        public async Task<IActionResult> ChangeEmail(EmailUpdate update)
         {
             IdentityResult result;
 
@@ -64,7 +64,7 @@ namespace Writely.Controllers
         }
         
         [HttpPatch("change-password")]
-        public async Task<IActionResult> ChangePassword(AccountUpdate update)
+        public async Task<IActionResult> ChangePassword(PasswordUpdate update)
         {
             try
             {

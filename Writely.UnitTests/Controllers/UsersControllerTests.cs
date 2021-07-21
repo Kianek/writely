@@ -101,7 +101,7 @@ namespace Writely.UnitTests.Controllers
         {
             // Arrange
             var accountUpdate = Helpers.GetEmailUpdate();
-            accountUpdate.EmailUpdate!.Email = null;
+            accountUpdate!.Email = null;
             var controller = PrepControllerForIncompleteInfo();
 
             // Act
@@ -118,7 +118,7 @@ namespace Writely.UnitTests.Controllers
             var accountUpdate = Helpers.GetEmailUpdate("old@email.com");
             var mockUserService = GetMockUserService();
             mockUserService.Setup(us =>
-                    us.ChangeEmail(It.IsAny<AccountUpdate>()))
+                    us.ChangeEmail(It.IsAny<EmailUpdate>()))
                 .ReturnsAsync(() => IdentityResult.Failed());
             var controller = new UsersController(mockUserService.Object);
 
@@ -151,7 +151,7 @@ namespace Writely.UnitTests.Controllers
             var controller = PrepControllerWithoutUser();
 
             // Act
-            var response = await controller.ChangeEmail(passwordUpdate);
+            var response = await controller.ChangePassword(passwordUpdate);
 
             // Assert
             response.Should().BeOfType<NotFoundObjectResult>();
@@ -162,7 +162,6 @@ namespace Writely.UnitTests.Controllers
         {
             // Arrange
             var accountUpdate = Helpers.GetPasswordUpdate();
-            accountUpdate.PasswordUpdate = null;
             var controller = PrepControllerForIncompleteInfo();
 
             // Act
@@ -177,7 +176,7 @@ namespace Writely.UnitTests.Controllers
         {
             // Arrange
             var accountUpdate = Helpers.GetPasswordUpdate();
-            accountUpdate.PasswordUpdate!.CurrentPassword = "Goobledyblech";
+            accountUpdate!.CurrentPassword = "Goobledyblech";
             var service = GetMockUserService();
             service.Setup(us => us.ChangePassword(accountUpdate))
                 .Throws<PasswordMismatchException>();
@@ -236,9 +235,9 @@ namespace Writely.UnitTests.Controllers
                 .ReturnsAsync(() => IdentityResult.Success);
             userService.Setup(us => us.CreateAccount(IncompleteRegistration()))
                 .Throws<IncompleteRegistrationException>();
-            userService.Setup(us => us.ChangeEmail(It.IsAny<AccountUpdate>()))
+            userService.Setup(us => us.ChangeEmail(It.IsAny<EmailUpdate>()))
                 .Throws<UserNotFoundException>();
-            userService.Setup(us => us.ChangePassword(It.IsAny<AccountUpdate>()))
+            userService.Setup(us => us.ChangePassword(It.IsAny<PasswordUpdate>()))
                 .Throws<UserNotFoundException>();
             
             return new (userService.Object);
@@ -249,9 +248,9 @@ namespace Writely.UnitTests.Controllers
             var userService = GetMockUserService();
             userService.Setup(us => us.CreateAccount(It.IsAny<Registration>()))
                 .Throws<DuplicateUserException>();
-            userService.Setup(us => us.ChangeEmail(It.IsAny<AccountUpdate>()))
+            userService.Setup(us => us.ChangeEmail(It.IsAny<EmailUpdate>()))
                 .ReturnsAsync(() => IdentityResult.Success);
-            userService.Setup(us => us.ChangePassword(It.IsAny<AccountUpdate>()))
+            userService.Setup(us => us.ChangePassword(It.IsAny<PasswordUpdate>()))
                 .ReturnsAsync(() => IdentityResult.Success);
             userService.Setup(us => us.DeleteAccount("UserId"))
                 .ReturnsAsync(() => IdentityResult.Success);
@@ -266,9 +265,9 @@ namespace Writely.UnitTests.Controllers
             var userService = GetMockUserService();
             userService.Setup(us => us.CreateAccount(It.IsAny<Registration>()))
                 .Throws<MissingInformationException>();
-            userService.Setup(us => us.ChangeEmail(It.IsAny<AccountUpdate>()))
+            userService.Setup(us => us.ChangeEmail(It.IsAny<EmailUpdate>()))
                 .Throws<MissingInformationException>();
-            userService.Setup(us => us.ChangePassword(It.IsAny<AccountUpdate>()))
+            userService.Setup(us => us.ChangePassword(It.IsAny<PasswordUpdate>()))
                 .Throws<MissingInformationException>();
             
             return new (userService.Object);

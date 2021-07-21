@@ -114,17 +114,15 @@ namespace Writely.UnitTests.Services
         }
 
         [Fact]
-        public async Task ChangeEmail_EmailUpdateMissing_ThrowsMissingInformationException()
+        public async Task ChangeEmail_EmailUpdateMissing_ThrowsArgumentNullException()
         {
             // Arrange
             var service = GetServiceWithUser();
-            var update = Helpers.GetEmailUpdate();
-            update.EmailUpdate = null;
 
             // Assert
-            await service.Invoking(us => us.ChangeEmail(update))
+            await service.Invoking(us => us.ChangeEmail(null!))
                 .Should()
-                .ThrowAsync<MissingInformationException>();
+                .ThrowAsync<ArgumentNullException>();
         }
         
         [Fact]
@@ -195,17 +193,15 @@ namespace Writely.UnitTests.Services
         }
 
         [Fact]
-        public async Task ChangePassword_PasswordUpdateMissing_ThrowsMissingInformationException()
+        public async Task ChangePassword_PasswordUpdateMissing_ThrowsArgumentNullException()
         {
             // Arrange
             var service = GetServiceWithUser();
-            var update = Helpers.GetPasswordUpdate();
-            update.PasswordUpdate = null;
 
             // Assert
-            await service.Invoking(us => us.ChangePassword(update))
+            await service.Invoking(us => us.ChangePassword(null!))
                 .Should()
-                .ThrowAsync<MissingInformationException>();
+                .ThrowAsync<ArgumentNullException>();
         }
         
         [Fact]

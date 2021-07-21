@@ -50,14 +50,14 @@ namespace Writely.Services
             return await _userManager.CreateAsync(newUser, registration.Password);
         }
 
-        public async Task<IdentityResult> ChangeEmail(AccountUpdate update)
+        public async Task<IdentityResult> ChangeEmail(EmailUpdate update)
         {
             if (update == null)
             {
                 _logger.LogWarning("AccountUpdate object null");
                 throw new ArgumentNullException(nameof(update));
             }
-            if (update.EmailUpdate == null || string.IsNullOrEmpty(update.EmailUpdate?.Email))
+            if (string.IsNullOrEmpty(update.Email))
             {
                 _logger.LogWarning("EmailUpdate or Email null");
                 throw new MissingInformationException("Missing email update");
@@ -71,7 +71,7 @@ namespace Writely.Services
                 throw new UserNotFoundException($"Unable to locate user: {update.UserId}");
             }
             
-            var email = update.EmailUpdate?.Email;
+            var email = update.Email;
             if (user.Email == email)
             {
                 _logger.LogWarning("New email same as the old; no change made");
@@ -83,7 +83,7 @@ namespace Writely.Services
             return await _userManager.ChangeEmailAsync(user, email, emailChangeToken);
         }
 
-        public async Task<IdentityResult> ChangePassword(AccountUpdate update)
+        public async Task<IdentityResult> ChangePassword(PasswordUpdate update)
         {
             if (update == null)
             {
@@ -91,9 +91,9 @@ namespace Writely.Services
                 throw new ArgumentNullException(nameof(update));
             }
 
-            var pw1 = update.PasswordUpdate?.CurrentPassword;
-            var pw2 = update.PasswordUpdate?.NewPassword;
-            if (update.PasswordUpdate == null
+            var pw1 = update.CurrentPassword;
+            var pw2 = update.NewPassword;
+            if (update == null
             || string.IsNullOrEmpty(pw1) || string.IsNullOrEmpty(pw2))
             {
                 _logger.LogWarning("One or more passwords missing");
@@ -109,7 +109,7 @@ namespace Writely.Services
             }
             
             _logger.LogInformation("Changing password");
-            var (oldPassword, newPassword) = update.PasswordUpdate!;
+            var (oldPassword, newPassword) = update;
             return await _userManager.ChangePasswordAsync(user, oldPassword, newPassword);
         }
 
