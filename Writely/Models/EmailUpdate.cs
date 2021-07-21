@@ -1,14 +1,10 @@
 namespace Writely.Models
 {
-    public class EmailUpdate
+    public class EmailUpdate : AccountUpdate
     {
         public string? Email { get; set; }
 
-        public EmailUpdate()
-        {
-        }
-
-        public EmailUpdate(string? email)
+        public EmailUpdate(string userId, string? email) : base(userId)
         {
             Email = email;
         }
