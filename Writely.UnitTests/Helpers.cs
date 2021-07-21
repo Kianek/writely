@@ -72,12 +72,11 @@ namespace Writely.UnitTests
             ConfirmPassword = "SecretPassword123!",
         };
         
-        public static AccountUpdate GetEmailUpdate(string email = "spiffynewemail@gmail.com")
-            => new("UserId", new (email));
+        public static EmailUpdate GetEmailUpdate(string email = "spiffynewemail@gmail.com")
+            => new("UserId", email);
 
-        public static AccountUpdate GetPasswordUpdate(string password = "SpiffierPassword123!!")
-            => new("UserId", passwordUpdate: 
-                new PasswordUpdate {CurrentPassword = password, NewPassword = password});
+        public static PasswordUpdate GetPasswordUpdate(string password = "SpiffierPassword123!!")
+            => new("UserId", password, password);
         
         public static NewEntry GetNewEntry(long journalId = 1L) =>
             new NewEntry(
